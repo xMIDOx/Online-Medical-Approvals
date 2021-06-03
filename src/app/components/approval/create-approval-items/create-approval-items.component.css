@@ -1,0 +1,20 @@
+/* .modal {
+    text-align: center;
+}
+
+.modal-dialog {
+    max-width: 100%;
+    width: auto !important;
+    display: inline-block;
+    text-align: left;
+} */
+
+.modal {
+    padding: 1%;
+}
+.modal-dialog {
+    min-width: auto;
+    max-width: fit-content;
+}
+
+

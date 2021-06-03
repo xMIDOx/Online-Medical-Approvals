@@ -1,0 +1,53 @@
+<form #approvalForm="ngForm" (ngSubmit)="onSubmit(approvalForm)">
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label for="provider" class="form-label">Service Providers</label>
+            <ng-select id="provider" name="provider" [(ngModel)]="approval.serviceProviderId" [items]="providerBuffers"
+                [virtualScroll]="true" [loading]="loading" placeholder="search with 3 letters" bindLabel="name"
+                bindValue="id" (scroll)="onScroll($event)" (scrollToEnd)="onScrollToEnd()" (search)="search($event)">
+                <ng-template ng-option-tmp let-item="item" let-index="index">
+                    <b>{{index}}</b> {{item.name}}
+                </ng-template>
+            </ng-select>
+        </div>
+        <div class="col-md-3">
+            <label for="cardNum" class="form-label">Card Number</label>
+            <input id="cardNum" name="cardNum" type="text" class="form-control col-md-3"
+                [(ngModel)]="approval.member.cardNumber" (focusout)="getMemberInfo()">
+        </div>
+        <div class="col-md-3">
+            <label for="claimFormNum" class="form-label">Claim Form Number</label>
+            <input id="claimFormNum" name="claimNum" type="text" class="form-control"
+                [(ngModel)]="approval.claimNumber" (focusout)="getClaimProvider()">
+        </div>
+        <div class="col-md-3">
+            <label for="date" class="form-label">Approval Date</label>
+            <input id="date" name="date" type="date" class="form-control"
+                [ngModel]="approval.approvalDate | date:'yyyy-MM-dd'" (ngModelChange)="setDate($event)">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label for="member" class="form-label">Member</label>
+            <input id="member" value={{approval.member.memberName}} type="text" class="form-control" readonly>
+        </div>
+        <div class="col-md-3">
+            <label for="customer" class="form-label">Customer</label>
+            <input id="customer" value={{approval.member.customerName}} type="text" class="form-control" readonly>
+        </div>
+        <div class="col-md-3">
+            <label for="status" class="form-label">Status</label>
+            <input id="status" [class.text-danger]="!approval.member.isActive" value={{approval.member.statusName}}
+                type="text" class="form-control fw-bold text-info" readonly>
+        </div>
+        <div class="col-md-3">
+            <label for="claimProvider" class="form-label">Claim Provider</label>
+            <input id="claimProvider" type="text" class="form-control" value="{{approval.claimProviderName}}" readonly>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <app-create-approval-items [serviceProviderId]="approval.serviceProviderId"
+            (getApprovalItems)="getItems($event)"></app-create-approval-items>
+    </div>
+    <button type="submit" class="btn btn-primary">Create Approval</button>
+</form>
