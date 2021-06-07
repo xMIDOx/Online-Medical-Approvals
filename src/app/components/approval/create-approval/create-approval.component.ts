@@ -31,16 +31,28 @@ export class CreateApprovalComponent implements OnInit {
     },
     approvalItems: [],
   };
-  public providerBuffers: KeyValue[] = [];
-  public loading = false;
   public providers: KeyValue[] = [];
-  private bufferSize = 50;
-  private numberOfItemsFromEndBeforeFetchingMore = 10;
   private queryObj: any = {};
 
-  constructor(private lookupService: LookupsService, private approvalService: ApprovalService) {}
+  constructor(
+    private lookupService: LookupsService,
+    private approvalService: ApprovalService
+  ) {}
 
   ngOnInit(): void {}
+
+  public loadNgSelectItems(searchTerm: string) {
+    console.log('SearchTerm: ', searchTerm);
+    this.queryObj.searchTerm = searchTerm;
+    this.lookupService.getProviders(this.queryObj).subscribe((res) => {
+      this.providers = res as KeyValue[];
+      console.log('Providers loaded Successfully.');
+    });
+  }
+
+  public getSelectedItem(item: KeyValue) {
+    this.approval.serviceProviderId = item.id;
+  }
 
   public getItems(items: ApprovalItem[]) {
     this.approval.approvalItems = items;
@@ -83,7 +95,7 @@ export class CreateApprovalComponent implements OnInit {
     console.log(typeof date, this.approval.approvalDate);
   }
 
-  public onSubmit(form: NgForm){    
+  public onSubmit(form: NgForm) {
     var approval: any = {};
     approval.ProviderId = this.approval.serviceProviderId;
     approval.PlanMemberId = this.approval.member.id;
@@ -91,41 +103,7 @@ export class CreateApprovalComponent implements OnInit {
     approval.ApprovalDate = this.approval.approvalDate;
     approval.ClaimNumber = this.approval.claimNumber;
     approval.ApprovalItems = this.approval.approvalItems;
-    
-    this.approvalService.CreateApproval(approval).subscribe(res => console.log(res));
-  }
 
-  public search(event: any) {
-    if (event.term.length == 3) {
-      this.queryObj.searchTerm = event.term;
-      this.lookupService.getProviders(this.queryObj).subscribe((res) => {        
-        this.providers = res as KeyValue[];
-        this.providerBuffers = this.providers.slice(0, this.bufferSize);
-      });
-    }
-    if (event.term.length > 3) this.fetchMore();
-  }
-
-  public onScroll(event: any) {
-    if (this.loading || this.providers.length <= this.providerBuffers.length)
-      return;
-
-    if (
-      event.end + this.numberOfItemsFromEndBeforeFetchingMore >=
-      this.providerBuffers.length
-    )
-      this.fetchMore();
-  }
-
-  public onScrollToEnd() {
-    this.fetchMore();
-  }
-
-  private fetchMore() {
-    const length = this.providerBuffers.length;
-    const more = this.providers.slice(length, this.bufferSize + length);
-    this.loading = true;
-    this.providerBuffers = this.providerBuffers.concat(more);
-    this.loading = false;
+    this.approvalService.CreateApproval(approval).subscribe();
   }
 }

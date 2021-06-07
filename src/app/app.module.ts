@@ -12,6 +12,7 @@ import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { CreateApprovalItemsComponent } from './components/approval/create-approval-items/create-approval-items.component';
+import { NgSelectComponent } from './components/ng-select/ng-select.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { CreateApprovalItemsComponent } from './components/approval/create-appro
     NotFoundComponent,
     CreateApprovalComponent,
     CreateApprovalItemsComponent,
+    NgSelectComponent,
   ],
   imports: [
     BrowserModule,

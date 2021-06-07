@@ -1,14 +1,15 @@
 <form #approvalForm="ngForm" (ngSubmit)="onSubmit(approvalForm)">
     <div class="row mb-3">
         <div class="col-md-3">
-            <label for="provider" class="form-label">Service Providers</label>
-            <ng-select id="provider" name="provider" [(ngModel)]="approval.serviceProviderId" [items]="providerBuffers"
+            <label for="ngSelect" class="form-label">Service Providers</label>
+            <app-ng-select [items]="providers" (searching)="loadNgSelectItems($event)" (selectedItem)="getSelectedItem($event)"></app-ng-select>
+            <!-- <ng-select id="provider" name="provider" [(ngModel)]="approval.serviceProviderId" [items]="providerBuffers"
                 [virtualScroll]="true" [loading]="loading" placeholder="search with 3 letters" bindLabel="name"
                 bindValue="id" (scroll)="onScroll($event)" (scrollToEnd)="onScrollToEnd()" (search)="search($event)">
                 <ng-template ng-option-tmp let-item="item" let-index="index">
                     <b>{{index}}</b> {{item.name}}
                 </ng-template>
-            </ng-select>
+            </ng-select> -->
         </div>
         <div class="col-md-3">
             <label for="cardNum" class="form-label">Card Number</label>
