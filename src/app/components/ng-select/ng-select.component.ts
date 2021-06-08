@@ -1,13 +1,15 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ControlContainer, NgForm } from '@angular/forms';
 import { KeyValue } from 'src/app/models/key-value.model';
 
 @Component({
   selector: 'app-ng-select',
   templateUrl: './ng-select.component.html',
   styleUrls: ['./ng-select.component.css'],
+  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
 })
-export class NgSelectComponent implements OnInit, OnChanges {
-  @Input() items: KeyValue[] = [];
+export class NgSelectComponent implements OnInit, OnChanges {  
+  @Input() items: KeyValue[] = [];  
   @Output() searching = new EventEmitter<string>();
   @Output() selectedItem = new EventEmitter<KeyValue>();
 

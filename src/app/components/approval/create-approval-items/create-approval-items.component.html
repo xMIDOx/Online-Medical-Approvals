@@ -14,7 +14,7 @@
             </th>
         </tr>
     </thead>
-    <tbody class="text-center" *ngFor="let item of approvalItems; index as i; trackByFn: trackItems">
+    <tbody class="text-center" *ngFor="let item of approvalItems; index as i; trackBy: trackItems;  ">
         <tr>
             <td>{{item.serviceId}}</td>
             <td>{{item.quantity}}</td>
@@ -23,7 +23,8 @@
             <td>{{item.dosagePerDay}}</td>
             <td>{{item.dosageTime}}</td>
             <td>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bsModal" (click)="Edit(item, i)">Edit</button>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bsModal"
+                    (click)="Edit(item, i)">Edit</button>
                 <button class="btn btn-danger" (click)="remove(item)">Delete</button>
             </td>
         </tr>
@@ -43,57 +44,50 @@
                     <div class="row mb-3">
                         <div class="col-md-10">
                             <label for="serviceId" class="form-label">Services</label>
-                            <ng-select 
-                                id="serviceId" 
-                                name="serviceId"
-                                placeholder="search with 3 letters" 
-                                bindLabel="name" 
-                                bindValue="id"
-                                [items]="servicesBuffers" 
-                                [virtualScroll]="true" 
-                                [loading]="loading"                                
-                                (scroll)="onScroll($event)" 
-                                (scrollToEnd)="onScrollToEnd()" 
-                                (search)="search($event)"
-                                [(ngModel)]="approvalItem.serviceId"
-                                ngModel>
+                            <app-ng-select [items]="services" (searching)="getMedicalServices($event)"
+                                (selectedItem)="getSelectedService($event)">
+                            </app-ng-select>
+                            <!-- <ng-select id="serviceId" name="serviceId" placeholder="search with 3 letters"
+                                bindLabel="name" bindValue="id" [items]="servicesBuffers" [virtualScroll]="true"
+                                [loading]="loading" (scroll)="onScroll($event)" (scrollToEnd)="onScrollToEnd()"
+                                (search)="search($event)" [(ngModel)]="approvalItem.serviceId">
                                 <ng-template ng-option-tmp let-item="item" let-index="index">
                                     <b>{{index}}</b> {{item.name}}
                                 </ng-template>
-                            </ng-select>
+                            </ng-select> -->
+                        </div>
                     </div>
-                </div>
                     <div class="row mb-3">
                         <div class="col-md-2">
                             <label for="qty" class="form-label">Quantity</label>
                             <input id="qty" name="quantity" type="number" class="form-control"
-                                [(ngModel)]="approvalItem.quantity" ngModel>
+                                [(ngModel)]="approvalItem.quantity">
                         </div>
                         <div class="col-md-2">
                             <label for="dosage" class="form-label col">Dosage</label>
                             <input id="dosage" name="dosage" type="number" class="form-control"
-                                [(ngModel)]="approvalItem.dosage" ngModel>
+                                [(ngModel)]="approvalItem.dosage">
                         </div>
                         <div class="col-md-2">
                             <label for="dosagePerDay" class="form-label col text-nowrap">Dosage Per Day</label>
                             <input id="dosagePerDay" name="dosagePerDay" type="number" class="form-control"
-                                [(ngModel)]="approvalItem.dosagePerDay" ngModel>
+                                [(ngModel)]="approvalItem.dosagePerDay">
                         </div>
                         <div class="col-md-2">
                             <label for="dosageDays" class="form-label">Dosage Days</label>
                             <input id="dosageDays" name="dosageDays" type="number" class="form-control"
-                                [(ngModel)]="approvalItem.dosageDays" ngModel>
+                                [(ngModel)]="approvalItem.dosageDays">
                         </div>
                         <div class="col-md-2">
                             <label for="dosageTime" class="form-label">Dosage Time</label>
                             <input id="dosageTime" name="dosageTime" type="number" class="form-control"
-                                [(ngModel)]="approvalItem.dosageTime" ngModel>
+                                [(ngModel)]="approvalItem.dosageTime">
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Save changes</button>
                 </form>
             </div>
-            <div class="modal-footer justify-content-start">                
+            <div class="modal-footer justify-content-start">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>

@@ -41,12 +41,10 @@ export class CreateApprovalComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  public loadNgSelectItems(searchTerm: string) {
-    console.log('SearchTerm: ', searchTerm);
+  public loadNgSelectItems(searchTerm: string) {    
     this.queryObj.searchTerm = searchTerm;
     this.lookupService.getProviders(this.queryObj).subscribe((res) => {
-      this.providers = res as KeyValue[];
-      console.log('Providers loaded Successfully.');
+      this.providers = res as KeyValue[];      
     });
   }
 

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -7,12 +8,12 @@ import { NgSelectModule } from '@ng-select/ng-select';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { CreateApprovalItemsComponent } from './components/approval/create-approval-items/create-approval-items.component';
 import { CreateApprovalComponent } from './components/approval/create-approval/create-approval.component';
 import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { NotFoundComponent } from './components/not-found/not-found.component';
-import { CreateApprovalItemsComponent } from './components/approval/create-approval-items/create-approval-items.component';
 import { NgSelectComponent } from './components/ng-select/ng-select.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -28,9 +29,10 @@ import { NgSelectComponent } from './components/ng-select/ng-select.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    BrowserAnimationsModule,    
+    BrowserAnimationsModule,
     FormsModule,
-    NgSelectModule
+    NgSelectModule,
+    CommonModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
