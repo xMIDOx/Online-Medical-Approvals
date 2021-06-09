@@ -8,14 +8,12 @@ import { KeyValue } from 'src/app/models/key-value.model';
   styleUrls: ['./ng-select.component.css'],
   viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
 })
-export class NgSelectComponent implements OnInit, OnChanges {  
-  @Input() items: KeyValue[] = [];  
+export class NgSelectComponent implements OnInit, OnChanges {
+  @Input() items: any;
   @Output() searching = new EventEmitter<string>();
   @Output() selectedItem = new EventEmitter<KeyValue>();
-
   public itemsBuffer: KeyValue[] = [];
   public loading = false;
-
   private bufferSize = 50;
   private fetchMoreAfter = 10;
 
@@ -24,10 +22,12 @@ export class NgSelectComponent implements OnInit, OnChanges {
   ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.itemsBuffer = this.items.slice(0, this.bufferSize);
+    if (changes.items.currentValue && changes.items.currentValue.length > 0)
+      this.itemsBuffer = this.items.slice(0, this.bufferSize);
   }
 
   public onScroll(event: any) {
+    if (!this.items) return;
     if (this.loading || this.items.length <= this.itemsBuffer.length) return;
     if (event.end + this.fetchMoreAfter >= this.itemsBuffer.length)
       this.fetchMore();

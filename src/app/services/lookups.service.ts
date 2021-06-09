@@ -34,7 +34,6 @@ export class LookupsService {
     );
   }
    
-
   public getMember(cardNumber: number) {
     return this.httpRepo.Get('api/lookups/getmember?cardnumber=' + cardNumber);
   }

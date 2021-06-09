@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { Approval } from 'src/app/models/approval.model';
 
 import { ApprovalItem } from './../../../models/approval-item.model';
@@ -31,7 +32,7 @@ export class CreateApprovalComponent implements OnInit {
     },
     approvalItems: [],
   };
-  public providers: KeyValue[] = [];
+  public providers = new Observable<object>();
   private queryObj: any = {};
 
   constructor(
@@ -41,15 +42,13 @@ export class CreateApprovalComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  public loadNgSelectItems(searchTerm: string) {    
+  public loadNgSelectItems(searchTerm: string) {
     this.queryObj.searchTerm = searchTerm;
-    this.lookupService.getProviders(this.queryObj).subscribe((res) => {
-      this.providers = res as KeyValue[];      
-    });
+    this.providers = this.lookupService.getProviders(this.queryObj);
   }
 
   public getSelectedItem(item: KeyValue) {
-    this.approval.serviceProviderId = item.id;
+    if (item) this.approval.serviceProviderId = item.id;
   }
 
   public getItems(items: ApprovalItem[]) {
@@ -57,27 +56,25 @@ export class CreateApprovalComponent implements OnInit {
   }
 
   public getMemberInfo() {
-    if (
-      this.approval.member.cardNumber > 0 &&
-      this.approval.member.cardNumber != null
-    ) {
+    if (this.approval.member.cardNumber) {
       this.lookupService
         .getMember(this.approval.member.cardNumber)
         .subscribe((res) => {
-          this.approval.member = res as Member;
+          if (res) this.approval.member = res as Member;
           this.setStatusName();
         });
     }
   }
 
   public getClaimProvider() {
-    if (this.approval.claimNumber > 0 && this.approval.claimNumber != null) {
+    if (this.approval.claimNumber) {
       this.lookupService
         .getProviderByClaimNum(this.approval.claimNumber)
         .subscribe((res: any) => {
-          console.log(res);
-          this.approval.claimProviderId = res.id;
-          this.approval.claimProviderName = res.name;
+          if (res) {
+            this.approval.claimProviderId = res.id;
+            this.approval.claimProviderName = res.name;
+          }
         });
     }
   }
