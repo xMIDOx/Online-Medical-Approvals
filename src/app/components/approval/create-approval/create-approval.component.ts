@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { Approval } from 'src/app/models/approval.model';
 
 import { ApprovalItem } from './../../../models/approval-item.model';
@@ -23,6 +23,7 @@ export class CreateApprovalComponent implements OnInit {
     serviceProviderId: 0,
     claimProviderName: '',
     serviceProviderName: '',
+    icdCodeId: 0,
     member: {
       id: 0,
       memberName: '',
@@ -33,6 +34,7 @@ export class CreateApprovalComponent implements OnInit {
     approvalItems: [],
   };
   public providers = new Observable<object>();
+  public diagnosis = new Observable<object>();
   private queryObj: any = {};
 
   constructor(
@@ -42,13 +44,22 @@ export class CreateApprovalComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  public loadNgSelectItems(searchTerm: string) {
+  public getProviders(searchTerm: string) {
     this.queryObj.searchTerm = searchTerm;
     this.providers = this.lookupService.getProviders(this.queryObj);
   }
 
-  public getSelectedItem(item: KeyValue) {
+  public getDiagnosis(searchTerm: string) {
+    this.queryObj.searchTerm = searchTerm;
+    this.diagnosis = this.lookupService.getDiagnosis(this.queryObj);
+  }
+
+  public getSelectedProvider(item: KeyValue) {
     if (item) this.approval.serviceProviderId = item.id;
+  }
+
+  public getSelectedDiagnosis(item: KeyValue) {
+    if (item) this.approval.icdCodeId = item.id;
   }
 
   public getItems(items: ApprovalItem[]) {
@@ -91,6 +102,8 @@ export class CreateApprovalComponent implements OnInit {
   }
 
   public onSubmit(form: NgForm) {
+    console.log(form.value);
+    if (!form.value) return;
     var approval: any = {};
     approval.ProviderId = this.approval.serviceProviderId;
     approval.PlanMemberId = this.approval.member.id;
@@ -98,7 +111,8 @@ export class CreateApprovalComponent implements OnInit {
     approval.ApprovalDate = this.approval.approvalDate;
     approval.ClaimNumber = this.approval.claimNumber;
     approval.ApprovalItems = this.approval.approvalItems;
-
-    this.approvalService.CreateApproval(approval).subscribe();
+    console.log(approval);
+    if (!approval) return;
+    // this.approvalService.CreateApproval(approval).subscribe();
   }
 }

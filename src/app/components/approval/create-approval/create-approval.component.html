@@ -2,8 +2,8 @@
   <div class="row mb-3">
     <div class="col-md-3">
       <label for="ngSelect" class="form-label">Service Providers</label>
-      <app-ng-select [items]="providers | async" (searching)="loadNgSelectItems($event)"
-        (selectedItem)="getSelectedItem($event)"></app-ng-select>
+      <app-ng-select [items]="providers | async" (searching)="getProviders($event)"
+        (selectedItem)="getSelectedProvider($event)"></app-ng-select>
     </div>
     <div class="col-md-3">
       <label for="cardNum" class="form-label">Card Number</label>
@@ -41,8 +41,21 @@
     </div>
   </div>
   <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="diagnosis" class="form-label">Diagnosis</label>
+      <app-ng-select [items]="diagnosis | async" (searching)="getDiagnosis($event)"
+        (selectedItem)="getSelectedDiagnosis($event)"></app-ng-select>
+    </div>
+    <div class="col-md-6">
+      <label for="notes" class="form-label">Notes</label>
+      <textarea class="form-control" name="notes" id="notes"></textarea>
+    </div>
+  </div>
+  <div class="row mb-3">
     <app-create-approval-items [serviceProviderId]="approval.serviceProviderId" (getApprovalItems)="getItems($event)">
     </app-create-approval-items>
   </div>
-  <button type="submit" class="btn btn-primary">Create Approval</button>
+  <div class="row  justify-content-center">
+    <button type="submit" class="col-md-2 btn btn-primary">Create Approval</button>
+  </div>
 </form>

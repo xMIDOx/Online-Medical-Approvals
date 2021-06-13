@@ -28,7 +28,7 @@ export class CreateApprovalItemsComponent implements OnInit, OnChanges {
   public priceList = new Observable<object>();
   public approvalItems: ApprovalItem[] = [];
   public approvalItem = <ApprovalItem>{};
-  private providerCatId = 0;
+  public providerCatId = 0;
   private index = -1;
   private queryObj: any = {};
 

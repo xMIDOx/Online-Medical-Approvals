@@ -9,6 +9,7 @@ export interface Approval {
   serviceProviderName: string;
   claimProviderId: number;
   claimProviderName: string;
+  icdCodeId: number;
   member: Member;
   approvalItems: ApprovalItem[];
 }

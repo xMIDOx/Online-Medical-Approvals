@@ -16,6 +16,12 @@ export class LookupsService {
     );
   }
 
+  public getDiagnosis(queryObject: any) {
+    return this.httpRepo.Get(
+      this.lookupsEndpoint + 'getdiagnosis?' + this.toQueryString(queryObject)
+    );
+  }
+
   public getProviderByClaimNum(claimNum: number) {
     return this.httpRepo.Get(
       this.lookupsEndpoint + 'getproviderbyclaimNum?claimFromNum=' + claimNum
@@ -33,7 +39,7 @@ export class LookupsService {
       this.lookupsEndpoint + 'GetMedicines?' + this.toQueryString(querObject)
     );
   }
-   
+
   public getMember(cardNumber: number) {
     return this.httpRepo.Get('api/lookups/getmember?cardnumber=' + cardNumber);
   }
