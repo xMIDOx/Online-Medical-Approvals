@@ -1,5 +1,9 @@
-import { Injectable, ɵangular_packages_core_core_bj } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
+import { ICDCodeDiagnosis } from './../models/ICDCode-Diagnosis.model';
+import { Member } from './../models/member.model';
 import { QueryObject } from './../models/query-object';
 import { GenericCRUDService } from './generic-crud.service';
 
@@ -28,10 +32,16 @@ export class LookupsService {
     );
   }
 
-  public getProviderById(providerId: number){
+  public getProviderById(providerId: number) {
     return this.httpRepo.Get(
       this.lookupsEndpoint + 'getProviderById?providerId=' + providerId
     );
+  }
+
+  public getICDCodeById(ICDCodeId: number): Observable<ICDCodeDiagnosis> {
+    return this.httpRepo.Get(
+      this.lookupsEndpoint + 'getICDCodeById?id=' + ICDCodeId
+    ).pipe(map(res => res as ICDCodeDiagnosis));
   }
 
   public getMedicinesData(querObject: QueryObject) {
@@ -40,13 +50,19 @@ export class LookupsService {
     );
   }
 
-  public getMember(cardNumber: number) {
-    return this.httpRepo.Get('api/lookups/getmember?cardnumber=' + cardNumber);
+  public getMember(cardNumber: number): Observable<Member> {
+    return this.httpRepo
+      .Get('api/lookups/getmember?cardnumber=' + cardNumber)
+      .pipe(map((res) => res as Member));
   }
 
   public getMedicalServices(providerId: number, queryObject: any) {
     return this.httpRepo.Get(
-      this.lookupsEndpoint + 'getservices?providerId=' + providerId + '&' + this.toQueryString(queryObject)
+      this.lookupsEndpoint +
+        'getservices?providerId=' +
+        providerId +
+        '&' +
+        this.toQueryString(queryObject)
     );
   }
 

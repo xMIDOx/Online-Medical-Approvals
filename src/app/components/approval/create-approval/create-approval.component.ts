@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { from, Observable } from 'rxjs';
-import { Approval } from 'src/app/models/approval.model';
+import { Observable } from 'rxjs';
+import { ApprovalDisplay } from 'src/app/models/approval-display.model';
 
 import { ApprovalItem } from './../../../models/approval-item.model';
+import { ICDCodeDiagnosis } from './../../../models/ICDCode-Diagnosis.model';
 import { KeyValue } from './../../../models/key-value.model';
 import { Member } from './../../../models/member.model';
 import { ApprovalService } from './../../../services/approval.service';
@@ -15,26 +16,21 @@ import { LookupsService } from './../../../services/lookups.service';
   styleUrls: ['./create-approval.component.css'],
 })
 export class CreateApprovalComponent implements OnInit {
-  public approval: Approval = {
-    id: 0,
+  public approval: ApprovalDisplay = {
     approvalDate: new Date(),
+    cardNumber: 0,
+    customerId: 0,
+    planMemberId: 0,
     claimNumber: 0,
     claimProviderId: 0,
     serviceProviderId: 0,
-    claimProviderName: '',
-    serviceProviderName: '',
-    icdCodeId: 0,
-    member: {
-      id: 0,
-      memberName: '',
-      customerName: '',
-      cardNumber: 0,
-      isActive: false,
-    },
+    ICDCode: '',
     approvalItems: [],
   };
+  public member = <Member>{};
   public providers = new Observable<object>();
   public diagnosis = new Observable<object>();
+  public claimProviderName = '';
   private queryObj: any = {};
 
   constructor(
@@ -44,75 +40,75 @@ export class CreateApprovalComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  public getProviders(searchTerm: string) {
+  public getProviders(searchTerm: string): void {
     this.queryObj.searchTerm = searchTerm;
     this.providers = this.lookupService.getProviders(this.queryObj);
   }
 
-  public getDiagnosis(searchTerm: string) {
+  public getDiagnosis(searchTerm: string): void {
     this.queryObj.searchTerm = searchTerm;
     this.diagnosis = this.lookupService.getDiagnosis(this.queryObj);
   }
 
-  public getSelectedProvider(item: KeyValue) {
+  public getSelectedProvider(item: KeyValue): void {
     if (item) this.approval.serviceProviderId = item.id;
   }
 
-  public getSelectedDiagnosis(item: KeyValue) {
-    if (item) this.approval.icdCodeId = item.id;
+  public getSelectedDiagnosis(item: KeyValue): void {
+    if (item) {
+      this.lookupService
+        .getICDCodeById(item.id)
+        .subscribe((res: ICDCodeDiagnosis) => {
+          console.log(res);
+          this.approval.ICDCode = res.icdCode;
+        });
+    }
   }
 
-  public getItems(items: ApprovalItem[]) {
+  public getItems(items: ApprovalItem[]): void {
     this.approval.approvalItems = items;
   }
 
-  public getMemberInfo() {
-    if (this.approval.member.cardNumber) {
+  public getMemberInfo(): void {
+    if (this.approval.cardNumber) {
       this.lookupService
-        .getMember(this.approval.member.cardNumber)
-        .subscribe((res) => {
-          if (res) this.approval.member = res as Member;
+        .getMember(this.approval.cardNumber)
+        .subscribe((res: Member) => {
+          if (res) {
+            this.member = res;
+            this.approval.planMemberId = res.id;
+            this.approval.customerId = res.customerId;
+          }
           this.setStatusName();
         });
     }
   }
 
-  public getClaimProvider() {
+  public getClaimProvider(): void {
     if (this.approval.claimNumber) {
       this.lookupService
         .getProviderByClaimNum(this.approval.claimNumber)
         .subscribe((res: any) => {
           if (res) {
             this.approval.claimProviderId = res.id;
-            this.approval.claimProviderName = res.name;
+            this.claimProviderName = res.name;
           }
         });
     }
   }
 
-  private setStatusName() {
-    if (this.approval.member.isActive)
-      this.approval.member.statusName = 'Active';
-    else this.approval.member.statusName = 'Stopped';
+  private setStatusName(): void {
+    if (this.member.isActive) this.member.statusName = 'Active';
+    else this.member.statusName = 'Stopped';
   }
 
-  public setDate(date: any) {
+  public setDate(date: any): void {
     this.approval.approvalDate = date;
     console.log(typeof date, this.approval.approvalDate);
   }
 
-  public onSubmit(form: NgForm) {
-    console.log(form.value);
-    if (!form.value) return;
-    var approval: any = {};
-    approval.ProviderId = this.approval.serviceProviderId;
-    approval.PlanMemberId = this.approval.member.id;
-    approval.CardNumber = this.approval.member.cardNumber;
-    approval.ApprovalDate = this.approval.approvalDate;
-    approval.ClaimNumber = this.approval.claimNumber;
-    approval.ApprovalItems = this.approval.approvalItems;
-    console.log(approval);
-    if (!approval) return;
-    // this.approvalService.CreateApproval(approval).subscribe();
+  public onSubmit(form: NgForm): void {
+    console.log(this.approval);
+    // if (form.valid) this.approvalService.CreateApproval(this.approval);
   }
 }

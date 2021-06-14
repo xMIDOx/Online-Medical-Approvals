@@ -8,7 +8,7 @@
     <div class="col-md-3">
       <label for="cardNum" class="form-label">Card Number</label>
       <input id="cardNum" name="cardNum" type="text" class="form-control col-md-3"
-        [(ngModel)]="approval.member.cardNumber" (focusout)="getMemberInfo()">
+        [(ngModel)]="approval.cardNumber" (focusout)="getMemberInfo()">
     </div>
     <div class="col-md-3">
       <label for="claimFormNum" class="form-label">Claim Form Number</label>
@@ -24,20 +24,20 @@
   <div class="row mb-3">
     <div class="col-md-3">
       <label for="member" class="form-label">Member</label>
-      <input id="member" value={{approval.member.memberName}} type="text" class="form-control" readonly>
+      <input id="member" value={{member.memberName}} type="text" class="form-control" readonly>
     </div>
     <div class="col-md-3">
       <label for="customer" class="form-label">Customer</label>
-      <input id="customer" value={{approval.member.customerName}} type="text" class="form-control" readonly>
+      <input id="customer" value={{member.customerName}} type="text" class="form-control" readonly>
     </div>
     <div class="col-md-3">
       <label for="status" class="form-label">Status</label>
-      <input id="status" [class.text-danger]="!approval.member.isActive" value={{approval.member.statusName}}
+      <input id="status" [class.text-danger]="!member.isActive" value={{member.statusName}}
         type="text" class="form-control fw-bold text-info" readonly>
     </div>
     <div class="col-md-3">
       <label for="claimProvider" class="form-label">Claim Provider</label>
-      <input id="claimProvider" type="text" class="form-control" value="{{approval.claimProviderName}}" readonly>
+      <input id="claimProvider" type="text" class="form-control" value="{{claimProviderName}}" readonly>
     </div>
   </div>
   <div class="row mb-3">

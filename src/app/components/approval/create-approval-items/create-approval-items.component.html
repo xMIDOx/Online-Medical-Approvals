@@ -3,7 +3,7 @@
     <tr>
       <th>Service</th>
       <th>Quantity</th>
-      <ng-container *ngIf="providerCatId">
+      <ng-container *ngIf="providerCatId === 2">
         <th>Dosage</th>
         <th>Dosage Days</th>
         <th>Dosage PerDay</th>
@@ -20,7 +20,7 @@
     <tr>
       <td>{{item.serviceId}}</td>
       <td>{{item.quantity}}</td>
-      <ng-container *ngIf="providerCatId">
+      <ng-container *ngIf="providerCatId === 2">
         <td>{{item.dosage}}</td>
         <td>{{item.dosageDays}}</td>
         <td>{{item.dosagePerDay}}</td>
