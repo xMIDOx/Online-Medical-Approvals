@@ -1,4 +1,5 @@
-import { ApprovalItem } from './approval-item.model';
+import { ApprovalItemCreate } from './approval-item-create.model';
+import { ApprovalItemDisplay } from './approval-item-display.model';
 
 export interface ApprovalCreate {
   providerId: number;
@@ -14,8 +15,8 @@ export interface ApprovalCreate {
   approvalType: number;
   masterBenefitId: number;
   benefitId: number;
-  ICDCode: string;
+  ICDCodeId: number;
   issuedBy: number;
   internalNotes: string;
-  approvalItems: ApprovalItem[];
+  approvalItems: ApprovalItemCreate[];
 }

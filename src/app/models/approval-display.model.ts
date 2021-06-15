@@ -1,4 +1,4 @@
-import { ApprovalItem } from './approval-item.model';
+import { ApprovalItemDisplay } from './approval-item-display.model';
 import { Member } from './member.model';
 
 export interface ApprovalDisplay {
@@ -8,7 +8,7 @@ export interface ApprovalDisplay {
   claimNumber: number;
   customerId: number;
   cardNumber: number;
-  ICDCode: string;
+  ICDCodeId: number;
   approvalDate: Date;
-  approvalItems: ApprovalItem[];
+  approvalItems: ApprovalItemDisplay[];
 }

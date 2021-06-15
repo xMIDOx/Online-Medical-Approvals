@@ -1,7 +1,7 @@
-export interface ApprovalItem {
-  id: number;
+export interface ApprovalItemDisplay {
   serviceId: number;
   serviceName: string;
+  servicePrice: number;
   quantity: number;
   dosage: number;
   dosageDays: number;

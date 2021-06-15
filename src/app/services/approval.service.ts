@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { ApprovalDisplay } from '../models/approval-display.model';
 import { ApprovalCreate } from './../models/approval-create.model';
+import { ApprovalItemCreate } from './../models/approval-item-create.model';
+import { ApprovalItemDisplay } from './../models/approval-item-display.model';
 import { GenericCRUDService } from './generic-crud.service';
 
 @Injectable({
@@ -13,32 +15,57 @@ export class ApprovalService {
   constructor(private http: GenericCRUDService) {}
 
   public CreateApproval(approval: ApprovalDisplay) {
-    this.getApprovalObject(approval);
-    console.log(this.approvalCreate);
-    // return this.http.Create(
-    //   this.approvalEndPoint + 'create',
-    //   this.approvalCreate
-    // );
+    this.fetchApprovalCreateObject(approval);
+    return this.http.Create(
+      this.approvalEndPoint + 'create',
+      this.approvalCreate
+    );
   }
 
-  private getApprovalObject(approvalDisplay: ApprovalDisplay) {
+  private fetchApprovalCreateObject(approvalDisplay: ApprovalDisplay) {
     this.approvalCreate.providerId = approvalDisplay.serviceProviderId;
     this.approvalCreate.planMemberId = approvalDisplay.planMemberId;
     this.approvalCreate.customerId = approvalDisplay.customerId;
     this.approvalCreate.cardNumber = approvalDisplay.cardNumber;
     this.approvalCreate.approvalDate = approvalDisplay.approvalDate;
     this.approvalCreate.claimNumber = approvalDisplay.claimNumber;
-    this.approvalCreate.ICDCode = approvalDisplay.ICDCode;
+    this.approvalCreate.ICDCodeId = approvalDisplay.ICDCodeId;
     this.approvalCreate.approvalNumber = this.getApprovalNumber();
-    this.approvalCreate.approvalAmt = 0;
-    this.approvalCreate.approvalCopaymentPer = 0;
-    this.approvalCreate.approvalCopaymentAmt = 0;
     this.approvalCreate.approvalType = 3;
-    this.approvalCreate.masterBenefitId = 0;
-    this.approvalCreate.benefitId = 0;
-    this.approvalCreate.issuedBy = 0;
-    this.approvalCreate.internalNotes = '';
-    this.approvalCreate.approvalItems = approvalDisplay.approvalItems;
+
+    this.fetchItemsCreateObject(approvalDisplay.approvalItems);
+    this.calculateApprovalPrices(this.approvalCreate);
+
+    console.log('Final Approval: ', this.approvalCreate);
+  }
+
+  private fetchItemsCreateObject(itemsDisplay: ApprovalItemDisplay[]) {
+    this.approvalCreate.approvalItems = [];
+
+    itemsDisplay.forEach((item) => {
+      let itemCreate = <ApprovalItemCreate>{};
+
+      itemCreate.serviceId = item.serviceId;
+      itemCreate.serviceName = item.serviceName;
+      itemCreate.serviceQnt = item.quantity;
+      itemCreate.serviceUnitAmt = item.servicePrice;
+      itemCreate.dosage = item.dosage;
+      itemCreate.dosageDays = item.dosageDays;
+      itemCreate.dosagePerDay = item.dosagePerDay;
+      itemCreate.dosageTime = item.dosageTime;
+
+      this.approvalCreate.approvalItems.push(itemCreate);
+    });
+    console.log('Approval Items Create: ', this.approvalCreate.approvalItems);
+  }
+
+  private calculateApprovalPrices(approvalCreate: ApprovalCreate) {
+    let approvalAmt = 0;
+    approvalCreate.approvalItems.forEach((item) => {
+      item.serviceTotalAmt = item.serviceQnt * item.serviceUnitAmt;
+      approvalAmt += item.serviceTotalAmt;
+    });
+    approvalCreate.approvalAmt = approvalAmt;
   }
 
   private getApprovalNumber(): number {

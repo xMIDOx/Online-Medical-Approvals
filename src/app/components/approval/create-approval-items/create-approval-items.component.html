@@ -18,7 +18,7 @@
   </thead>
   <tbody class="text-center" *ngFor="let item of approvalItems; index as i; trackBy: trackItems;  ">
     <tr>
-      <td>{{item.serviceId}}</td>
+      <td>{{item.serviceName}}</td>
       <td>{{item.quantity}}</td>
       <ng-container *ngIf="providerCatId === 2">
         <td>{{item.dosage}}</td>

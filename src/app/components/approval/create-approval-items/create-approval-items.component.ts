@@ -11,9 +11,9 @@ import {
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { KeyValue } from 'src/app/models/key-value.model';
 
-import { ApprovalItem } from './../../../models/approval-item.model';
+import { ApprovalItemDisplay } from '../../../models/approval-item-display.model';
+import { ServicePrice } from './../../../models/service-price.model';
 import { LookupsService } from './../../../services/lookups.service';
 
 @Component({
@@ -23,11 +23,11 @@ import { LookupsService } from './../../../services/lookups.service';
 })
 export class CreateApprovalItemsComponent implements OnInit, OnChanges {
   @Input() serviceProviderId = 0;
-  @Output() getApprovalItems = new EventEmitter<ApprovalItem[]>();
+  @Output() getApprovalItems = new EventEmitter<ApprovalItemDisplay[]>();
   @ViewChild('closeBtn') closeBtn!: ElementRef;
   public priceList = new Observable<object>();
-  public approvalItems: ApprovalItem[] = [];
-  public approvalItem = <ApprovalItem>{};
+  public approvalItems: ApprovalItemDisplay[] = [];
+  public approvalItem = <ApprovalItemDisplay>{};
   public providerCatId = 0;
   private index = -1;
   private queryObj: any = {};
@@ -46,22 +46,27 @@ export class CreateApprovalItemsComponent implements OnInit, OnChanges {
     else this.getMedicalServices();
   }
 
-  public getSelectedService(service: KeyValue) {
-    if (service) this.approvalItem.serviceId = service.id;
+  public getSelectedService(service: ServicePrice) {
+    console.log(service);
+    if (service) {
+      this.approvalItem.serviceId =
+        this.providerCatId === 2 ? service.id : service.serviceId;
+      this.approvalItem.servicePrice = service.servicePrice;
+      this.approvalItem.serviceName = service.name;
+    }
   }
 
-  public Edit(item: ApprovalItem, i: number) {
+  public Edit(item: ApprovalItemDisplay, i: number) {
     this.approvalItem = item;
     this.index = i;
   }
 
-  public remove(item: ApprovalItem) {
+  public remove(item: ApprovalItemDisplay) {
     const index = this.approvalItems.indexOf(item);
     this.approvalItems.splice(index, 1);
   }
 
   public onSubmit(form: NgForm) {
-    this.approvalItem.serviceId = form.value.ngSelect.id;
     const item = Object.assign({}, this.approvalItem);
     if (this.index === -1) this.approvalItems.push(item);
     else this.approvalItems[this.index] = item;

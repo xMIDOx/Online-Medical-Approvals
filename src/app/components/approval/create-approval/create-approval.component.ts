@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { ApprovalDisplay } from 'src/app/models/approval-display.model';
 
-import { ApprovalItem } from './../../../models/approval-item.model';
+import { ApprovalItemDisplay } from '../../../models/approval-item-display.model';
 import { ICDCodeDiagnosis } from './../../../models/ICDCode-Diagnosis.model';
 import { KeyValue } from './../../../models/key-value.model';
 import { Member } from './../../../models/member.model';
@@ -24,7 +24,7 @@ export class CreateApprovalComponent implements OnInit {
     claimNumber: 0,
     claimProviderId: 0,
     serviceProviderId: 0,
-    ICDCode: '',
+    ICDCodeId: 0,
     approvalItems: [],
   };
   public member = <Member>{};
@@ -55,17 +55,10 @@ export class CreateApprovalComponent implements OnInit {
   }
 
   public getSelectedDiagnosis(item: KeyValue): void {
-    if (item) {
-      this.lookupService
-        .getICDCodeById(item.id)
-        .subscribe((res: ICDCodeDiagnosis) => {
-          console.log(res);
-          this.approval.ICDCode = res.icdCode;
-        });
-    }
+    if (item) this.approval.ICDCodeId = item.id;
   }
 
-  public getItems(items: ApprovalItem[]): void {
+  public getItems(items: ApprovalItemDisplay[]): void {
     this.approval.approvalItems = items;
   }
 
@@ -108,7 +101,9 @@ export class CreateApprovalComponent implements OnInit {
   }
 
   public onSubmit(form: NgForm): void {
-    console.log(this.approval);
-    // if (form.valid) this.approvalService.CreateApproval(this.approval);
+    if (form.valid)
+      this.approvalService
+        .CreateApproval(this.approval)
+        .subscribe((res) => console.log(res));
   }
 }

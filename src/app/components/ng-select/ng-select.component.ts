@@ -11,7 +11,7 @@ import { KeyValue } from 'src/app/models/key-value.model';
 export class NgSelectComponent implements OnInit, OnChanges {
   @Input() items: any;
   @Output() searching = new EventEmitter<string>();
-  @Output() selectedItem = new EventEmitter<KeyValue>();
+  @Output() selectedItem = new EventEmitter<any>();
   public itemsBuffer: KeyValue[] = [];
   public loading = false;
   private bufferSize = 50;
@@ -42,7 +42,7 @@ export class NgSelectComponent implements OnInit, OnChanges {
     if (event.term.length > 3) this.fetchMore();
   }
 
-  public onChange(item: KeyValue) {
+  public onChange(item: any) {
     this.selectedItem.emit(item);
   }
 
