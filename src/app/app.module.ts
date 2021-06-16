@@ -14,6 +14,8 @@ import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { NgSelectComponent } from './components/ng-select/ng-select.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { PendingApprovalsListComponent } from './components/cmc/pending-approvals-list/pending-approvals-list.component';
+import { PendingApprovalDetailsComponent } from './components/cmc/pending-approval-details/pending-approval-details.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,8 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
     CreateApprovalComponent,
     CreateApprovalItemsComponent,
     NgSelectComponent,
+    PendingApprovalsListComponent,
+    PendingApprovalDetailsComponent,
   ],
   imports: [
     BrowserModule,

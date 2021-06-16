@@ -9,6 +9,7 @@ export interface ApprovalDisplay {
   customerId: number;
   cardNumber: number;
   ICDCodeId: number;
+  onlineStatusId: number;
   approvalDate: Date;
   approvalItems: ApprovalItemDisplay[];
 }

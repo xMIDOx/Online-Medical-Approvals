@@ -6,17 +6,18 @@ export interface ApprovalCreate {
   planMemberId: number;
   customerId: number;
   cardNumber: number;
-  approvalDate: Date;
   approvalNumber: number;
   claimNumber: number;
   approvalAmt: number;
   approvalCopaymentPer: number;
   approvalCopaymentAmt: number;
   approvalType: number;
+  onlineStatusId: number;
   masterBenefitId: number;
   benefitId: number;
   ICDCodeId: number;
   issuedBy: number;
+  approvalDate: Date;
   internalNotes: string;
   approvalItems: ApprovalItemCreate[];
 }

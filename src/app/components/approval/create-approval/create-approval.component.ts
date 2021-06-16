@@ -25,6 +25,7 @@ export class CreateApprovalComponent implements OnInit {
     claimProviderId: 0,
     serviceProviderId: 0,
     ICDCodeId: 0,
+    onlineStatusId: 0,
     approvalItems: [],
   };
   public member = <Member>{};
@@ -103,7 +104,7 @@ export class CreateApprovalComponent implements OnInit {
   public onSubmit(form: NgForm): void {
     if (form.valid)
       this.approvalService
-        .CreateApproval(this.approval)
+        .createApproval(this.approval)
         .subscribe((res) => console.log(res));
   }
 }

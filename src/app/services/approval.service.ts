@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { ApprovalDisplay } from '../models/approval-display.model';
 import { ApprovalCreate } from './../models/approval-create.model';
 import { ApprovalItemCreate } from './../models/approval-item-create.model';
 import { ApprovalItemDisplay } from './../models/approval-item-display.model';
+import { PendingApproval } from './../models/pending-approval.model';
 import { GenericCRUDService } from './generic-crud.service';
 
 @Injectable({
@@ -14,12 +17,18 @@ export class ApprovalService {
   private approvalCreate = <ApprovalCreate>{};
   constructor(private http: GenericCRUDService) {}
 
-  public CreateApproval(approval: ApprovalDisplay) {
+  public createApproval(approval: ApprovalDisplay) {
     this.fetchApprovalCreateObject(approval);
     return this.http.Create(
       this.approvalEndPoint + 'create',
       this.approvalCreate
     );
+  }
+
+  public getApprovals(statusId: number): Observable<PendingApproval[]> {
+    return this.http
+      .Get(this.approvalEndPoint + 'getapprovals?statusId=' + statusId)
+      .pipe(map((res) => res as PendingApproval[]));
   }
 
   private fetchApprovalCreateObject(approvalDisplay: ApprovalDisplay) {
@@ -32,6 +41,7 @@ export class ApprovalService {
     this.approvalCreate.ICDCodeId = approvalDisplay.ICDCodeId;
     this.approvalCreate.approvalNumber = this.getApprovalNumber();
     this.approvalCreate.approvalType = 3;
+    this.approvalCreate.onlineStatusId = 1;
 
     this.fetchItemsCreateObject(approvalDisplay.approvalItems);
     this.calculateApprovalPrices(this.approvalCreate);
