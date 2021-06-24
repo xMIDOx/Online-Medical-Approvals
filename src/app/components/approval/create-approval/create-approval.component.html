@@ -1,14 +1,16 @@
 <form #approvalForm="ngForm" (ngSubmit)="onSubmit(approvalForm)">
-  <div class="row mb-3">
-    <div class="col-md-3">
+  <div class="row mb-1">
+    <div class="col-md-6">
       <label for="ngSelect" class="form-label">Service Providers</label>
       <app-ng-select [items]="providers | async" (searching)="getProviders($event)"
         (selectedItem)="getSelectedProvider($event)"></app-ng-select>
     </div>
+  </div>
+  <div class="row mb-1">
     <div class="col-md-3">
       <label for="cardNum" class="form-label">Card Number</label>
-      <input id="cardNum" name="cardNum" type="text" class="form-control col-md-3"
-        [(ngModel)]="approval.cardNumber" (focusout)="getMemberInfo()">
+      <input id="cardNum" name="cardNum" type="text" class="form-control col-md-3" [(ngModel)]="approval.cardNumber"
+        (focusout)="getMemberInfo()">
     </div>
     <div class="col-md-3">
       <label for="claimFormNum" class="form-label">Claim Form Number</label>
@@ -20,8 +22,13 @@
       <input id="date" name="date" type="date" class="form-control"
         [ngModel]="approval.approvalDate | date:'yyyy-MM-dd'" (ngModelChange)="setDate($event)">
     </div>
+    <div class="col-md-3">
+      <label for="diagnosis" class="form-label">Diagnosis</label>
+      <app-ng-select [items]="diagnosis | async" (searching)="getDiagnosis($event)"
+        (selectedItem)="getSelectedDiagnosis($event)"></app-ng-select>
+    </div>
   </div>
-  <div class="row mb-3">
+  <div class="row mb-1">
     <div class="col-md-3">
       <label for="member" class="form-label">Member</label>
       <input id="member" value={{member.memberName}} type="text" class="form-control" readonly>
@@ -32,26 +39,21 @@
     </div>
     <div class="col-md-3">
       <label for="status" class="form-label">Status</label>
-      <input id="status" [class.text-danger]="!member.isActive" value={{member.statusName}}
-        type="text" class="form-control fw-bold text-info" readonly>
+      <input id="status" [class.text-danger]="!member.isActive" value={{member.statusName}} type="text"
+        class="form-control fw-bold text-info " readonly>
     </div>
     <div class="col-md-3">
       <label for="claimProvider" class="form-label">Claim Provider</label>
       <input id="claimProvider" type="text" class="form-control" value="{{claimProviderName}}" readonly>
     </div>
   </div>
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <label for="diagnosis" class="form-label">Diagnosis</label>
-      <app-ng-select [items]="diagnosis | async" (searching)="getDiagnosis($event)"
-        (selectedItem)="getSelectedDiagnosis($event)"></app-ng-select>
-    </div>
-    <div class="col-md-6">
+  <div class="row mb-1">
+    <div class="col-md-9">
       <label for="notes" class="form-label">Notes</label>
       <textarea class="form-control" name="notes" id="notes"></textarea>
     </div>
   </div>
-  <div class="row mb-3">
+  <div class="row mb-1">
     <app-create-approval-items [serviceProviderId]="approval.serviceProviderId" (getApprovalItems)="getItems($event)">
     </app-create-approval-items>
   </div>

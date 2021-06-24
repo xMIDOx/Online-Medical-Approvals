@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 
 import { ICDCodeDiagnosis } from './../models/ICDCode-Diagnosis.model';
 import { Member } from './../models/member.model';
+import { PlanMasterBenefits } from './../models/plan-master-benefits.model';
 import { QueryObject } from './../models/query-object';
 import { GenericCRUDService } from './generic-crud.service';
 
@@ -39,9 +40,9 @@ export class LookupsService {
   }
 
   public getICDCodeById(ICDCodeId: number): Observable<ICDCodeDiagnosis> {
-    return this.httpRepo.Get(
-      this.lookupsEndpoint + 'getICDCodeById?id=' + ICDCodeId
-    ).pipe(map(res => res as ICDCodeDiagnosis));
+    return this.httpRepo
+      .Get(this.lookupsEndpoint + 'getICDCodeById?id=' + ICDCodeId)
+      .pipe(map((res) => res as ICDCodeDiagnosis));
   }
 
   public getMedicinesData(querObject: QueryObject) {
@@ -64,6 +65,12 @@ export class LookupsService {
         '&' +
         this.toQueryString(queryObject)
     );
+  }
+
+  public getPlanMasterBenefits(planId: number): Observable<PlanMasterBenefits[]> {
+    return this.httpRepo
+      .Get(this.lookupsEndpoint + 'getplanmasters?planId=' + planId)
+      .pipe(map((res) => res as PlanMasterBenefits[]));
   }
 
   private toQueryString(obj: QueryObject) {

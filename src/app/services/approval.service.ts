@@ -6,6 +6,7 @@ import { ApprovalDisplay } from '../models/approval-display.model';
 import { ApprovalCreate } from './../models/approval-create.model';
 import { ApprovalItemCreate } from './../models/approval-item-create.model';
 import { ApprovalItemDisplay } from './../models/approval-item-display.model';
+import { PendingApprovalDetails } from './../models/pending-approval-details.model';
 import { PendingApproval } from './../models/pending-approval.model';
 import { GenericCRUDService } from './generic-crud.service';
 
@@ -29,6 +30,12 @@ export class ApprovalService {
     return this.http
       .Get(this.approvalEndPoint + 'getapprovals?statusId=' + statusId)
       .pipe(map((res) => res as PendingApproval[]));
+  }
+
+  public getApprovalById(id: number): Observable<PendingApprovalDetails> {
+    return this.http
+      .Get(this.approvalEndPoint + 'getapprovalbyid?id=' + id)
+      .pipe(map((res) => res as PendingApprovalDetails));
   }
 
   private fetchApprovalCreateObject(approvalDisplay: ApprovalDisplay) {

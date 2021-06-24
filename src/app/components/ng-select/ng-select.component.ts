@@ -6,7 +6,7 @@ import { KeyValue } from 'src/app/models/key-value.model';
   selector: 'app-ng-select',
   templateUrl: './ng-select.component.html',
   styleUrls: ['./ng-select.component.css'],
-  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
+  viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
 })
 export class NgSelectComponent implements OnInit, OnChanges {
   @Input() items: any;
@@ -22,8 +22,9 @@ export class NgSelectComponent implements OnInit, OnChanges {
   ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.items.currentValue && changes.items.currentValue.length > 0)
+    if (changes.items.currentValue && changes.items.currentValue.length > 0) {
       this.itemsBuffer = this.items.slice(0, this.bufferSize);
+    }
   }
 
   public onScroll(event: any) {
@@ -48,7 +49,7 @@ export class NgSelectComponent implements OnInit, OnChanges {
 
   private fetchMore() {
     const length = this.itemsBuffer.length;
-    const more = this.items.slice(length, this.bufferSize + length);
+    const more = this.items?.slice(length, this.bufferSize + length);
     this.loading = true;
     this.itemsBuffer = this.itemsBuffer.concat(more);
     this.loading = false;

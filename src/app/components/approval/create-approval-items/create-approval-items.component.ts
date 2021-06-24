@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { ObserveOnMessage } from 'rxjs/internal/operators/observeOn';
 
 import { ApprovalItemDisplay } from '../../../models/approval-item-display.model';
 import { ServicePrice } from './../../../models/service-price.model';
@@ -25,7 +26,7 @@ export class CreateApprovalItemsComponent implements OnInit, OnChanges {
   @Input() serviceProviderId = 0;
   @Output() getApprovalItems = new EventEmitter<ApprovalItemDisplay[]>();
   @ViewChild('closeBtn') closeBtn!: ElementRef;
-  public priceList = new Observable<object>();
+  public priceList$ = new Observable<object>();
   public approvalItems: ApprovalItemDisplay[] = [];
   public approvalItem = <ApprovalItemDisplay>{};
   public providerCatId = 0;
@@ -38,6 +39,8 @@ export class CreateApprovalItemsComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.getProviderData();
+    this.approvalItems.length = 0;
+    console.log('provider Id Changed');
   }
 
   public getProviderPriceList(searchTerm: string) {
@@ -47,7 +50,6 @@ export class CreateApprovalItemsComponent implements OnInit, OnChanges {
   }
 
   public getSelectedService(service: ServicePrice) {
-    console.log(service);
     if (service) {
       this.approvalItem.serviceId =
         this.providerCatId === 2 ? service.id : service.serviceId;
@@ -89,14 +91,14 @@ export class CreateApprovalItemsComponent implements OnInit, OnChanges {
   }
 
   private getMedicalServices() {
-    this.priceList = this.lookupService.getMedicalServices(
+    this.priceList$ = this.lookupService.getMedicalServices(
       this.serviceProviderId,
       this.queryObj
     );
   }
 
   private getDrugsData() {
-    this.priceList = this.lookupService.getMedicinesData(this.queryObj);
+    this.priceList$ = this.lookupService.getMedicinesData(this.queryObj);
   }
 
   private closeModal() {

@@ -48,7 +48,7 @@
           <div class="row mb-3">
             <div class="col-md-9">
               <label for="serviceId" class="form-label">Services</label>
-              <app-ng-select [items]="priceList | async" (searching)="getProviderPriceList($event)"
+              <app-ng-select [items]="priceList$ | async" (searching)="getProviderPriceList($event)"
                 (selectedItem)="getSelectedService($event)">
               </app-ng-select>
             </div>

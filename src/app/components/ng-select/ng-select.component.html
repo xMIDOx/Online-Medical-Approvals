@@ -1,7 +1,8 @@
 <div ngModelGroup="ngSelect">
-    <ng-select 
+    <ng-select
         id="ngSelectId"
         name="id"
+        class="custom"
         placeholder="search with 3 letters"
         bindLabel="name"
         bindValue="id"
@@ -14,7 +15,7 @@
         (change)="onChange($event)"
         ngModel>
         <ng-template ng-option-tmp let-item="item" let-index="index">
-            <b>{{index}}</b> {{item.name}}
+            <div title="{{item.name}}">{{item.name}}</div>
         </ng-template>
     </ng-select>
 </div>
