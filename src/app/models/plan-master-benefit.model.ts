@@ -1,4 +1,4 @@
-export interface PlanMasterBenefits {
+export interface PlanMasterBenefit {
   id: number;
   planId: number;
   masterBenefitsId: number;
@@ -7,7 +7,7 @@ export interface PlanMasterBenefits {
   maxMemberPer: number;
   maxMemberNum: number;
   availableAfterDays: number;
-  isPoolMemberCeiling: number;
+  isPoolMemberCeiling: boolean;
   memberPoolCeiling: number;
   poolMonthlyPer: number;
 }

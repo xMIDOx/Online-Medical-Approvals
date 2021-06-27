@@ -47,10 +47,19 @@
     <div class="col-md-6">
       <label for="planMaster" class="form-label">Masters Benefits</label>
       <select class="form-select" id="planMaster" name="planMaster" [(ngModel)]="selectedMaster"
-        (ngModelChange)="getBenefits()">
-        <option [ngValue]="selectedMaster" disabled hidden>Select</option>
+        (ngModelChange)="fetchBenefits()">
+        <option [value]="selectedMaster" disabled hidden>Select</option>
         <option *ngFor="let master of (planMasterBenefits$ | async)" [ngValue]="master">
           {{master.masterBenefitName}}
+        </option>
+      </select>
+    </div>
+    <div class="col-md-6">
+      <label for="planBenefit" class="form-label">Benefits</label>
+      <select class="form-select" id="planBenefit" name="planBenefit" [(ngModel)]="selectedBenefit">
+        <option [value]="selectedBenefit" disabled hidden>Select</option>
+        <option *ngFor="let benefit of (planBenefits$ | async)" [ngValue]="benefit">
+          {{benefit.benefitName}}
         </option>
       </select>
     </div>

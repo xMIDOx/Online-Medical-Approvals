@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { PlanMasterBenefit } from '../models/plan-master-benefit.model';
 import { ICDCodeDiagnosis } from './../models/ICDCode-Diagnosis.model';
 import { Member } from './../models/member.model';
-import { PlanMasterBenefits } from './../models/plan-master-benefits.model';
+import { PlanBenefit } from './../models/plan-benefit.model';
 import { QueryObject } from './../models/query-object';
 import { GenericCRUDService } from './generic-crud.service';
 
@@ -67,10 +68,16 @@ export class LookupsService {
     );
   }
 
-  public getPlanMasterBenefits(planId: number): Observable<PlanMasterBenefits[]> {
+  public getPlanMasterBenefits(planId: number): Observable<PlanMasterBenefit[]> {
     return this.httpRepo
       .Get(this.lookupsEndpoint + 'getplanmasters?planId=' + planId)
-      .pipe(map((res) => res as PlanMasterBenefits[]));
+      .pipe(map((res) => res as PlanMasterBenefit[]));
+  }
+
+  public getPlanBenefits(planId: number, masterId: number): Observable<PlanBenefit[]> {
+    return this.httpRepo
+      .Get(this.lookupsEndpoint + 'getplanbenefits?planId=' + planId + '&masterId=' + masterId)
+      .pipe(map((res) => res as PlanBenefit[]));
   }
 
   private toQueryString(obj: QueryObject) {

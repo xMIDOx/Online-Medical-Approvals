@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { PlanBenefit } from 'src/app/models/plan-benefit.model';
 
+import { PlanMasterBenefit } from '../../../models/plan-master-benefit.model';
 import { PendingApprovalDetails } from './../../../models/pending-approval-details.model';
-import { PlanMasterBenefits } from './../../../models/plan-master-benefits.model';
 import { ApprovalService } from './../../../services/approval.service';
 import { LookupsService } from './../../../services/lookups.service';
 
@@ -14,8 +15,10 @@ import { LookupsService } from './../../../services/lookups.service';
 })
 export class PendingApprovalDetailsComponent implements OnInit {
   public approval$ = new Observable<PendingApprovalDetails>();
-  public planMasterBenefits$ = new Observable<PlanMasterBenefits[]>();
-  public selectedMaster = <PlanMasterBenefits>{};
+  public planMasterBenefits$ = new Observable<PlanMasterBenefit[]>();
+  public planBenefits$ = new Observable<PlanBenefit[]>();
+  public selectedMaster = <PlanMasterBenefit>{};
+  public selectedBenefit = <PlanBenefit>{};
   private approvalId = 0;
 
   constructor(
@@ -30,7 +33,10 @@ export class PendingApprovalDetailsComponent implements OnInit {
     this.planMasterBenefits$ = this.lookupService.getPlanMasterBenefits(2007);
   }
 
-  getBenefits() {
-     console.log(this.selectedMaster);
+  fetchBenefits() {
+    this.planBenefits$ = this.lookupService.getPlanBenefits(
+      this.selectedMaster.planId,
+      this.selectedMaster.masterBenefitsId
+    );
   }
 }
