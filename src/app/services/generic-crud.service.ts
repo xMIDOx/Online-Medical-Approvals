@@ -43,4 +43,13 @@ export class GenericCRUDService {
   private generateHeaders() {
     return { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
   }
+
+  public toQueryString(obj: Object) {
+    var parts = [];
+    for (let [key, value] of Object.entries(obj)) {
+      if (value != null && value != undefined)
+        parts.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
+    }
+    return parts.join('&');
+  }
 }

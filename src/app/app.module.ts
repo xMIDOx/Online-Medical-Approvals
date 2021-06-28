@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -10,12 +10,18 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CreateApprovalItemsComponent } from './components/approval/create-approval-items/create-approval-items.component';
 import { CreateApprovalComponent } from './components/approval/create-approval/create-approval.component';
+import { LogInComponent } from './components/auth/log-in/log-in.component';
+import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
+import {
+  PendingApprovalDetailsComponent,
+} from './components/cmc/pending-approval-details/pending-approval-details.component';
+import { PendingApprovalsListComponent } from './components/cmc/pending-approvals-list/pending-approvals-list.component';
 import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { NgSelectComponent } from './components/ng-select/ng-select.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
-import { PendingApprovalsListComponent } from './components/cmc/pending-approvals-list/pending-approvals-list.component';
-import { PendingApprovalDetailsComponent } from './components/cmc/pending-approval-details/pending-approval-details.component';
+import { AuthInterceptorService } from './services/auth-interceptor.service';
+
 
 @NgModule({
   declarations: [
@@ -28,6 +34,8 @@ import { PendingApprovalDetailsComponent } from './components/cmc/pending-approv
     NgSelectComponent,
     PendingApprovalsListComponent,
     PendingApprovalDetailsComponent,
+    SignUpComponent,
+    LogInComponent,
   ],
   imports: [
     BrowserModule,
@@ -38,7 +46,13 @@ import { PendingApprovalDetailsComponent } from './components/cmc/pending-approv
     NgSelectModule,
     CommonModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
