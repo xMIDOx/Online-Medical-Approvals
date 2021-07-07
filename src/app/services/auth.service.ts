@@ -13,20 +13,15 @@ export class AuthService {
   public user = new BehaviorSubject<User>(null as any);
   private tokenExpirationTimer: any;
   private endPoint = 'api/Account/';
-  private userRegister = { email: '', password: '', confirmPassword: '' };
   private userLogin = { username: '', password: '', grant_type: 'password' };
 
   constructor(private http: GenericCRUDService, private router: Router) {}
 
-  signup(clientInput: any) {
-    this.userRegister.email = clientInput.username;
-    this.userRegister.password = clientInput.password;
-    this.userRegister.confirmPassword = clientInput.password;
-
-    return this.http.Create(this.endPoint + 'Register', this.userRegister);
+  public signup(clientInput: any) {
+    return this.http.Create(this.endPoint + 'Register', clientInput);
   }
 
-  login(clientInput: any) {
+  public login(clientInput: any) {
     this.userLogin.username = clientInput.username;
     this.userLogin.password = clientInput.password;
     let body = this.http.toQueryString(this.userLogin);
@@ -44,19 +39,19 @@ export class AuthService {
     );
   }
 
-  logout() {
+  public logout() {
     this.user.next(null as any);
     this.router.navigate(['/log-in']);
     localStorage.removeItem('userData');
 
-    if (this.tokenExpirationTimer){
+    if (this.tokenExpirationTimer) {
       clearTimeout(this.tokenExpirationTimer);
       this.tokenExpirationTimer = null;
     }
   }
 
   // to presist the token when app refresh
-  autoLogin(): void {
+  public autoLogin(): void {
     const userData: User = JSON.parse(localStorage.getItem('userData')!);
     if (!userData) return;
 
@@ -66,14 +61,16 @@ export class AuthService {
       new Date(userData._tokenExpirationDate)
     );
 
-    if (loadUser.token){
+    if (loadUser.token) {
       this.user.next(loadUser);
-      const expirationDuration = new Date(userData._tokenExpirationDate).getTime() - new Date().getTime();
+      const expirationDuration =
+        new Date(userData._tokenExpirationDate).getTime() -
+        new Date().getTime();
       this.autoLogout(expirationDuration);
     }
   }
 
-  autoLogout(expirationDuration: number): void {
+  private autoLogout(expirationDuration: number): void {
     this.tokenExpirationTimer = setTimeout(() => {
       this.logout();
     }, expirationDuration);

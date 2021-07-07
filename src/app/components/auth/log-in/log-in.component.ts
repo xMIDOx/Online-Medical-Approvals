@@ -24,7 +24,7 @@ export class LogInComponent implements OnInit {
         (res) => {
           console.log(res);
           this.isLoading = false;
-          this.router.navigate(['/create-approval']);
+          this.router.navigate(['/home']);
         },
         (err) => {
           console.log(err);

@@ -1,20 +1,25 @@
-<div class="container-fluid">
-  <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+<div class="col-md-2">
+  <h2>Login</h2>
+  <hr>
+</div>
 
-  <div *ngIf="isLoading">
-    <div class="text-center">
-      <div class="spinner-border text-danger">
+<div class="container">
+  <div class="row">
+    <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+
+    <div *ngIf="isLoading">
+      <div class="text-center">
+        <div class="spinner-border text-danger">
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="row">
-    <form #loginForm="ngForm" (ngSubmit)="login(loginForm)" *ngIf="!isLoading">
-      <div class="col-md-6 mb-3">
+    <form class="col-md-4 mx-auto" #loginForm="ngForm" (ngSubmit)="login(loginForm)" *ngIf="!isLoading">
+      <div class="col mb-3">
         <label for="username" class="form-label">User Name</label>
         <input type="text" id="username" name="username" class="form-control" ngModel required>
       </div>
-      <div class="col-md-6 mb-3">
+      <div class="col mb-3">
         <label for="password" class="form-label">Password</label>
         <input type="password" id="password" name="password" class="form-control" ngModel required minlength="6">
       </div>
