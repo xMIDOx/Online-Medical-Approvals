@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
 
 import { User } from '../models/user.model';
 import { GenericCRUDService } from './generic-crud.service';
@@ -10,7 +10,7 @@ import { GenericCRUDService } from './generic-crud.service';
   providedIn: 'root',
 })
 export class AuthService {
-  public user = new BehaviorSubject<User>(null as any);
+  public userSubject = new BehaviorSubject<User>(null as any);
   private tokenExpirationTimer: any;
   private endPoint = 'api/Account/';
   private userLogin = { username: '', password: '', grant_type: 'password' };
@@ -31,8 +31,13 @@ export class AuthService {
         const expirationDate = new Date(
           new Date().getTime() + +res.expires_in * 1000
         );
-        const user = new User(res.userName, res.access_token, expirationDate);
-        this.user.next(user);
+        const user = new User(
+          res.userName,
+          res.access_token,
+          expirationDate,
+          JSON.parse(res.roles)
+        );
+        this.userSubject.next(user);
         this.autoLogout(+res.expires_in * 1000);
         localStorage.setItem('userData', JSON.stringify(user));
       })
@@ -40,7 +45,7 @@ export class AuthService {
   }
 
   public logout() {
-    this.user.next(null as any);
+    this.userSubject.next(null as any);
     this.router.navigate(['/log-in']);
     localStorage.removeItem('userData');
 
@@ -58,11 +63,12 @@ export class AuthService {
     const loadUser = new User(
       userData.email,
       userData._token,
-      new Date(userData._tokenExpirationDate)
+      new Date(userData._tokenExpirationDate),
+      userData.roles
     );
 
     if (loadUser.token) {
-      this.user.next(loadUser);
+      this.userSubject.next(loadUser);
       const expirationDuration =
         new Date(userData._tokenExpirationDate).getTime() -
         new Date().getTime();
@@ -74,5 +80,15 @@ export class AuthService {
     this.tokenExpirationTimer = setTimeout(() => {
       this.logout();
     }, expirationDuration);
+  }
+
+  public isAuthorized(allowedRoles: string[], userRoles: string[]): boolean {
+    let isMatch = false;
+
+    allowedRoles.forEach((role) => {
+      if (userRoles.indexOf(role) > -1) isMatch = true;
+      return isMatch;
+    });
+    return isMatch;
   }
 }

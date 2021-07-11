@@ -21,6 +21,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { NgSelectComponent } from './components/ng-select/ng-select.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
+import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
     PendingApprovalDetailsComponent,
     SignUpComponent,
     LogInComponent,
+    ForbiddenComponent,
   ],
   imports: [
     BrowserModule,

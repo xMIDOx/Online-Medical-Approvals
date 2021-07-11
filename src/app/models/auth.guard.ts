@@ -16,12 +16,17 @@ export class AuthGuard implements CanActivate {
     | UrlTree
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree> {
-    return this.authService.user.pipe(
+    return this.authService.userSubject.pipe(
       take(1),
       map((user) => {
-        const isAuth = !!user;
-        if (isAuth) return true;
-        return this.router.createUrlTree(['/log-in']);
+        const isAuthenticated: boolean = !!user;
+        if (!isAuthenticated) return this.router.createUrlTree(['/log-in']);
+
+        const roles: string[] = route.data['roles'];
+        if (!roles) return true;
+
+        const isMatch: boolean = this.authService.isAuthorized(roles, user.roles);
+        return isMatch ? true : this.router.createUrlTree(['/forbidden']);
       })
     );
   }

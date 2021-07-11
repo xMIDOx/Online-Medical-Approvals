@@ -52,8 +52,6 @@ export class ApprovalService {
 
     this.fetchItemsCreateObject(approvalDisplay.approvalItems);
     this.calculateApprovalPrices(this.approvalCreate);
-
-    console.log('Final Approval: ', this.approvalCreate);
   }
 
   private fetchItemsCreateObject(itemsDisplay: ApprovalItemDisplay[]) {
@@ -73,7 +71,6 @@ export class ApprovalService {
 
       this.approvalCreate.approvalItems.push(itemCreate);
     });
-    console.log('Approval Items Create: ', this.approvalCreate.approvalItems);
   }
 
   private calculateApprovalPrices(approvalCreate: ApprovalCreate) {

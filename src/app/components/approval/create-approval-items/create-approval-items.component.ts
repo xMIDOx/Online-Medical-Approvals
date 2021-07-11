@@ -11,11 +11,11 @@ import {
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { ObserveOnMessage } from 'rxjs/internal/operators/observeOn';
 
 import { ApprovalItemDisplay } from '../../../models/approval-item-display.model';
 import { ServicePrice } from './../../../models/service-price.model';
 import { LookupsService } from './../../../services/lookups.service';
+
 
 @Component({
   selector: 'app-create-approval-items',
@@ -40,7 +40,6 @@ export class CreateApprovalItemsComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     this.getProviderData();
     this.approvalItems.length = 0;
-    console.log('provider Id Changed');
   }
 
   public getProviderPriceList(searchTerm: string) {
@@ -51,8 +50,8 @@ export class CreateApprovalItemsComponent implements OnInit, OnChanges {
 
   public getSelectedService(service: ServicePrice) {
     if (service) {
-      this.approvalItem.serviceId =
-        this.providerCatId === 2 ? service.id : service.serviceId;
+      this.approvalItem.serviceId = this.providerCatId === 2 ? service.id : service.serviceId;
+
       this.approvalItem.servicePrice = service.servicePrice;
       this.approvalItem.serviceName = service.name;
     }
