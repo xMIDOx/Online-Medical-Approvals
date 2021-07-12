@@ -4,6 +4,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
 
 import { User } from '../models/user.model';
+import { Register } from './../models/register.model';
 import { GenericCRUDService } from './generic-crud.service';
 
 @Injectable({
@@ -17,8 +18,8 @@ export class AuthService {
 
   constructor(private http: GenericCRUDService, private router: Router) {}
 
-  public signup(clientInput: any) {
-    return this.http.Create(this.endPoint + 'Register', clientInput);
+  public signup(userRegisteration: Register) {
+    return this.http.Create(this.endPoint + 'Register', userRegisteration);
   }
 
   public login(clientInput: any) {

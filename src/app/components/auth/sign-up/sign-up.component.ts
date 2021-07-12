@@ -3,7 +3,10 @@ import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { KeyValue } from 'src/app/models/key-value.model';
 
+import { Register } from './../../../models/register.model';
+import { Roles } from './../../../models/user-roles.enum';
 import { AuthService } from './../../../services/auth.service';
+import { LookupsService } from './../../../services/lookups.service';
 import { UserRolesService } from './../../../services/user-roles.service';
 
 @Component({
@@ -13,14 +16,23 @@ import { UserRolesService } from './../../../services/user-roles.service';
 })
 export class SignUpComponent implements OnInit {
   public roles$ = new Observable<KeyValue[]>();
+  public providers$ = new Observable<Object>();
+  public rolesEnum = Roles;
   public isLoading = false;
   public error: string = '';
-  public userRegistration: any = {
+  public userRegistration: Register = {
+    email: '',
+    password: '',
+    confirmPassword: '',
+    providerId: 0,
     roles: [],
   };
+  private queryObj: any = {};
+
   constructor(
     private authService: AuthService,
-    private userRolesService: UserRolesService
+    private userRolesService: UserRolesService,
+    private lookupService: LookupsService
   ) {}
 
   ngOnInit(): void {
@@ -34,9 +46,7 @@ export class SignUpComponent implements OnInit {
       this.userRegistration.confirmPassword = form.value.password;
 
       this.isLoading = true;
-
-      this.authService.signup(this.userRegistration)
-      .subscribe(
+      this.authService.signup(this.userRegistration).subscribe(
         (res) => (this.isLoading = false),
         (err) => {
           console.log(err);
@@ -46,6 +56,7 @@ export class SignUpComponent implements OnInit {
       );
     }
     form.reset();
+    this.userRegistration.roles = [];
   }
 
   onRoleToggle(roleName: string, $event: any) {
@@ -54,5 +65,18 @@ export class SignUpComponent implements OnInit {
       const index = this.userRegistration.roles.indexOf(roleName);
       this.userRegistration.roles.splice(index, 1);
     }
+  }
+
+  fetchProviders(searchTerm: string) {
+    this.queryObj.searchTerm = searchTerm;
+    this.providers$ = this.lookupService.getProviders(this.queryObj);
+  }
+
+  selectedProvider(item: KeyValue) {
+    this.userRegistration.providerId = item.id;
+  }
+
+  isProviderAdmin(): boolean {
+    return this.userRegistration.roles.includes(this.rolesEnum.ProviderAdmin);
   }
 }
