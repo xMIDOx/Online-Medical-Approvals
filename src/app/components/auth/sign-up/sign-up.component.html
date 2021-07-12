@@ -6,13 +6,14 @@
 <div class="container">
   <div class="row">
     <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+
     <div *ngIf="isLoading">
       <div class="text-center">
         <div class="spinner-border text-danger"></div>
       </div>
     </div>
 
-    <form class="col-md-4 mx-auto" #authForm="ngForm" (ngSubmit)="signUp(authForm)" *ngIf="!isLoading">
+    <form class="col-md-6 mx-auto" #authForm="ngForm" (ngSubmit)="signUp(authForm)" *ngIf="!isLoading">
       <div class="col mb-3">
         <label for="email" class="form-label">Email</label>
         <input type="text" id="email" name="email" class="form-control" ngModel required>
@@ -23,11 +24,16 @@
       </div>
       <div class="col mb-3">
         <h5>Roles</h5>
-        <div *ngFor="let r of (roles$ | async); let i = index" class="form-check">
+        <div *ngFor="let r of (roles$ | async); let i = index" class="form-check form-check-inline">
           <input class="form-check-input" type="checkbox" id="role-{{i}}" name="role-{{i}}"
             (change)="onRoleToggle(r.name, $event)" ngModel>
           <label class="form-check-label" for="role-{{i}}">{{r.name}}</label>
         </div>
+      </div>
+      <div class="col mb-3" *ngIf="isProviderAdmin()">
+        <label for="" class="form-label">Providers</label>
+        <app-ng-select [items]="(providers$ | async)" (searching)="fetchProviders($event)"
+          (selectedItem)="selectedProvider($event)"></app-ng-select>
       </div>
       <div class="mb-3">
         <button type="submit" class="btn btn-primary" [disabled]="!authForm.valid">Sign Up</button>
