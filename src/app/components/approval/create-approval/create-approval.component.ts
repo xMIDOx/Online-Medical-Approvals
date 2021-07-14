@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { ApprovalDisplay } from 'src/app/models/approval-display.model';
@@ -40,14 +41,18 @@ export class CreateApprovalComponent implements OnInit {
   constructor(
     private lookupService: LookupsService,
     private approvalService: ApprovalService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.authService.getUser().pipe(take(1)).subscribe(user => {
-      this.approval.serviceProviderId = user.providerId;
-      this.provider$ = this.lookupService.getProviderById(user.providerId);
-    });
+    this.authService
+      .getUser()
+      .pipe(take(1))
+      .subscribe((user) => {
+        this.approval.serviceProviderId = user.providerId;
+        this.provider$ = this.lookupService.getProviderById(user.providerId);
+      });
   }
 
   // public getProviders(searchTerm: string): void {
@@ -112,7 +117,11 @@ export class CreateApprovalComponent implements OnInit {
 
   public onSubmit(form: NgForm): void {
     if (form.valid)
-      this.approvalService.createApproval(this.approval).subscribe();
-      form.reset();
+      this.approvalService
+        .createApproval(this.approval)
+        .pipe(take(1))
+        .subscribe((res) => this.router.navigate(['/pending-approvals']));
+
+    form.reset();
   }
 }

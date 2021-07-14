@@ -22,12 +22,10 @@ export class LogInComponent implements OnInit {
       this.authService.login(form.value)
       .subscribe(
         (res) => {
-          console.log(res);
           this.isLoading = false;
           this.router.navigate(['/home']);
         },
         (err) => {
-          console.log(err);
           this.error = err.error.message;
           this.isLoading = false;
         }

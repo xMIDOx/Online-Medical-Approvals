@@ -50,7 +50,7 @@ const routes: Routes = [
     path: 'pending-approvals',
     component: PendingApprovalsListComponent,
     canActivate: [AuthGuard],
-    data: {roles: [Roles.CMCDoctor]}
+    data: {roles: [Roles.CMCDoctor, Roles.ProviderUser]}
   },
 
   {

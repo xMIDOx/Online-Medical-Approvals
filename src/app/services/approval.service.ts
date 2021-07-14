@@ -26,9 +26,17 @@ export class ApprovalService {
     );
   }
 
-  public getApprovals(statusId: number): Observable<PendingApproval[]> {
+  public getApprovals(
+    statusId: number,
+    providerId: number
+  ): Observable<PendingApproval[]> {
+    const queryParams = { statusId: statusId, providerId: providerId };
     return this.http
-      .Get(this.approvalEndPoint + 'getapprovals?statusId=' + statusId)
+      .Get(
+        this.approvalEndPoint +
+          'getapprovals?' +
+          this.http.toQueryString(queryParams)
+      )
       .pipe(map((res) => res as PendingApproval[]));
   }
 
