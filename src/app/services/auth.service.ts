@@ -1,20 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
 
-import { User } from '../models/user.model';
+import { UserToken } from '../models/user-token.model';
 import { Register } from './../models/register.model';
+import { User } from './../models/user.model';
 import { GenericCRUDService } from './generic-crud.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  public userSubject = new BehaviorSubject<User>(null as any);
+  public userToken$ = new BehaviorSubject<UserToken>(null as any);
   private tokenExpirationTimer: any;
-  private endPoint = 'api/Account/';
   private userLogin = { username: '', password: '', grant_type: 'password' };
+  private endPoint = 'api/Account/';
 
   constructor(private http: GenericCRUDService, private router: Router) {}
 
@@ -32,36 +33,25 @@ export class AuthService {
         const expirationDate = new Date(
           new Date().getTime() + +res.expires_in * 1000
         );
-        const user = new User(
+        const user = new UserToken(
           res.userName,
           res.access_token,
           expirationDate,
           JSON.parse(res.roles)
         );
-        this.userSubject.next(user);
+        this.userToken$.next(user);
         this.autoLogout(+res.expires_in * 1000);
-        localStorage.setItem('userData', JSON.stringify(user));
+        localStorage.setItem('userToken', JSON.stringify(user));
       })
     );
   }
 
-  public logout() {
-    this.userSubject.next(null as any);
-    this.router.navigate(['/log-in']);
-    localStorage.removeItem('userData');
-
-    if (this.tokenExpirationTimer) {
-      clearTimeout(this.tokenExpirationTimer);
-      this.tokenExpirationTimer = null;
-    }
-  }
-
   // to presist the token when app refresh
   public autoLogin(): void {
-    const userData: User = JSON.parse(localStorage.getItem('userData')!);
+    const userData: UserToken = JSON.parse(localStorage.getItem('userToken')!);
     if (!userData) return;
 
-    const loadUser = new User(
+    const loadUser = new UserToken(
       userData.email,
       userData._token,
       new Date(userData._tokenExpirationDate),
@@ -69,11 +59,22 @@ export class AuthService {
     );
 
     if (loadUser.token) {
-      this.userSubject.next(loadUser);
+      this.userToken$.next(loadUser);
       const expirationDuration =
         new Date(userData._tokenExpirationDate).getTime() -
         new Date().getTime();
       this.autoLogout(expirationDuration);
+    }
+  }
+
+  public logout() {
+    this.userToken$.next(null as any);
+    this.router.navigate(['/log-in']);
+    localStorage.removeItem('userToken');
+
+    if (this.tokenExpirationTimer) {
+      clearTimeout(this.tokenExpirationTimer);
+      this.tokenExpirationTimer = null;
     }
   }
 
@@ -91,5 +92,11 @@ export class AuthService {
       return isMatch;
     });
     return isMatch;
+  }
+
+  public getUser(): Observable<User> {
+    return this.http.Get('api/user/getUser').pipe(
+      map(res => res as User)
+    )
   }
 }

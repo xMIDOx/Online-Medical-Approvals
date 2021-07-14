@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { ApprovalDisplay } from 'src/app/models/approval-display.model';
+import { AuthService } from 'src/app/services/auth.service';
 
 import { ApprovalItemDisplay } from '../../../models/approval-item-display.model';
 import { ICDCodeDiagnosis } from './../../../models/ICDCode-Diagnosis.model';
@@ -29,22 +31,29 @@ export class CreateApprovalComponent implements OnInit {
     approvalItems: [],
   };
   public member = <Member>{};
-  public providers = new Observable<object>();
+  // public providers = new Observable<object>();
+  public provider$ = new Observable<any>();
   public diagnosis = new Observable<object>();
   public claimProviderName = '';
   private queryObj: any = {};
 
   constructor(
     private lookupService: LookupsService,
-    private approvalService: ApprovalService
+    private approvalService: ApprovalService,
+    private authService: AuthService
   ) {}
 
-  ngOnInit(): void {}
-
-  public getProviders(searchTerm: string): void {
-    this.queryObj.searchTerm = searchTerm;
-    this.providers = this.lookupService.getProviders(this.queryObj);
+  ngOnInit(): void {
+    this.authService.getUser().pipe(take(1)).subscribe(user => {
+      this.approval.serviceProviderId = user.providerId;
+      this.provider$ = this.lookupService.getProviderById(user.providerId);
+    });
   }
+
+  // public getProviders(searchTerm: string): void {
+  //   this.queryObj.searchTerm = searchTerm;
+  //   this.providers = this.lookupService.getProviders(this.queryObj);
+  // }
 
   public getDiagnosis(searchTerm: string): void {
     this.queryObj.searchTerm = searchTerm;

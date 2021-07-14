@@ -22,9 +22,9 @@
         <label for="password" class="form-label">Password</label>
         <input type="password" id="password" name="password" class="form-control" ngModel required minlength="6">
       </div>
-      <div class="col mb-3">
+      <div class="col mb-3" *ngIf="(roles$ | async) as roles">
         <h5>Roles</h5>
-        <div *ngFor="let r of (roles$ | async); let i = index" class="form-check form-check-inline">
+        <div *ngFor="let r of roles; let i = index" class="form-check form-check-inline">
           <input class="form-check-input" type="checkbox" id="role-{{i}}" name="role-{{i}}"
             (change)="onRoleToggle(r.name, $event)" ngModel>
           <label class="form-check-label" for="role-{{i}}">{{r.name}}</label>

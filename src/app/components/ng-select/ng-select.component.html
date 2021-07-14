@@ -13,7 +13,8 @@
         (scrollToEnd)="onScrollToEnd()"
         (search)="onSearch($event)"
         (change)="onChange($event)"
-        ngModel>
+        ngModel
+        required>
         <ng-template ng-option-tmp let-item="item" let-index="index">
             <div title="{{item.name}}">{{item.name}}</div>
         </ng-template>

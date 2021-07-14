@@ -8,7 +8,7 @@ export class AuthInterceptorService implements HttpInterceptor {
   constructor(private authService: AuthService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
-    return this.authService.userSubject.pipe(
+    return this.authService.userToken$.pipe(
       take(1),
       exhaustMap((user) => {
         if (!user) return next.handle(req);

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { KeyValue } from 'src/app/models/key-value.model';
 
 import { Register } from './../../../models/register.model';
@@ -36,7 +37,16 @@ export class SignUpComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.roles$ = this.userRolesService.getRoles();
+    this.authService
+      .getUser()
+      .pipe(take(1))
+      .subscribe((res) => {
+        if (res.providerId != 0) {
+          this.userRegistration.providerId = res.providerId;
+          this.userRegistration.roles.push(Roles.ProviderUser);
+        }
+        else this.roles$ = this.userRolesService.getRoles();
+      });
   }
 
   signUp(form: NgForm) {

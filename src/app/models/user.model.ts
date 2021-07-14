@@ -1,15 +1,8 @@
-export class User {
-  constructor(
-    public email: string,
-    public _token: string,
-    public _tokenExpirationDate: Date,
-    public roles: string[]
-  ) {}
+import { KeyValue } from './key-value.model';
 
-  get token() {
-    if (!this._tokenExpirationDate || new Date() > this._tokenExpirationDate)
-      return null;
-
-    return this._token;
-  }
+export interface User {
+  id: string;
+  email: string;
+  userName: string;
+  providerId: number;
 }

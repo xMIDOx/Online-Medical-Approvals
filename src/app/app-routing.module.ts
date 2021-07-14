@@ -12,6 +12,7 @@ import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 import { HomeComponent } from './components/home/home.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { AuthGuard } from './models/auth.guard';
+import { Roles } from './models/user-roles.enum';
 
 const routes: Routes = [
   {
@@ -29,7 +30,7 @@ const routes: Routes = [
     path: 'sign-up',
     component: SignUpComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['Admin'] }
+    data: { roles: [Roles.Admin, Roles.ProviderAdmin] }
   },
 
   {
@@ -42,21 +43,21 @@ const routes: Routes = [
     path: 'create-approval',
     component: CreateApprovalComponent,
     canActivate: [AuthGuard],
-    data: {roles: ['ProviderUser']}
+    data: {roles: [Roles.ProviderUser]}
   },
 
   {
     path: 'pending-approvals',
     component: PendingApprovalsListComponent,
     canActivate: [AuthGuard],
-    data: {roles: ['CMCDoctor']}
+    data: {roles: [Roles.CMCDoctor]}
   },
 
   {
     path: 'pending-approval-details/:id',
     component: PendingApprovalDetailsComponent,
     canActivate: [AuthGuard],
-    data: {roles: ['CMCDoctor']}
+    data: {roles: [Roles.CMCDoctor]}
   },
 
   {
