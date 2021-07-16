@@ -7,11 +7,11 @@ import { ApprovalDisplay } from 'src/app/models/approval-display.model';
 import { AuthService } from 'src/app/services/auth.service';
 
 import { ApprovalItemDisplay } from '../../../models/approval-item-display.model';
-import { ICDCodeDiagnosis } from './../../../models/ICDCode-Diagnosis.model';
 import { KeyValue } from './../../../models/key-value.model';
 import { Member } from './../../../models/member.model';
 import { ApprovalService } from './../../../services/approval.service';
 import { LookupsService } from './../../../services/lookups.service';
+
 
 @Component({
   selector: 'app-create-approval',

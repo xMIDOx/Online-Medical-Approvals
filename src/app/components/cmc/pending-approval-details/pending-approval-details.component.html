@@ -1,52 +1,11 @@
 <div class="container-fluid" *ngIf="(approval$ | async) as approval">
-  <div class="row mb-2">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Member Name</th>
-          <th>Card Number</th>
-          <th>Customer Name</th>
-          <th>Plan Name</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{{approval.memberName}}</td>
-          <td>{{approval.cardNumber}}</td>
-          <td>{{approval.customerName}}</td>
-          <td>{{approval.planName}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="row mb-2">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Approval Date</th>
-          <th>Approval Number</th>
-          <th>Claim Number</th>
-          <th>Provider Name</th>
-          <th>Provider Category</th>
-          <th>Diagnosis</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{{approval.approvalDate | date}}</td>
-          <td>{{approval.approvalNumber}}</td>
-          <td>{{approval.claimNumber}}</td>
-          <td>{{approval.providerName}}</td>
-          <td>{{approval.providerCatName}}</td>
-          <td>{{approval.diagnosis}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="row mb-2">
-    <div class="col-md-6">
-      <label for="planMaster" class="form-label">Masters Benefits</label>
-      <select class="form-select" id="planMaster" name="planMaster" [(ngModel)]="selectedMaster"
+
+  <span class="badge rounded-pill bg-warning mb-3 fs-5">Approval Data</span>
+
+  <div class="row fw-bold fst-italic">
+    <label for="planMaster" class="col-md-2 col-form-label">Masters Benefits</label>
+    <div class="col-md-2">
+      <select class="form-select form-select-sm" id="planMaster" name="planMaster" [(ngModel)]="selectedMaster"
         (ngModelChange)="fetchBenefits()">
         <option [value]="selectedMaster" disabled hidden>Select</option>
         <option *ngFor="let master of (planMasterBenefits$ | async)" [ngValue]="master">
@@ -54,51 +13,172 @@
         </option>
       </select>
     </div>
-    <div class="col-md-6">
-      <label for="planBenefit" class="form-label">Benefits</label>
-      <select class="form-select" id="planBenefit" name="planBenefit" [(ngModel)]="selectedBenefit">
+
+    <label for="planBenefit" class="col-md-2 col-form-label">Benefits</label>
+    <div class="col-md-2">
+      <select class="form-select form-select-sm" id="planBenefit" name="planBenefit" [(ngModel)]="selectedBenefit">
         <option [value]="selectedBenefit" disabled hidden>Select</option>
         <option *ngFor="let benefit of (planBenefits$ | async)" [ngValue]="benefit">
           {{benefit.benefitName}}
         </option>
       </select>
     </div>
+
+    <label for="copayment" class="col-md-2 col-form-label">CoPayment Per</label>
+    <div class="col-md-2">
+      <input type="text" class="form-control form-control-sm mt-1" id="copayment" readonly
+        value="{{approval.approvalCopaymentPer}}">
+    </div>
+
   </div>
-  <div class="row mb-2">
-    <table class="table">
-      <thead>
+
+  <div class="row fw-bold fst-italic">
+    <label for="approvalNumber" class="col-md-2 col-form-label">Approval Number</label>
+    <div class="col-md-2">
+      <input type="text" class="form-control form-control-sm mt-1" id="approvalNumber" readonly
+        value="{{approval.approvalNumber}}">
+    </div>
+
+    <label for="approvalDate" class="col-md-2 col-form-label">Approval Date</label>
+    <div class="col-md-2">
+      <input type="text" class="form-control form-control-sm mt-1" id="approvalDate" readonly
+        value="{{approval.approvalDate | date}}">
+    </div>
+
+    <label for="claimNumber" class="col-md-2 col-form-label">Claim Number</label>
+    <div class="col-md-2">
+      <input type="text" class="form-control form-control-sm mt-1" id="claimNumber" readonly
+        value="{{approval.claimNumber}}">
+    </div>
+  </div>
+
+  <div class="row fw-bold fst-italic">
+    <label for="name" class="col-md-2 col-form-label">Member Name</label>
+    <div class="col-md-2">
+      <input type="text" class="form-control form-control-sm mt-1" id="name" readonly
+        value="{{approval.memberName}}">
+    </div>
+
+    <label for="cardNumber" class="col-md-2 col-form-label">Card Number</label>
+    <div class="col-md-2">
+      <input type="text" class="form-control form-control-sm mt-1" id="cardNumber" readonly
+        value="{{approval.cardNumber}}">
+    </div>
+
+    <label for="ceiling" class="col-md-2 col-form-label">Available Ceiling</label>
+    <div class="col-md-2">
+      <input type="text" class="form-control form-control-sm mt-1" id="ceiling" readonly value="">
+    </div>
+  </div>
+
+  <div class="row fw-bold fst-italic">
+    <label for="plan" class="col-md-2 col-form-label">Member Plan</label>
+    <div class="col-md-2">
+      <input type="text" class="form-control form-control-sm mt-1" id="plan" readonly
+        value="{{approval.planName}}">
+    </div>
+
+    <label for="customer" class="col-md-2 col-form-label">Customer Name</label>
+    <div class="col-md-2">
+      <input type="text" class="form-control form-control-sm mt-1" id="customer" readonly
+        value="{{approval.customerName}}">
+    </div>
+
+    <label for="status" class="col-md-2 col-form-label">Member Status</label>
+    <div class="col-md-2">
+      <input type="text" class="form-control form-control-sm mt-1" id="status" readonly value="">
+    </div>
+
+  </div>
+
+  <div class="row fw-bold fst-italic">
+    <label for="provider" class="col-md-2 col-form-label">Provider Name</label>
+    <div class="col-md-6">
+      <input type="text" class="form-control form-control-sm mt-1" id="provider" readonly
+        value="{{approval.providerName}}">
+    </div>
+
+    <label for="providerCat" class="col-md-2 col-form-label">Provider Cat</label>
+    <div class="col-md-2">
+      <input type="text" class="form-control form-control-sm mt-1" id="providerCat" readonly
+        value="{{approval.providerCatName}}">
+    </div>
+  </div>
+
+  <div class="row fw-bold fst-italic">
+    <label for="diagnosis" class="col-md-2 col-form-label">Diagnosis</label>
+    <div class="col-md-6">
+      <input type="text" class="form-control form-control-sm mt-1" id="diagnosis" readonly
+        value="{{approval.diagnosis}}">
+    </div>
+
+    <label for="ICDCode" class="col-md-2 col-form-label">ICDCode</label>
+    <div class="col-md-2">
+      <input type="text" class="form-control form-control-sm mt-1" id="ICDCode" readonly value="">
+    </div>
+  </div>
+
+  <div class="row fw-bold fst-italic">
+    <label for="internalNote" class="col-md-2 col-form-label">Interna Notes</label>
+    <div class="col-md-10">
+      <textarea type="text" class="form-control form-control-sm mt-1" id="internalNote" readonly value=""></textarea>
+    </div>
+  </div>
+
+  <div class="row mb-3 fw-bold fst-italic">
+    <label for="printedNote" class="col-md-2 col-form-label">Printed Notes</label>
+    <div class="col-md-10">
+      <textarea type="text" class="form-control form-control-sm mt-1" id="printedNote" readonly value=""></textarea>
+    </div>
+  </div>
+
+  <span class="badge rounded-pill bg-warning mb-3 fs-5">Approval Services</span>
+
+  <div class="row">
+    <table class="table table-bordered table-responsive table-sm">
+      <thead class="fst-italic text-center">
         <tr>
           <th>Service Name</th>
           <th>Quantity</th>
           <th>Unit Amt</th>
           <th>Service Amt</th>
-          <th>Copayment Per</th>
+          <!-- <th>Copayment Per</th> -->
           <th>Copayment Amt</th>
           <th>Dosage</th>
           <th>Dosgae Per Day</th>
           <th>Dosgae Times</th>
           <th>Dosgae Days</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of approval.approvalItems">
+        <tr *ngFor="let item of approval.approvalItems" class="text-center">
           <td>{{item.serviceName}}</td>
           <td>{{item.serviceQnt}}</td>
           <td>{{item.serviceUnitAmt}}</td>
           <td>{{item.serviceTotalAmt}}</td>
-          <td>{{item.serviceCopaymentPer}}</td>
+          <!-- <td>{{item.serviceCopaymentPer}}</td> -->
           <td>{{item.serviceCopaymentAmt}}</td>
           <td>{{item.dosage}}</td>
           <td>{{item.dosagePerDay}}</td>
           <td>{{item.dosageTime}}</td>
           <td>{{item.dosageDays}}</td>
+          <td class="text-center fst-italic">
+            <button type="button" class="btn btn-outline-danger btn-sm">Reject</button>
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
-  <div class="row fw-bold">
-    <p class="col-md-4">Total Approval Amount : {{approval.approvalAmt}}</p>
-    <p class="col-md-4">Copayment Percentage : {{approval.approvalCopaymentPer}}</p>
-    <p class="col-md-4">Total Copayment Amount : {{approval.approvalCopaymentAmt}}</p>
+
+  <div class="row fw-bolder fst-italic text-center text-success">
+    <div class="col-md-6">
+      <p class="mx-auto">Total Approval Amount: {{approval.approvalAmt}}</p>
+    </div>
+    <div class="col-md-6">
+      <p class="mx-auto">Total Copayment Amount: {{approval.approvalCopaymentAmt}}</p>
+    </div>
+
   </div>
+
 </div>
