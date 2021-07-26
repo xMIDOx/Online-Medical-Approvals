@@ -14,4 +14,5 @@ export interface ApprovalItemCreate {
   dosageDays: number;
   dosagePerDay: number;
   dosageTime: number;
+  status: number;
 }

@@ -1,9 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ItemsList } from '@ng-select/ng-select/lib/items-list';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/internal/operators/take';
+import { switchMap } from 'rxjs/operators';
+import { ApprovalItemCreate } from 'src/app/models/approval-item-create.model';
 import { PlanBenefit } from 'src/app/models/plan-benefit.model';
 
 import { PlanMasterBenefit } from '../../../models/plan-master-benefit.model';
+import { ItemStatus } from './../../../models/item-status.enum';
 import { PendingApprovalDetails } from './../../../models/pending-approval-details.model';
 import { ApprovalService } from './../../../services/approval.service';
 import { LookupsService } from './../../../services/lookups.service';
@@ -14,12 +19,13 @@ import { LookupsService } from './../../../services/lookups.service';
   styleUrls: ['./pending-approval-details.component.css'],
 })
 export class PendingApprovalDetailsComponent implements OnInit {
-  public approval$ = new Observable<PendingApprovalDetails>();
-  public planMasterBenefits$ = new Observable<PlanMasterBenefit[]>();
-  public planBenefits$ = new Observable<PlanBenefit[]>();
-  public selectedMaster = <PlanMasterBenefit>{};
-  public selectedBenefit = <PlanBenefit>{};
-  private approvalId = 0;
+  public approval = <PendingApprovalDetails>{};
+  public masterBenefits$ = new Observable<PlanMasterBenefit[]>();
+  public benefits$ = new Observable<PlanBenefit[]>();
+  public rejected = ItemStatus.Rejected;
+  public accepted = ItemStatus.Accepted;
+  public masterBenefit = <PlanMasterBenefit>{};
+  public benefit = <PlanBenefit>{};
 
   constructor(
     private route: ActivatedRoute,
@@ -28,15 +34,65 @@ export class PendingApprovalDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.approvalId = this.route.snapshot.params['id'];
-    this.approval$ = this.approvalService.getApprovalById(this.approvalId);
-    this.planMasterBenefits$ = this.lookupService.getPlanMasterBenefits(2007);
+    const approvalId = this.route.snapshot.params['id'];
+    this.getApprovalById(approvalId);
   }
 
-  fetchBenefits() {
-    this.planBenefits$ = this.lookupService.getPlanBenefits(
-      this.selectedMaster.planId,
-      this.selectedMaster.masterBenefitsId
+  public fetchPlanBenefits(): void {
+    this.benefits$ = this.lookupService.getPlanBenefits(
+      this.masterBenefit.planId,
+      this.masterBenefit.masterBenefitsId
     );
+
+    this.approval.masterBenefitId = this.masterBenefit.masterBenefitsId;
+  }
+
+  public calculateCopayment(): void {
+    this.approval.benefitId = this.benefit.BenefitId;
+
+    this.approval.approvalCopaymentPer = this.benefit.coPaymentPer;
+    this.approval.approvalCopaymentAmt =
+      this.benefit.coPaymentPer * this.approval.approvalAmt;
+  }
+
+  public toggleItem(item: ApprovalItemCreate): void {
+    item.status =
+      item.status === ItemStatus.Rejected
+        ? ItemStatus.Accepted
+        : ItemStatus.Rejected;
+
+    this.calculateApprovalAmt();
+    if (this.approval.approvalCopaymentPer != 0) this.calculateCopayment();
+  }
+
+  private getApprovalById(approvalId: number) {
+    this.approvalService
+      .getApprovalById(approvalId)
+      .pipe(
+        take(1),
+        switchMap((approval: PendingApprovalDetails) => {
+          this.approval = approval;
+
+          return this.lookupService
+            .getMember(approval.cardNumber)
+            .pipe(take(1));
+        })
+      )
+      .subscribe((member) => {
+        this.masterBenefits$ = this.lookupService.getPlanMasterBenefits(
+          member.planId
+        );
+        this.approval.memberStatus = member.isActive ? 'Active' : 'Stopped';
+      });
+  }
+
+  private calculateApprovalAmt(): void {
+    this.approval.approvalAmt = 0;
+
+    this.approval.approvalItems
+      .filter((item) => item.status === ItemStatus.Accepted)
+      .forEach((item) => {
+        this.approval.approvalAmt += item.serviceTotalAmt;
+      });
   }
 }

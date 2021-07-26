@@ -1,14 +1,14 @@
-<div class="container-fluid" *ngIf="(approval$ | async) as approval">
+<div class="container-fluid" *ngIf="(approval)">
 
   <span class="badge rounded-pill bg-warning mb-3 fs-5">Approval Data</span>
 
   <div class="row fw-bold fst-italic">
     <label for="planMaster" class="col-md-2 col-form-label">Masters Benefits</label>
     <div class="col-md-2">
-      <select class="form-select form-select-sm" id="planMaster" name="planMaster" [(ngModel)]="selectedMaster"
-        (ngModelChange)="fetchBenefits()">
-        <option [value]="selectedMaster" disabled hidden>Select</option>
-        <option *ngFor="let master of (planMasterBenefits$ | async)" [ngValue]="master">
+      <select class="form-select form-select-sm" id="planMaster" name="planMaster" [(ngModel)]="masterBenefit"
+        (ngModelChange)="fetchPlanBenefits()" required>
+        <option [value]="masterBenefit" disabled hidden>Select</option>
+        <option *ngFor="let master of (masterBenefits$ | async)" [ngValue]="master">
           {{master.masterBenefitName}}
         </option>
       </select>
@@ -16,9 +16,10 @@
 
     <label for="planBenefit" class="col-md-2 col-form-label">Benefits</label>
     <div class="col-md-2">
-      <select class="form-select form-select-sm" id="planBenefit" name="planBenefit" [(ngModel)]="selectedBenefit">
-        <option [value]="selectedBenefit" disabled hidden>Select</option>
-        <option *ngFor="let benefit of (planBenefits$ | async)" [ngValue]="benefit">
+      <select class="form-select form-select-sm" id="planBenefit" name="planBenefit" [(ngModel)]="benefit"
+        (ngModelChange)="calculateCopayment()">
+        <option [value]="benefit" disabled hidden>Select</option>
+        <option *ngFor="let benefit of (benefits$ | async)" [ngValue]="benefit">
           {{benefit.benefitName}}
         </option>
       </select>
@@ -27,7 +28,7 @@
     <label for="copayment" class="col-md-2 col-form-label">CoPayment Per</label>
     <div class="col-md-2">
       <input type="text" class="form-control form-control-sm mt-1" id="copayment" readonly
-        value="{{approval.approvalCopaymentPer}}">
+        value="{{approval.approvalCopaymentPer | percent}}">
     </div>
 
   </div>
@@ -55,8 +56,7 @@
   <div class="row fw-bold fst-italic">
     <label for="name" class="col-md-2 col-form-label">Member Name</label>
     <div class="col-md-2">
-      <input type="text" class="form-control form-control-sm mt-1" id="name" readonly
-        value="{{approval.memberName}}">
+      <input type="text" class="form-control form-control-sm mt-1" id="name" readonly value="{{approval.memberName}}">
     </div>
 
     <label for="cardNumber" class="col-md-2 col-form-label">Card Number</label>
@@ -74,8 +74,7 @@
   <div class="row fw-bold fst-italic">
     <label for="plan" class="col-md-2 col-form-label">Member Plan</label>
     <div class="col-md-2">
-      <input type="text" class="form-control form-control-sm mt-1" id="plan" readonly
-        value="{{approval.planName}}">
+      <input type="text" class="form-control form-control-sm mt-1" id="plan" readonly value="{{approval.planName}}">
     </div>
 
     <label for="customer" class="col-md-2 col-form-label">Customer Name</label>
@@ -86,7 +85,7 @@
 
     <label for="status" class="col-md-2 col-form-label">Member Status</label>
     <div class="col-md-2">
-      <input type="text" class="form-control form-control-sm mt-1" id="status" readonly value="">
+      <input type="text" class="form-control form-control-sm mt-1" id="status" readonly value="{{approval.memberStatus}}">
     </div>
 
   </div>
@@ -114,7 +113,7 @@
 
     <label for="ICDCode" class="col-md-2 col-form-label">ICDCode</label>
     <div class="col-md-2">
-      <input type="text" class="form-control form-control-sm mt-1" id="ICDCode" readonly value="">
+      <input type="text" class="form-control form-control-sm mt-1" id="ICDCode" readonly value="{{approval.icdCode}}">
     </div>
   </div>
 
@@ -152,7 +151,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of approval.approvalItems" class="text-center">
+        <tr *ngFor="let item of approval.approvalItems" class="text-center"
+          [class.text-decoration-line-through]="item.status === rejected">
           <td>{{item.serviceName}}</td>
           <td>{{item.serviceQnt}}</td>
           <td>{{item.serviceUnitAmt}}</td>
@@ -164,14 +164,17 @@
           <td>{{item.dosageTime}}</td>
           <td>{{item.dosageDays}}</td>
           <td class="text-center fst-italic">
-            <button type="button" class="btn btn-outline-danger btn-sm">Reject</button>
+            <button *ngIf="item.status === rejected" type="button" class="btn btn-outline-success btn-sm"
+              (click)="toggleItem(item)">Accept</button>
+            <button *ngIf="item.status !== rejected" type="button" class="btn btn-outline-danger btn-sm"
+              (click)="toggleItem(item)">reject</button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <div class="row fw-bolder fst-italic text-center text-success">
+  <div class="row fw-bolder fst-italic text-center text-primary">
     <div class="col-md-6">
       <p class="mx-auto">Total Approval Amount: {{approval.approvalAmt}}</p>
     </div>

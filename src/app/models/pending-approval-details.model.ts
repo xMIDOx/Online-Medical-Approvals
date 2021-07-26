@@ -12,10 +12,12 @@ export interface PendingApprovalDetails {
   approvalCopaymentAmt: number;
   approvalDate: Date;
   planName: string;
-  memberName: string
+  memberName: string;
+  memberStatus: string;
   customerName: string;
   providerName: string;
   providerCatName: string;
+  icdCode: string;
   diagnosis: string;
   internalNotes: string;
   printedNotes: string;
