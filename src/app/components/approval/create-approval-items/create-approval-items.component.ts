@@ -13,6 +13,7 @@ import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 import { ApprovalItemDisplay } from '../../../models/approval-item-display.model';
+import { ItemStatus } from './../../../models/item-status.enum';
 import { ServicePrice } from './../../../models/service-price.model';
 import { LookupsService } from './../../../services/lookups.service';
 
@@ -35,7 +36,10 @@ export class CreateApprovalItemsComponent implements OnInit, OnChanges {
 
   constructor(private lookupService: LookupsService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // Default Item Status When Creating Items
+    this.approvalItem.status = ItemStatus.Accepted;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.getProviderData();

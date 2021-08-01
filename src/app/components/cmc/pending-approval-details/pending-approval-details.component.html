@@ -2,133 +2,156 @@
 
   <span class="badge rounded-pill bg-warning mb-3 fs-5">Approval Data</span>
 
-  <div class="row fw-bold fst-italic">
-    <label for="planMaster" class="col-md-2 col-form-label">Masters Benefits</label>
-    <div class="col-md-2">
-      <select class="form-select form-select-sm" id="planMaster" name="planMaster" [(ngModel)]="masterBenefit"
-        (ngModelChange)="fetchPlanBenefits()" required>
-        <option [value]="masterBenefit" disabled hidden>Select</option>
-        <option *ngFor="let master of (masterBenefits$ | async)" [ngValue]="master">
-          {{master.masterBenefitName}}
-        </option>
-      </select>
-    </div>
+  <div class="row">
 
-    <label for="planBenefit" class="col-md-2 col-form-label">Benefits</label>
-    <div class="col-md-2">
-      <select class="form-select form-select-sm" id="planBenefit" name="planBenefit" [(ngModel)]="benefit"
-        (ngModelChange)="calculateCopayment()">
-        <option [value]="benefit" disabled hidden>Select</option>
-        <option *ngFor="let benefit of (benefits$ | async)" [ngValue]="benefit">
-          {{benefit.benefitName}}
-        </option>
-      </select>
-    </div>
-
-    <label for="copayment" class="col-md-2 col-form-label">CoPayment Per</label>
-    <div class="col-md-2">
-      <input type="text" class="form-control form-control-sm mt-1" id="copayment" readonly
-        value="{{approval.approvalCopaymentPer | percent}}">
-    </div>
-
-  </div>
-
-  <div class="row fw-bold fst-italic">
-    <label for="approvalNumber" class="col-md-2 col-form-label">Approval Number</label>
-    <div class="col-md-2">
-      <input type="text" class="form-control form-control-sm mt-1" id="approvalNumber" readonly
-        value="{{approval.approvalNumber}}">
-    </div>
-
-    <label for="approvalDate" class="col-md-2 col-form-label">Approval Date</label>
-    <div class="col-md-2">
-      <input type="text" class="form-control form-control-sm mt-1" id="approvalDate" readonly
-        value="{{approval.approvalDate | date}}">
-    </div>
-
-    <label for="claimNumber" class="col-md-2 col-form-label">Claim Number</label>
-    <div class="col-md-2">
-      <input type="text" class="form-control form-control-sm mt-1" id="claimNumber" readonly
-        value="{{approval.claimNumber}}">
-    </div>
-  </div>
-
-  <div class="row fw-bold fst-italic">
-    <label for="name" class="col-md-2 col-form-label">Member Name</label>
-    <div class="col-md-2">
-      <input type="text" class="form-control form-control-sm mt-1" id="name" readonly value="{{approval.memberName}}">
-    </div>
-
-    <label for="cardNumber" class="col-md-2 col-form-label">Card Number</label>
-    <div class="col-md-2">
-      <input type="text" class="form-control form-control-sm mt-1" id="cardNumber" readonly
-        value="{{approval.cardNumber}}">
-    </div>
-
-    <label for="ceiling" class="col-md-2 col-form-label">Available Ceiling</label>
-    <div class="col-md-2">
-      <input type="text" class="form-control form-control-sm mt-1" id="ceiling" readonly value="">
-    </div>
-  </div>
-
-  <div class="row fw-bold fst-italic">
-    <label for="plan" class="col-md-2 col-form-label">Member Plan</label>
-    <div class="col-md-2">
-      <input type="text" class="form-control form-control-sm mt-1" id="plan" readonly value="{{approval.planName}}">
-    </div>
-
-    <label for="customer" class="col-md-2 col-form-label">Customer Name</label>
-    <div class="col-md-2">
-      <input type="text" class="form-control form-control-sm mt-1" id="customer" readonly
-        value="{{approval.customerName}}">
-    </div>
-
-    <label for="status" class="col-md-2 col-form-label">Member Status</label>
-    <div class="col-md-2">
-      <input type="text" class="form-control form-control-sm mt-1" id="status" readonly value="{{approval.memberStatus}}">
-    </div>
-
-  </div>
-
-  <div class="row fw-bold fst-italic">
-    <label for="provider" class="col-md-2 col-form-label">Provider Name</label>
-    <div class="col-md-6">
-      <input type="text" class="form-control form-control-sm mt-1" id="provider" readonly
-        value="{{approval.providerName}}">
-    </div>
-
-    <label for="providerCat" class="col-md-2 col-form-label">Provider Cat</label>
-    <div class="col-md-2">
-      <input type="text" class="form-control form-control-sm mt-1" id="providerCat" readonly
-        value="{{approval.providerCatName}}">
-    </div>
-  </div>
-
-  <div class="row fw-bold fst-italic">
-    <label for="diagnosis" class="col-md-2 col-form-label">Diagnosis</label>
-    <div class="col-md-6">
-      <input type="text" class="form-control form-control-sm mt-1" id="diagnosis" readonly
-        value="{{approval.diagnosis}}">
-    </div>
-
-    <label for="ICDCode" class="col-md-2 col-form-label">ICDCode</label>
-    <div class="col-md-2">
-      <input type="text" class="form-control form-control-sm mt-1" id="ICDCode" readonly value="{{approval.icdCode}}">
-    </div>
-  </div>
-
-  <div class="row fw-bold fst-italic">
-    <label for="internalNote" class="col-md-2 col-form-label">Interna Notes</label>
     <div class="col-md-10">
-      <textarea type="text" class="form-control form-control-sm mt-1" id="internalNote" readonly value=""></textarea>
-    </div>
-  </div>
 
-  <div class="row mb-3 fw-bold fst-italic">
-    <label for="printedNote" class="col-md-2 col-form-label">Printed Notes</label>
-    <div class="col-md-10">
-      <textarea type="text" class="form-control form-control-sm mt-1" id="printedNote" readonly value=""></textarea>
+      <div class="row fw-bold fst-italic">
+        <label for="planMaster" class="col-md-2 col-form-label">Masters Benefits</label>
+        <div class="col-md-2">
+          <select class="form-select form-select-sm mt-1" id="planMaster" name="planMaster" [(ngModel)]="masterBenefit"
+            (ngModelChange)="fetchPlanBenefits()" required>
+            <option [value]="masterBenefit" disabled hidden>Select</option>
+            <option *ngFor="let master of (masterBenefits$ | async)" [ngValue]="master">
+              {{master.masterBenefitName}}
+            </option>
+          </select>
+        </div>
+
+        <label for="planBenefit" class="col-md-2 col-form-label">Benefits</label>
+        <div class="col-md-2">
+          <select class="form-select form-select-sm mt-1" id="planBenefit" name="planBenefit" [(ngModel)]="benefit"
+            (ngModelChange)="calculateCopayment()">
+            <option [value]="benefit" disabled hidden>Select</option>
+            <option *ngFor="let benefit of (benefits$ | async)" [ngValue]="benefit">
+              {{benefit.benefitName}}
+            </option>
+          </select>
+        </div>
+
+        <label for="copayment" class="col-md-2 col-form-label">CoPayment Per</label>
+        <div class="col-md-2">
+          <input type="text" class="form-control form-control-sm mt-1" id="copayment" readonly
+            value="{{approval.approvalCopaymentPer | percent}}">
+        </div>
+
+      </div>
+
+      <div class="row fw-bold fst-italic">
+        <label for="approvalNumber" class="col-md-2 col-form-label">Approval Number</label>
+        <div class="col-md-2">
+          <input type="text" class="form-control form-control-sm mt-1" id="approvalNumber" readonly
+            value="{{approval.approvalNumber}}">
+        </div>
+
+        <label for="approvalDate" class="col-md-2 col-form-label">Approval Date</label>
+        <div class="col-md-2">
+          <input type="text" class="form-control form-control-sm mt-1" id="approvalDate" readonly
+            value="{{approval.approvalDate | date}}">
+        </div>
+
+        <label for="claimNumber" class="col-md-2 col-form-label">Claim Number</label>
+        <div class="col-md-2">
+          <input type="text" class="form-control form-control-sm mt-1" id="claimNumber" readonly
+            value="{{approval.claimNumber}}">
+        </div>
+      </div>
+
+      <div class="row fw-bold fst-italic">
+        <label for="name" class="col-md-2 col-form-label">Member Name</label>
+        <div class="col-md-2">
+          <input type="text" class="form-control form-control-sm mt-1" id="name" readonly
+            value="{{approval.memberName}}">
+        </div>
+
+        <label for="cardNumber" class="col-md-2 col-form-label">Card Number</label>
+        <div class="col-md-2">
+          <input type="text" class="form-control form-control-sm mt-1" id="cardNumber" readonly
+            value="{{approval.cardNumber}}">
+        </div>
+
+        <label for="ceiling" class="col-md-2 col-form-label">Available Ceiling</label>
+        <div class="col-md-2">
+          <input type="text" class="form-control form-control-sm mt-1" id="ceiling" readonly value="">
+        </div>
+      </div>
+
+      <div class="row fw-bold fst-italic">
+        <label for="plan" class="col-md-2 col-form-label">Member Plan</label>
+        <div class="col-md-2">
+          <input type="text" class="form-control form-control-sm mt-1" id="plan" readonly value="{{approval.planName}}">
+        </div>
+
+        <label for="customer" class="col-md-2 col-form-label">Customer Name</label>
+        <div class="col-md-2">
+          <input type="text" class="form-control form-control-sm mt-1" id="customer" readonly
+            value="{{approval.customerName}}">
+        </div>
+
+        <label for="status" class="col-md-2 col-form-label">Member Status</label>
+        <div class="col-md-2">
+          <input type="text" class="form-control form-control-sm mt-1" id="status" readonly
+            value="{{approval.memberStatus}}">
+        </div>
+
+      </div>
+
+      <div class="row fw-bold fst-italic">
+        <label for="provider" class="col-md-2 col-form-label">Provider Name</label>
+        <div class="col-md-6">
+          <input type="text" class="form-control form-control-sm mt-1" id="provider" readonly
+            value="{{approval.providerName}}">
+        </div>
+
+        <label for="providerCat" class="col-md-2 col-form-label">Provider Cat</label>
+        <div class="col-md-2">
+          <input type="text" class="form-control form-control-sm mt-1" id="providerCat" readonly
+            value="{{approval.providerCatName}}">
+        </div>
+      </div>
+
+      <div class="row fw-bold fst-italic">
+        <label for="diagnosis" class="col-md-2 col-form-label">Diagnosis</label>
+        <div class="col-md-6">
+          <input type="text" class="form-control form-control-sm mt-1" id="diagnosis" readonly
+            value="{{approval.diagnosis}}">
+        </div>
+
+        <label for="ICDCode" class="col-md-2 col-form-label">ICDCode</label>
+        <div class="col-md-2">
+          <input type="text" class="form-control form-control-sm mt-1" id="ICDCode" readonly
+            value="{{approval.icdCode}}">
+        </div>
+      </div>
+
+      <div class="row fw-bold fst-italic">
+        <label for="printedNote" class="col-md-2 col-form-label">Provider Notes</label>
+        <div class="col-md-10">
+          <textarea type="text" class="form-control form-control-sm mt-1" id="printedNote" readonly value=""></textarea>
+        </div>
+      </div>
+
+      <div class="row mb-3 fw-bold fst-italic">
+        <label for="internalNote" class="col-md-2 col-form-label">Internal Notes</label>
+        <div class="col-md-10">
+          <textarea type="text" class="form-control form-control-sm mt-1" id="internalNote" readonly
+            value=""></textarea>
+        </div>
+      </div>
+
     </div>
+
+    <div class="col-md-2 mb-3">
+      <ul class="list-group fw-bold mt-1 ">
+        <li class="list-group-item text-warning">Annual Ceiling : <br> {{ member.annualCeilingAmt | number }} </li>
+        <li class="list-group-item text-warning">Rem. Annual Ceiling : <br> </li>
+        <li class="list-group-item text-warning">Master Ceiling : <br> {{ masterBenefit.masterCeilingAmt }} </li>
+        <li class="list-group-item text-warning">Rem. Master Ceiling : <br> </li>
+        <li class="list-group-item text-warning">Benefit Ceiling : <br> {{ benefit.maxCeilingAmt | number }} </li>
+        <li class="list-group-item text-warning">Rem. Benefit Ceiling : <br> </li>
+      </ul>
+    </div>
+
   </div>
 
   <span class="badge rounded-pill bg-warning mb-3 fs-5">Approval Services</span>

@@ -9,6 +9,7 @@ import { PlanBenefit } from 'src/app/models/plan-benefit.model';
 
 import { PlanMasterBenefit } from '../../../models/plan-master-benefit.model';
 import { ItemStatus } from './../../../models/item-status.enum';
+import { Member } from './../../../models/member.model';
 import { PendingApprovalDetails } from './../../../models/pending-approval-details.model';
 import { ApprovalService } from './../../../services/approval.service';
 import { LookupsService } from './../../../services/lookups.service';
@@ -22,10 +23,12 @@ export class PendingApprovalDetailsComponent implements OnInit {
   public approval = <PendingApprovalDetails>{};
   public masterBenefits$ = new Observable<PlanMasterBenefit[]>();
   public benefits$ = new Observable<PlanBenefit[]>();
+
   public rejected = ItemStatus.Rejected;
   public accepted = ItemStatus.Accepted;
   public masterBenefit = <PlanMasterBenefit>{};
   public benefit = <PlanBenefit>{};
+  public member = <Member>{};
 
   constructor(
     private route: ActivatedRoute,
@@ -55,16 +58,6 @@ export class PendingApprovalDetailsComponent implements OnInit {
       this.benefit.coPaymentPer * this.approval.approvalAmt;
   }
 
-  public toggleItem(item: ApprovalItemCreate): void {
-    item.status =
-      item.status === ItemStatus.Rejected
-        ? ItemStatus.Accepted
-        : ItemStatus.Rejected;
-
-    this.calculateApprovalAmt();
-    if (this.approval.approvalCopaymentPer != 0) this.calculateCopayment();
-  }
-
   private getApprovalById(approvalId: number) {
     this.approvalService
       .getApprovalById(approvalId)
@@ -79,11 +72,20 @@ export class PendingApprovalDetailsComponent implements OnInit {
         })
       )
       .subscribe((member) => {
-        this.masterBenefits$ = this.lookupService.getPlanMasterBenefits(
-          member.planId
-        );
-        this.approval.memberStatus = member.isActive ? 'Active' : 'Stopped';
+        this.member = member;
+        this.masterBenefits$ = this.lookupService.getPlanMasterBenefits(member.planId);
+        this.setMemberStatus();
       });
+  }
+
+  public toggleItem(item: ApprovalItemCreate): void {
+    item.status =
+      item.status === ItemStatus.Rejected
+        ? ItemStatus.Accepted
+        : ItemStatus.Rejected;
+
+    this.calculateApprovalAmt();
+    if (this.approval.approvalCopaymentPer != 0) this.calculateCopayment();
   }
 
   private calculateApprovalAmt(): void {
@@ -94,5 +96,9 @@ export class PendingApprovalDetailsComponent implements OnInit {
       .forEach((item) => {
         this.approval.approvalAmt += item.serviceTotalAmt;
       });
+  }
+
+  private setMemberStatus(): void {
+    this.approval.memberStatus = this.member.isActive ? 'Active' : 'Stopped';
   }
 }

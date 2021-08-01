@@ -6,5 +6,6 @@ export interface Member {
   customerId: number;
   customerName: string;
   isActive: boolean;
+  annualCeilingAmt: number;
   statusName?: 'Active' | 'Stopped';
 }

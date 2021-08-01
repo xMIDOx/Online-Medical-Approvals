@@ -7,4 +7,5 @@ export interface ApprovalItemDisplay {
   dosageDays: number;
   dosagePerDay: number;
   dosageTime: number;
+  status: number;
 }

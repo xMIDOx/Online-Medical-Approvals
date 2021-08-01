@@ -1,3 +1,5 @@
+import { ItemStatus } from './item-status.enum';
+
 export interface ApprovalItemCreate {
   masterBenefitId:number;
   benefitId: number;
