@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { defaultIfEmpty, map, take } from 'rxjs/operators';
 import { KeyValue } from 'src/app/models/key-value.model';
 
+import { Branch } from './../../../models/branch.model';
 import { Register } from './../../../models/register.model';
 import { Roles } from './../../../models/user-roles.enum';
 import { AuthService } from './../../../services/auth.service';
@@ -18,6 +19,8 @@ import { UserRolesService } from './../../../services/user-roles.service';
 export class SignUpComponent implements OnInit {
   public roles$ = new Observable<KeyValue[]>();
   public providers$ = new Observable<Object>();
+  public branches$ = new Observable<Branch[]>();
+  public branch = <Branch>{};
   public rolesEnum = Roles;
   public isLoading = false;
   public error: string = '';
@@ -40,16 +43,17 @@ export class SignUpComponent implements OnInit {
     this.authService
       .getUser()
       .pipe(take(1))
-      .subscribe((res) => {
-        if (res.providerId != 0) {
-          this.userRegistration.providerId = res.providerId;
+      .subscribe((user) => {
+        if (user.providerId != 0) {
+          this.userRegistration.providerId = user.providerId;
           this.userRegistration.roles.push(Roles.ProviderUser);
+          this.branches$ = this.lookupService.getBranches(user.providerId);
         }
         else this.roles$ = this.userRolesService.getRoles();
       });
   }
 
-  signUp(form: NgForm) {
+  public signUp(form: NgForm) {
     if (form.valid) {
       this.userRegistration.email = form.value.email;
       this.userRegistration.password = form.value.password;
@@ -69,7 +73,7 @@ export class SignUpComponent implements OnInit {
     this.userRegistration.roles = [];
   }
 
-  onRoleToggle(roleName: string, $event: any) {
+  public onRoleToggle(roleName: string, $event: any) {
     if ($event.target.checked) this.userRegistration.roles.push(roleName);
     else {
       const index = this.userRegistration.roles.indexOf(roleName);
@@ -77,16 +81,21 @@ export class SignUpComponent implements OnInit {
     }
   }
 
-  fetchProviders(searchTerm: string) {
+  public fetchProviders(searchTerm: string) {
     this.queryObj.searchTerm = searchTerm;
     this.providers$ = this.lookupService.getProviders(this.queryObj);
   }
 
-  selectedProvider(item: KeyValue) {
+  public selectedProvider(item: KeyValue) {
     this.userRegistration.providerId = item.id;
   }
 
-  isProviderAdmin(): boolean {
+  public isProviderAdmin(): boolean {
     return this.userRegistration.roles.includes(this.rolesEnum.ProviderAdmin);
   }
+
+  public OnBranchChange() {
+    console.log(this.branch);
+  }
+
 }

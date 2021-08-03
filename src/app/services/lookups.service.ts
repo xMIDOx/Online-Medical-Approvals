@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { Branch } from '../models/branch.model';
 import { PlanMasterBenefit } from '../models/plan-master-benefit.model';
 import { ICDCodeDiagnosis } from './../models/ICDCode-Diagnosis.model';
+import { KeyValue } from './../models/key-value.model';
 import { Member } from './../models/member.model';
 import { PlanBenefit } from './../models/plan-benefit.model';
 import { QueryObject } from './../models/query-object';
@@ -68,15 +70,26 @@ export class LookupsService {
     );
   }
 
-  public getPlanMasterBenefits(planId: number): Observable<PlanMasterBenefit[]> {
+  public getPlanMasterBenefits(
+    planId: number
+  ): Observable<PlanMasterBenefit[]> {
     return this.httpRepo
       .Get(this.lookupsEndpoint + 'getplanmasters?planId=' + planId)
       .pipe(map((res) => res as PlanMasterBenefit[]));
   }
 
-  public getPlanBenefits(planId: number, masterId: number): Observable<PlanBenefit[]> {
+  public getPlanBenefits(
+    planId: number,
+    masterId: number
+  ): Observable<PlanBenefit[]> {
     return this.httpRepo
-      .Get(this.lookupsEndpoint + 'getplanbenefits?planId=' + planId + '&masterId=' + masterId)
+      .Get(
+        this.lookupsEndpoint +
+          'getplanbenefits?planId=' +
+          planId +
+          '&masterId=' +
+          masterId
+      )
       .pipe(map((res) => res as PlanBenefit[]));
   }
 
@@ -87,5 +100,11 @@ export class LookupsService {
         parts.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
     }
     return parts.join('&');
+  }
+
+  public getBranches(providerId: number): Observable<Branch[]> {
+    return this.httpRepo
+      .Get(this.lookupsEndpoint + 'getBranches?providerId=' + providerId)
+      .pipe(map((res) => res as Branch[]));
   }
 }

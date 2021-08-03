@@ -18,10 +18,12 @@
         <label for="email" class="form-label">Email</label>
         <input type="text" id="email" name="email" class="form-control" ngModel required>
       </div>
+
       <div class="col mb-3">
         <label for="password" class="form-label">Password</label>
         <input type="password" id="password" name="password" class="form-control" ngModel required minlength="6">
       </div>
+
       <div class="col mb-3" *ngIf="(roles$ | async) as roles">
         <h5>Roles</h5>
         <div *ngFor="let r of roles; let i = index" class="form-check form-check-inline">
@@ -30,14 +32,28 @@
           <label class="form-check-label" for="role-{{i}}">{{r.name}}</label>
         </div>
       </div>
+
       <div class="col mb-3" *ngIf="isProviderAdmin()">
         <label for="" class="form-label">Providers</label>
         <app-ng-select [items]="(providers$ | async)" (searching)="fetchProviders($event)"
           (selectedItem)="selectedProvider($event)"></app-ng-select>
       </div>
+
+      <div class="col mb-3" *ngIf="((branches$ | async)?.length != 0)">
+          <label for="branches" class="col-md-2 col-form-label">Branches</label>
+          <select class="form-select mt-1" id="branches" name="branches" [(ngModel)]="branch"
+            (ngModelChange)="OnBranchChange()">
+            <option [value]="branch" disabled>Select</option>
+            <option *ngFor="let b of (branches$ | async)" [ngValue]="branch">
+              {{b.address}}
+            </option>
+          </select>
+      </div>
+
       <div class="mb-3">
         <button type="submit" class="btn btn-primary" [disabled]="!authForm.valid">Sign Up</button>
       </div>
+
     </form>
   </div>
 </div>

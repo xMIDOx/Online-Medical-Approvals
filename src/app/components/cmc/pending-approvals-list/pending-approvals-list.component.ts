@@ -34,9 +34,9 @@ export class PendingApprovalsListComponent implements OnInit {
           const isProviderUser = combined[0].roles.includes(Roles.ProviderUser);
 
           if (isCMC) return this.approvalService.getApprovals(1, 0);
-          else if (isProviderUser)
+          else if (isProviderUser) {
             return this.approvalService.getApprovals(1, combined[1].providerId);
-
+          }
           return this.approvalService.getApprovals(0, 0);
         })
       )
