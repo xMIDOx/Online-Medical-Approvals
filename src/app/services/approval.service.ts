@@ -6,7 +6,6 @@ import { ApprovalDisplay } from '../models/approval-display.model';
 import { ApprovalCreate } from './../models/approval-create.model';
 import { ApprovalItemCreate } from './../models/approval-item-create.model';
 import { ApprovalItemDisplay } from './../models/approval-item-display.model';
-import { ItemStatus } from './../models/item-status.enum';
 import { PendingApprovalDetails } from './../models/pending-approval-details.model';
 import { PendingApproval } from './../models/pending-approval.model';
 import { GenericCRUDService } from './generic-crud.service';
@@ -47,6 +46,14 @@ export class ApprovalService {
       .pipe(map((res) => res as PendingApprovalDetails));
   }
 
+  public getUtilization(obj: any): Observable<number> {
+    return this.http
+      .Get(
+        this.approvalEndPoint + 'getUtilization?' + this.http.toQueryString(obj)
+      )
+      .pipe(map((res) => res as number));
+  }
+
   private fetchApprovalCreateObject(approvalDisplay: ApprovalDisplay) {
     this.approvalCreate.providerId = approvalDisplay.serviceProviderId;
     this.approvalCreate.planMemberId = approvalDisplay.planMemberId;
@@ -85,8 +92,7 @@ export class ApprovalService {
   private calculateApprovalAmt(approvalCreate: ApprovalCreate) {
     let approvalAmt = 0;
 
-    approvalCreate.approvalItems
-    .forEach((item) => {
+    approvalCreate.approvalItems.forEach((item) => {
       item.serviceTotalAmt = item.serviceQnt * item.serviceUnitAmt;
       approvalAmt += item.serviceTotalAmt;
     });

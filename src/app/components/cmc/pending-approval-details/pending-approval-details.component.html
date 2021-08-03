@@ -10,7 +10,7 @@
         <label for="planMaster" class="col-md-2 col-form-label">Masters Benefits</label>
         <div class="col-md-2">
           <select class="form-select form-select-sm mt-1" id="planMaster" name="planMaster" [(ngModel)]="masterBenefit"
-            (ngModelChange)="fetchPlanBenefits()" required>
+            (ngModelChange)="onMasterBenefitChange()" required>
             <option [value]="masterBenefit" disabled hidden>Select</option>
             <option *ngFor="let master of (masterBenefits$ | async)" [ngValue]="master">
               {{master.masterBenefitName}}
@@ -21,7 +21,7 @@
         <label for="planBenefit" class="col-md-2 col-form-label">Benefits</label>
         <div class="col-md-2">
           <select class="form-select form-select-sm mt-1" id="planBenefit" name="planBenefit" [(ngModel)]="benefit"
-            (ngModelChange)="calculateCopayment()">
+            (ngModelChange)="onBenefitChange()">
             <option [value]="benefit" disabled hidden>Select</option>
             <option *ngFor="let benefit of (benefits$ | async)" [ngValue]="benefit">
               {{benefit.benefitName}}
@@ -72,7 +72,7 @@
 
         <label for="ceiling" class="col-md-2 col-form-label">Available Ceiling</label>
         <div class="col-md-2">
-          <input type="text" class="form-control form-control-sm mt-1" id="ceiling" readonly value="">
+          <input type="text" class="form-control form-control-sm mt-1" id="ceiling" readonly value="{{availableCeiling}}">
         </div>
       </div>
 
@@ -143,12 +143,12 @@
 
     <div class="col-md-2 mb-3">
       <ul class="list-group fw-bold mt-1 ">
-        <li class="list-group-item text-warning">Annual Ceiling : <br> {{ member.annualCeilingAmt | number }} </li>
-        <li class="list-group-item text-warning">Rem. Annual Ceiling : <br> </li>
-        <li class="list-group-item text-warning">Master Ceiling : <br> {{ masterBenefit.masterCeilingAmt }} </li>
-        <li class="list-group-item text-warning">Rem. Master Ceiling : <br> </li>
-        <li class="list-group-item text-warning">Benefit Ceiling : <br> {{ benefit.maxCeilingAmt | number }} </li>
-        <li class="list-group-item text-warning">Rem. Benefit Ceiling : <br> </li>
+        <li class="list-group-item text-primary">Annual Ceiling : <br> {{ ceiling.annualCeiling | number }} </li>
+        <li class="list-group-item text-primary">Rem. Annual Ceiling : <br> {{ ceiling.remainingAnnual | number}} </li>
+        <li class="list-group-item text-primary">Master Ceiling : <br> {{ ceiling.masterCeiling }} </li>
+        <li class="list-group-item text-primary">Rem. Master Ceiling : <br> {{ ceiling.remainingMaster | number}} </li>
+        <li class="list-group-item text-primary">Benefit Ceiling : <br> {{ ceiling.benefitCeiling | number }} </li>
+        <li class="list-group-item text-primary">Rem. Benefit Ceiling : <br> {{ ceiling.remainingBenefit | number }} </li>
       </ul>
     </div>
 

@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ItemsList } from '@ng-select/ng-select/lib/items-list';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/internal/operators/take';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { ApprovalItemCreate } from 'src/app/models/approval-item-create.model';
 import { PlanBenefit } from 'src/app/models/plan-benefit.model';
 
 import { PlanMasterBenefit } from '../../../models/plan-master-benefit.model';
+import { CeilingUtilization } from './../../../models/ceiling-utilization.model';
 import { ItemStatus } from './../../../models/item-status.enum';
 import { Member } from './../../../models/member.model';
 import { PendingApprovalDetails } from './../../../models/pending-approval-details.model';
@@ -23,12 +23,13 @@ export class PendingApprovalDetailsComponent implements OnInit {
   public approval = <PendingApprovalDetails>{};
   public masterBenefits$ = new Observable<PlanMasterBenefit[]>();
   public benefits$ = new Observable<PlanBenefit[]>();
-
   public rejected = ItemStatus.Rejected;
   public accepted = ItemStatus.Accepted;
   public masterBenefit = <PlanMasterBenefit>{};
   public benefit = <PlanBenefit>{};
   public member = <Member>{};
+  public ceiling = <CeilingUtilization>{};
+  public availableCeiling = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -41,41 +42,30 @@ export class PendingApprovalDetailsComponent implements OnInit {
     this.getApprovalById(approvalId);
   }
 
-  public fetchPlanBenefits(): void {
-    this.benefits$ = this.lookupService.getPlanBenefits(
-      this.masterBenefit.planId,
-      this.masterBenefit.masterBenefitsId
-    );
+  public onMasterBenefitChange(): void {
+    this.resetCeiling();
 
     this.approval.masterBenefitId = this.masterBenefit.masterBenefitsId;
+    this.ceiling.masterCeiling = this.masterBenefit.masterCeilingAmt;
+
+    this.fetchPlanBenefits();
+
+    this.getUtilization().subscribe(
+      (res) => {
+        this.ceiling.masterUtilization = res;
+        this.ceiling.remainingMaster = this.ceiling.masterCeiling - this.ceiling.masterUtilization;
+      }
+    );
   }
 
-  public calculateCopayment(): void {
-    this.approval.benefitId = this.benefit.BenefitId;
-
-    this.approval.approvalCopaymentPer = this.benefit.coPaymentPer;
-    this.approval.approvalCopaymentAmt =
-      this.benefit.coPaymentPer * this.approval.approvalAmt;
-  }
-
-  private getApprovalById(approvalId: number) {
-    this.approvalService
-      .getApprovalById(approvalId)
-      .pipe(
-        take(1),
-        switchMap((approval: PendingApprovalDetails) => {
-          this.approval = approval;
-
-          return this.lookupService
-            .getMember(approval.cardNumber)
-            .pipe(take(1));
-        })
-      )
-      .subscribe((member) => {
-        this.member = member;
-        this.masterBenefits$ = this.lookupService.getPlanMasterBenefits(member.planId);
-        this.setMemberStatus();
-      });
+  public onBenefitChange(): void {
+    this.ceiling.benefitCeiling = this.benefit.maxCeilingAmt;
+    this.calculateCopayment();
+    this.getUtilization().subscribe((res) => {
+      this.ceiling.benefitUtilization = res;
+      this.ceiling.remainingBenefit = this.ceiling.benefitCeiling - this.ceiling.benefitUtilization;
+      this.getAvailableCeiling();
+    });
   }
 
   public toggleItem(item: ApprovalItemCreate): void {
@@ -86,6 +76,57 @@ export class PendingApprovalDetailsComponent implements OnInit {
 
     this.calculateApprovalAmt();
     if (this.approval.approvalCopaymentPer != 0) this.calculateCopayment();
+  }
+
+  private fetchPlanBenefits(): void {
+    this.benefits$ = this.lookupService.getPlanBenefits(
+      this.masterBenefit.planId,
+      this.masterBenefit.masterBenefitsId
+    );
+  }
+
+  private calculateCopayment(): void {
+    this.approval.benefitId = this.benefit.BenefitId;
+    this.approval.approvalCopaymentPer = this.benefit.coPaymentPer;
+    this.approval.approvalCopaymentAmt =
+      this.benefit.coPaymentPer * this.approval.approvalAmt;
+  }
+
+  private getApprovalById(approvalId: number) {
+    this.approvalService
+      .getApprovalById(approvalId)
+      .pipe(
+        take(1),
+        switchMap((approval) => {
+          this.approval = approval;
+          return this.lookupService.getMember(approval.cardNumber).pipe(
+            take(1),
+            switchMap((member) => {
+              this.member = member;
+              this.ceiling.annualCeiling = member.annualCeilingAmt;
+              this.masterBenefits$ = this.lookupService.getPlanMasterBenefits(member.planId);
+              this.setMemberStatus();
+              return this.getUtilization();
+            })
+          );
+        })
+      )
+      .subscribe(
+        (utilization) => {
+          this.ceiling.annualUtilization = utilization;
+          this.ceiling.remainingAnnual = this.ceiling.annualCeiling - this.ceiling.annualUtilization;
+        }
+      );
+    // .subscribe((member) => {
+    //   this.member = member;
+    //   this.masterBenefits$ = this.lookupService.getPlanMasterBenefits(
+    //     member.planId
+    //   );
+    //   this.getUtilization().subscribe(
+    //     (res) => (this.utilizations.annualUtilization = res)
+    //   );
+    //   // this.setMemberStatus();
+    // });
   }
 
   private calculateApprovalAmt(): void {
@@ -100,5 +141,38 @@ export class PendingApprovalDetailsComponent implements OnInit {
 
   private setMemberStatus(): void {
     this.approval.memberStatus = this.member.isActive ? 'Active' : 'Stopped';
+  }
+
+  private getUtilization(): Observable<number> {
+    let queryParams: any = {};
+    queryParams.memberId = this.member.id;
+    queryParams.masterId = this.masterBenefit.id;
+    queryParams.benefitId = this.benefit.id;
+
+    return this.approvalService.getUtilization(queryParams).pipe(
+      take(1),
+      map((utilization) => {
+        return utilization;
+      })
+    );
+  }
+
+  private getAvailableCeiling(): void {
+    let remainingObj = {value1: 0, value2: 0, value3: 0};
+    remainingObj.value1 = this.ceiling.remainingAnnual;
+    remainingObj.value2 = this.ceiling.remainingMaster;
+    remainingObj.value3 = this.ceiling.remainingBenefit;
+
+    this.availableCeiling = Math.min(
+      ...Object.entries(remainingObj).map((o) => o[1])
+    );
+  }
+
+  private resetCeiling() {
+    this.ceiling.benefitCeiling = 0;
+    this.ceiling.benefitUtilization = 0;
+    this.ceiling.remainingBenefit = 0;
+
+    this.availableCeiling = 0;
   }
 }
