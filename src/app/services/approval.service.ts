@@ -28,9 +28,10 @@ export class ApprovalService {
 
   public getApprovals(
     statusId: number,
-    providerId: number
+    providerId: number,
+    userId?: string
   ): Observable<PendingApproval[]> {
-    const queryParams = { statusId: statusId, providerId: providerId };
+    const queryParams = { statusId: statusId, providerId: providerId, userId };
     return this.http
       .Get(
         this.approvalEndPoint +
@@ -62,6 +63,7 @@ export class ApprovalService {
     this.approvalCreate.approvalDate = approvalDisplay.approvalDate;
     this.approvalCreate.claimNumber = approvalDisplay.claimNumber;
     this.approvalCreate.ICDCodeId = approvalDisplay.ICDCodeId;
+    this.approvalCreate.issuedBy = approvalDisplay.issuedBy;
     this.approvalCreate.approvalNumber = this.getApprovalNumber();
     this.approvalCreate.approvalType = 3;
     this.approvalCreate.onlineStatusId = 1;

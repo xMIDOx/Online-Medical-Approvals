@@ -35,7 +35,7 @@ export class PendingApprovalsListComponent implements OnInit {
 
           if (isCMC) return this.approvalService.getApprovals(1, 0);
           else if (isProviderUser) {
-            return this.approvalService.getApprovals(1, combined[1].providerId);
+            return this.approvalService.getApprovals(1, combined[1].providerId, combined[1].id);
           }
           return this.approvalService.getApprovals(0, 0);
         })

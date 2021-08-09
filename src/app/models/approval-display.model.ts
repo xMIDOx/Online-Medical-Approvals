@@ -11,5 +11,6 @@ export interface ApprovalDisplay {
   ICDCodeId: number;
   onlineStatusId: number;
   approvalDate: Date;
+  issuedBy: string;
   approvalItems: ApprovalItemDisplay[];
 }

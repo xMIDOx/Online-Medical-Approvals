@@ -16,7 +16,7 @@ export interface ApprovalCreate {
   masterBenefitId: number;
   benefitId: number;
   ICDCodeId: number;
-  issuedBy: number;
+  issuedBy: string;
   approvalDate: Date;
   internalNotes: string;
   approvalItems: ApprovalItemCreate[];

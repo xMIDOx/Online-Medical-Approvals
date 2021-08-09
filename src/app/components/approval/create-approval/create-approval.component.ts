@@ -29,6 +29,7 @@ export class CreateApprovalComponent implements OnInit {
     serviceProviderId: 0,
     ICDCodeId: 0,
     onlineStatusId: 0,
+    issuedBy: '',
     approvalItems: [],
   };
   public member = <Member>{};
@@ -51,6 +52,7 @@ export class CreateApprovalComponent implements OnInit {
       .pipe(take(1))
       .subscribe((user) => {
         this.approval.serviceProviderId = user.providerId;
+        this.approval.issuedBy = user.id;
         this.provider$ = this.lookupService.getProviderById(user.providerId);
       });
   }
