@@ -72,6 +72,7 @@ export class CreateApprovalItemsComponent implements OnInit, OnChanges {
   }
 
   public onSubmit(form: NgForm) {
+    this.approvalItem.status = ItemStatus.Accepted;
     const item = Object.assign({}, this.approvalItem);
     if (this.index === -1) this.approvalItems.push(item);
     else this.approvalItems[this.index] = item;

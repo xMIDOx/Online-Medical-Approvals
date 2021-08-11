@@ -1,7 +1,7 @@
 import { ApprovalItemCreate } from './approval-item-create.model';
-import { ApprovalItemDisplay } from './approval-item-display.model';
 
 export interface ApprovalCreate {
+  id: number;
   providerId: number;
   planMemberId: number;
   customerId: number;
@@ -19,5 +19,6 @@ export interface ApprovalCreate {
   issuedBy: string;
   approvalDate: Date;
   internalNotes: string;
+  printedNotes: string;
   approvalItems: ApprovalItemCreate[];
 }

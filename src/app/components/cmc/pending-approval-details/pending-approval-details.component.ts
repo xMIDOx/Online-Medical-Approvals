@@ -7,6 +7,7 @@ import { ApprovalItemCreate } from 'src/app/models/approval-item-create.model';
 import { PlanBenefit } from 'src/app/models/plan-benefit.model';
 
 import { PlanMasterBenefit } from '../../../models/plan-master-benefit.model';
+import { ApprovalOnlineStatus } from './../../../models/approval-online-status.enum';
 import { CeilingUtilization } from './../../../models/ceiling-utilization.model';
 import { ItemStatus } from './../../../models/item-status.enum';
 import { Member } from './../../../models/member.model';
@@ -29,6 +30,7 @@ export class PendingApprovalDetailsComponent implements OnInit {
   public benefit = <PlanBenefit>{};
   public member = <Member>{};
   public ceiling = <CeilingUtilization>{};
+  public onlineStatus = ApprovalOnlineStatus;
   public availableCeiling = 0;
 
   constructor(
@@ -59,8 +61,11 @@ export class PendingApprovalDetailsComponent implements OnInit {
   }
 
   public onBenefitChange(): void {
+    this.approval.benefitId = this.benefit.benefitId;
+    this.approval.approvalCopaymentPer = this.benefit.coPaymentPer;
+    this.approval.approvalCopaymentAmt = this.benefit.coPaymentPer * this.approval.approvalAmt;
     this.ceiling.benefitCeiling = this.benefit.maxCeilingAmt;
-    this.calculateCopayment();
+
     this.getUtilization().subscribe((res) => {
       this.ceiling.benefitUtilization = res;
       this.ceiling.remainingBenefit = this.ceiling.benefitCeiling - this.ceiling.benefitUtilization;
@@ -75,7 +80,19 @@ export class PendingApprovalDetailsComponent implements OnInit {
         : ItemStatus.Rejected;
 
     this.calculateApprovalAmt();
-    if (this.approval.approvalCopaymentPer != 0) this.calculateCopayment();
+
+    if (this.approval.approvalCopaymentPer != 0)
+        this.approval.approvalCopaymentAmt = this.benefit.coPaymentPer * this.approval.approvalAmt;
+  }
+
+  public onSubmitApproval(onlineStatusId: number) {
+    if (onlineStatusId === this.onlineStatus.accepted)
+      this.approval.onlineStatusId = this.onlineStatus.accepted;
+    else if (onlineStatusId === this.onlineStatus.rejected)
+      this.approval.onlineStatusId = this.onlineStatus.rejected;
+
+    console.log(this.approval);
+    this.approvalService.updateApproval(this.approval).subscribe(res => console.log(res));
   }
 
   private fetchPlanBenefits(): void {
@@ -83,13 +100,6 @@ export class PendingApprovalDetailsComponent implements OnInit {
       this.masterBenefit.planId,
       this.masterBenefit.masterBenefitsId
     );
-  }
-
-  private calculateCopayment(): void {
-    this.approval.benefitId = this.benefit.BenefitId;
-    this.approval.approvalCopaymentPer = this.benefit.coPaymentPer;
-    this.approval.approvalCopaymentAmt =
-      this.benefit.coPaymentPer * this.approval.approvalAmt;
   }
 
   private getApprovalById(approvalId: number) {
@@ -117,16 +127,6 @@ export class PendingApprovalDetailsComponent implements OnInit {
           this.ceiling.remainingAnnual = this.ceiling.annualCeiling - this.ceiling.annualUtilization;
         }
       );
-    // .subscribe((member) => {
-    //   this.member = member;
-    //   this.masterBenefits$ = this.lookupService.getPlanMasterBenefits(
-    //     member.planId
-    //   );
-    //   this.getUtilization().subscribe(
-    //     (res) => (this.utilizations.annualUtilization = res)
-    //   );
-    //   // this.setMemberStatus();
-    // });
   }
 
   private calculateApprovalAmt(): void {

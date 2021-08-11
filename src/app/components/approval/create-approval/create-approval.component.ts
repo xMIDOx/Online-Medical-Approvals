@@ -7,11 +7,11 @@ import { ApprovalDisplay } from 'src/app/models/approval-display.model';
 import { AuthService } from 'src/app/services/auth.service';
 
 import { ApprovalItemDisplay } from '../../../models/approval-item-display.model';
+import { ApprovalOnlineStatus } from './../../../models/approval-online-status.enum';
 import { KeyValue } from './../../../models/key-value.model';
 import { Member } from './../../../models/member.model';
 import { ApprovalService } from './../../../services/approval.service';
 import { LookupsService } from './../../../services/lookups.service';
-
 
 @Component({
   selector: 'app-create-approval',
@@ -20,6 +20,7 @@ import { LookupsService } from './../../../services/lookups.service';
 })
 export class CreateApprovalComponent implements OnInit {
   public approval: ApprovalDisplay = {
+    id: 0,
     approvalDate: new Date(),
     cardNumber: 0,
     customerId: 0,
@@ -30,10 +31,10 @@ export class CreateApprovalComponent implements OnInit {
     ICDCodeId: 0,
     onlineStatusId: 0,
     issuedBy: '',
+    printedNotes: '',
     approvalItems: [],
   };
   public member = <Member>{};
-  // public providers = new Observable<object>();
   public provider$ = new Observable<any>();
   public diagnosis = new Observable<object>();
   public claimProviderName = '';
@@ -56,11 +57,6 @@ export class CreateApprovalComponent implements OnInit {
         this.provider$ = this.lookupService.getProviderById(user.providerId);
       });
   }
-
-  // public getProviders(searchTerm: string): void {
-  //   this.queryObj.searchTerm = searchTerm;
-  //   this.providers = this.lookupService.getProviders(this.queryObj);
-  // }
 
   public getDiagnosis(searchTerm: string): void {
     this.queryObj.searchTerm = searchTerm;
@@ -118,12 +114,14 @@ export class CreateApprovalComponent implements OnInit {
   }
 
   public onSubmit(form: NgForm): void {
+    this.approval.onlineStatusId = ApprovalOnlineStatus.pending;
+
     if (form.valid)
       this.approvalService
         .createApproval(this.approval)
         .pipe(take(1))
-        .subscribe((res) => this.router.navigate(['/pending-approvals']));
-
-    form.reset();
+        .subscribe((res) => {
+          this.router.navigate(['/pending-approvals']);
+        });
   }
 }

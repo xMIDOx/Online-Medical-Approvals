@@ -2,7 +2,7 @@ export interface PlanBenefit {
   id: number;
   planId: number;
   masterBenefitsId: number;
-  BenefitId: number;
+  benefitId: number;
   benefitName: string;
   maxCeilingAmt: number;
   coPaymentPer: number;

@@ -18,7 +18,7 @@
       <td>{{app.providerName}}</td>
       <td>{{app.approvalAmt}}</td>
       <td>{{app.onlineStatus}}</td>
-      <td>
+      <td *ngIf="!isProviderUser">
         <a [routerLink]="['/pending-approval-details', app.id]" class="link-primary">Details</a>
       </td>
     </tr>

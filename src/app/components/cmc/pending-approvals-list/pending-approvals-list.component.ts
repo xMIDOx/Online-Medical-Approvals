@@ -3,6 +3,7 @@ import { combineLatest, Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
 
+import { ApprovalOnlineStatus } from './../../../models/approval-online-status.enum';
 import { PendingApproval } from './../../../models/pending-approval.model';
 import { Roles } from './../../../models/user-roles.enum';
 import { UserToken } from './../../../models/user-token.model';
@@ -16,6 +17,8 @@ import { ApprovalService } from './../../../services/approval.service';
 })
 export class PendingApprovalsListComponent implements OnInit {
   public pendingApprovals$ = new Observable<PendingApproval[]>();
+  private onlineStatus = ApprovalOnlineStatus;
+  public isProviderUser = false;
   constructor(
     private approvalService: ApprovalService,
     private authService: AuthService
@@ -32,10 +35,14 @@ export class PendingApprovalsListComponent implements OnInit {
         map((combined: [UserToken, User]) => {
           const isCMC = combined[0].roles.includes(Roles.CMCDoctor);
           const isProviderUser = combined[0].roles.includes(Roles.ProviderUser);
-
-          if (isCMC) return this.approvalService.getApprovals(1, 0);
+          if (isCMC) {
+            return this.approvalService
+            .getApprovals(this.onlineStatus.pending, 0);
+          }
           else if (isProviderUser) {
-            return this.approvalService.getApprovals(1, combined[1].providerId, combined[1].id);
+            this.isProviderUser = true;
+            return this.approvalService
+            .getApprovals(0, combined[1].providerId, combined[1].id);
           }
           return this.approvalService.getApprovals(0, 0);
         })

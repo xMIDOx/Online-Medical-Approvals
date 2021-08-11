@@ -21,8 +21,15 @@ export class ApprovalService {
   public createApproval(approval: ApprovalDisplay) {
     this.fetchApprovalCreateObject(approval);
     return this.http.Create(
-      this.approvalEndPoint + 'create',
+      this.approvalEndPoint + 'CreateOrUpdate',
       this.approvalCreate
+    );
+  }
+
+  public updateApproval(approval: any) {
+    return this.http.Create(
+      this.approvalEndPoint + 'CreateOrUpdate',
+      approval
     );
   }
 
@@ -56,6 +63,7 @@ export class ApprovalService {
   }
 
   private fetchApprovalCreateObject(approvalDisplay: ApprovalDisplay) {
+    this.approvalCreate.id = approvalDisplay.id;
     this.approvalCreate.providerId = approvalDisplay.serviceProviderId;
     this.approvalCreate.planMemberId = approvalDisplay.planMemberId;
     this.approvalCreate.customerId = approvalDisplay.customerId;
@@ -64,9 +72,10 @@ export class ApprovalService {
     this.approvalCreate.claimNumber = approvalDisplay.claimNumber;
     this.approvalCreate.ICDCodeId = approvalDisplay.ICDCodeId;
     this.approvalCreate.issuedBy = approvalDisplay.issuedBy;
+    this.approvalCreate.printedNotes = approvalDisplay.printedNotes;
+    this.approvalCreate.onlineStatusId = approvalDisplay.onlineStatusId;
     this.approvalCreate.approvalNumber = this.getApprovalNumber();
     this.approvalCreate.approvalType = 3;
-    this.approvalCreate.onlineStatusId = 1;
 
     this.fetchItemsCreateObject(approvalDisplay.approvalItems);
     this.calculateApprovalAmt(this.approvalCreate);
@@ -86,6 +95,7 @@ export class ApprovalService {
       itemCreate.dosageDays = item.dosageDays;
       itemCreate.dosagePerDay = item.dosagePerDay;
       itemCreate.dosageTime = item.dosageTime;
+      itemCreate.status = item.status;
 
       this.approvalCreate.approvalItems.push(itemCreate);
     });

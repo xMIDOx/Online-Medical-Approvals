@@ -3,9 +3,6 @@
     <div class="col text-center" *ngIf="(provider$ | async) as provider">
       <h5><strong>{{provider.name}}</strong></h5>
       <hr>
-      <!-- <label for="ngSelect" class="form-label">Service Providers</label>
-      <app-ng-select [items]="providers | async" (searching)="getProviders($event)"
-        (selectedItem)="getSelectedProvider($event)"></app-ng-select> -->
     </div>
   </div>
   <div class="row mb-1">
@@ -51,8 +48,8 @@
   </div>
   <div class="row mb-1">
     <div class="col-md-9">
-      <label for="notes" class="form-label">Notes</label>
-      <textarea class="form-control" name="notes" id="notes"></textarea>
+      <label for="notes" class="form-label">Provider Notes</label>
+      <textarea class="form-control" name="providerNotes" [(ngModel)]="approval.printedNotes" id="notes"></textarea>
     </div>
   </div>
   <div class="row mb-1">

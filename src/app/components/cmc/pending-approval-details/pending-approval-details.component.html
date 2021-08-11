@@ -72,7 +72,8 @@
 
         <label for="ceiling" class="col-md-2 col-form-label">Available Ceiling</label>
         <div class="col-md-2">
-          <input type="text" class="form-control form-control-sm mt-1" id="ceiling" readonly value="{{availableCeiling}}">
+          <input type="text" class="form-control form-control-sm mt-1" id="ceiling" readonly
+            value="{{availableCeiling}}">
         </div>
       </div>
 
@@ -127,15 +128,15 @@
       <div class="row fw-bold fst-italic">
         <label for="printedNote" class="col-md-2 col-form-label">Provider Notes</label>
         <div class="col-md-10">
-          <textarea type="text" class="form-control form-control-sm mt-1" id="printedNote" readonly value=""></textarea>
+          <textarea type="text" class="form-control form-control-sm mt-1" id="printedNote" readonly [value]="approval.printedNotes"></textarea>
         </div>
       </div>
 
       <div class="row mb-3 fw-bold fst-italic">
         <label for="internalNote" class="col-md-2 col-form-label">Internal Notes</label>
         <div class="col-md-10">
-          <textarea type="text" class="form-control form-control-sm mt-1" id="internalNote" readonly
-            value=""></textarea>
+          <textarea type="text" class="form-control form-control-sm mt-1" id="internalNote"
+            name="internalNotes" [(ngModel)]="approval.internalNotes"></textarea>
         </div>
       </div>
 
@@ -145,10 +146,11 @@
       <ul class="list-group fw-bold mt-1 ">
         <li class="list-group-item text-primary">Annual Ceiling : <br> {{ ceiling.annualCeiling | number }} </li>
         <li class="list-group-item text-primary">Rem. Annual Ceiling : <br> {{ ceiling.remainingAnnual | number}} </li>
-        <li class="list-group-item text-primary">Master Ceiling : <br> {{ ceiling.masterCeiling }} </li>
+        <li class="list-group-item text-primary">Master Ceiling : <br> {{ ceiling.masterCeiling | number}} </li>
         <li class="list-group-item text-primary">Rem. Master Ceiling : <br> {{ ceiling.remainingMaster | number}} </li>
         <li class="list-group-item text-primary">Benefit Ceiling : <br> {{ ceiling.benefitCeiling | number }} </li>
-        <li class="list-group-item text-primary">Rem. Benefit Ceiling : <br> {{ ceiling.remainingBenefit | number }} </li>
+        <li class="list-group-item text-primary">Rem. Benefit Ceiling : <br> {{ ceiling.remainingBenefit | number }}
+        </li>
       </ul>
     </div>
 
@@ -198,6 +200,7 @@
   </div>
 
   <div class="row fw-bolder fst-italic text-center text-primary">
+
     <div class="col-md-6">
       <p class="mx-auto">Total Approval Amount: {{approval.approvalAmt}}</p>
     </div>
@@ -207,4 +210,10 @@
 
   </div>
 
+  <div class="row">
+    <div class="col-md-2 mx-auto">
+      <button type="button" class="btn btn-success me-2" (click)="onSubmitApproval(onlineStatus.accepted)">Accept</button>
+      <button type="button" class="btn btn-danger" (click)="onSubmitApproval(onlineStatus.rejected)">Reject</button>
+    </div>
+  </div>
 </div>
