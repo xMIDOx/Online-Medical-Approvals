@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { take } from 'rxjs/internal/operators/take';
-import { map, switchMap } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
+import { combineLatest, EMPTY, empty, Observable } from 'rxjs';
+import { map, switchMap, take } from 'rxjs/operators';
 import { ApprovalItemCreate } from 'src/app/models/approval-item-create.model';
 import { PlanBenefit } from 'src/app/models/plan-benefit.model';
 
@@ -12,7 +11,10 @@ import { CeilingUtilization } from './../../../models/ceiling-utilization.model'
 import { ItemStatus } from './../../../models/item-status.enum';
 import { Member } from './../../../models/member.model';
 import { PendingApprovalDetails } from './../../../models/pending-approval-details.model';
+import { Roles } from './../../../models/user-roles.enum';
+import { UserToken } from './../../../models/user-token.model';
 import { ApprovalService } from './../../../services/approval.service';
+import { AuthService } from './../../../services/auth.service';
 import { LookupsService } from './../../../services/lookups.service';
 
 @Component({
@@ -32,16 +34,21 @@ export class PendingApprovalDetailsComponent implements OnInit {
   public ceiling = <CeilingUtilization>{};
   public onlineStatus = ApprovalOnlineStatus;
   public availableCeiling = 0;
+  public userRoles: string[] = [];
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private approvalService: ApprovalService,
-    private lookupService: LookupsService
+    private lookupService: LookupsService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     const approvalId = this.route.snapshot.params['id'];
-    this.getApprovalById(approvalId);
+    this.getApprovalByIdAndRole(approvalId);
+    // this.authService.userToken$.pipe(take(1)).subscribe(userToken => this.userRoles = userToken.roles);
+    // this.getApprovalById(approvalId);
   }
 
   public onMasterBenefitChange(): void {
@@ -52,23 +59,24 @@ export class PendingApprovalDetailsComponent implements OnInit {
 
     this.fetchPlanBenefits();
 
-    this.getUtilization().subscribe(
-      (res) => {
-        this.ceiling.masterUtilization = res;
-        this.ceiling.remainingMaster = this.ceiling.masterCeiling - this.ceiling.masterUtilization;
-      }
-    );
+    this.getUtilization().subscribe((res) => {
+      this.ceiling.masterUtilization = res;
+      this.ceiling.remainingMaster =
+        this.ceiling.masterCeiling - this.ceiling.masterUtilization;
+    });
   }
 
   public onBenefitChange(): void {
     this.approval.benefitId = this.benefit.benefitId;
     this.approval.approvalCopaymentPer = this.benefit.coPaymentPer;
-    this.approval.approvalCopaymentAmt = this.benefit.coPaymentPer * this.approval.approvalAmt;
+    this.approval.approvalCopaymentAmt =
+      this.benefit.coPaymentPer * this.approval.approvalAmt;
     this.ceiling.benefitCeiling = this.benefit.maxCeilingAmt;
 
     this.getUtilization().subscribe((res) => {
       this.ceiling.benefitUtilization = res;
-      this.ceiling.remainingBenefit = this.ceiling.benefitCeiling - this.ceiling.benefitUtilization;
+      this.ceiling.remainingBenefit =
+        this.ceiling.benefitCeiling - this.ceiling.benefitUtilization;
       this.getAvailableCeiling();
     });
   }
@@ -82,7 +90,8 @@ export class PendingApprovalDetailsComponent implements OnInit {
     this.calculateApprovalAmt();
 
     if (this.approval.approvalCopaymentPer != 0)
-        this.approval.approvalCopaymentAmt = this.benefit.coPaymentPer * this.approval.approvalAmt;
+      this.approval.approvalCopaymentAmt =
+        this.benefit.coPaymentPer * this.approval.approvalAmt;
   }
 
   public onSubmitApproval(onlineStatusId: number) {
@@ -92,7 +101,9 @@ export class PendingApprovalDetailsComponent implements OnInit {
       this.approval.onlineStatusId = this.onlineStatus.rejected;
 
     console.log(this.approval);
-    this.approvalService.updateApproval(this.approval).subscribe(res => console.log(res));
+    this.approvalService
+      .updateApproval(this.approval)
+      .subscribe((res) => console.log(res));
   }
 
   private fetchPlanBenefits(): void {
@@ -102,32 +113,67 @@ export class PendingApprovalDetailsComponent implements OnInit {
     );
   }
 
-  private getApprovalById(approvalId: number) {
-    this.approvalService
-      .getApprovalById(approvalId)
+  private getApprovalByIdAndRole(approvalId: number) {
+    combineLatest([
+      this.authService.userToken$,
+      this.approvalService.getApprovalById(approvalId),
+    ])
       .pipe(
         take(1),
-        switchMap((approval) => {
-          this.approval = approval;
-          return this.lookupService.getMember(approval.cardNumber).pipe(
+        switchMap((combined: [UserToken, PendingApprovalDetails]) => {
+          this.approval = combined[1];
+          this.userRoles = combined[0].roles;
+
+          return this.lookupService.getMember(combined[1].cardNumber).pipe(
             take(1),
-            switchMap((member) => {
+            switchMap((member: Member) => {
               this.member = member;
               this.ceiling.annualCeiling = member.annualCeilingAmt;
-              this.masterBenefits$ = this.lookupService.getPlanMasterBenefits(member.planId);
               this.setMemberStatus();
-              return this.getUtilization();
+              if (this.isProviderUser()) return EMPTY; // Return Nothing if Provider User.
+              else {
+                this.masterBenefits$ = this.lookupService.getPlanMasterBenefits(member.planId);
+                return this.getUtilization(); // Return Member Utilization If CMC Doctor
+              }
             })
           );
         })
       )
-      .subscribe(
-        (utilization) => {
-          this.ceiling.annualUtilization = utilization;
+      .subscribe((result) => {
+        if (typeof result === 'number') {
+          this.ceiling.annualUtilization = result;
           this.ceiling.remainingAnnual = this.ceiling.annualCeiling - this.ceiling.annualUtilization;
         }
-      );
+      });
   }
+
+  // private getApprovalById(approvalId: number) {
+  //   this.approvalService
+  //     .getApprovalById(approvalId)
+  //     .pipe(
+  //       take(1),
+  //       switchMap((approval) => {
+  //         this.approval = approval;
+  //         return this.lookupService.getMember(approval.cardNumber).pipe(
+  //           take(1),
+  //           switchMap((member) => {
+  //             this.member = member;
+  //             this.ceiling.annualCeiling = member.annualCeilingAmt;
+  //             this.masterBenefits$ = this.lookupService.getPlanMasterBenefits(
+  //               member.planId
+  //             );
+  //             this.setMemberStatus();
+  //             return this.getUtilization();
+  //           })
+  //         );
+  //       })
+  //     )
+  //     .subscribe((utilization) => {
+  //       this.ceiling.annualUtilization = utilization;
+  //       this.ceiling.remainingAnnual =
+  //         this.ceiling.annualCeiling - this.ceiling.annualUtilization;
+  //     });
+  // }
 
   private calculateApprovalAmt(): void {
     this.approval.approvalAmt = 0;
@@ -158,7 +204,7 @@ export class PendingApprovalDetailsComponent implements OnInit {
   }
 
   private getAvailableCeiling(): void {
-    let remainingObj = {value1: 0, value2: 0, value3: 0};
+    let remainingObj = { value1: 0, value2: 0, value3: 0 };
     remainingObj.value1 = this.ceiling.remainingAnnual;
     remainingObj.value2 = this.ceiling.remainingMaster;
     remainingObj.value3 = this.ceiling.remainingBenefit;
@@ -174,5 +220,21 @@ export class PendingApprovalDetailsComponent implements OnInit {
     this.ceiling.remainingBenefit = 0;
 
     this.availableCeiling = 0;
+  }
+
+  public isCMC(): boolean {
+    return this.userRoles.includes(Roles.CMCDoctor);
+  }
+
+  public isProviderUser(): boolean {
+    return this.userRoles.includes(Roles.ProviderUser);
+  }
+
+  public onDispense() {
+    this.approval.onlineStatusId = this.onlineStatus.dispensed;
+    this.approvalService.updateApproval(this.approval).subscribe((res) => {
+      console.log(res);
+      this.router.navigate(['/pending-approvals']);
+    });
   }
 }

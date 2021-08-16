@@ -4,11 +4,12 @@
 
   <div class="row">
 
-    <div class="col-md-10">
+    <div class="col">
 
       <div class="row fw-bold fst-italic">
-        <label for="planMaster" class="col-md-2 col-form-label">Masters Benefits</label>
-        <div class="col-md-2">
+
+        <label *ngIf="isCMC()" for="planMaster" class="col-md-2 col-form-label">Masters Benefits</label>
+        <div *ngIf="isCMC()" class="col-md-2">
           <select class="form-select form-select-sm mt-1" id="planMaster" name="planMaster" [(ngModel)]="masterBenefit"
             (ngModelChange)="onMasterBenefitChange()" required>
             <option [value]="masterBenefit" disabled hidden>Select</option>
@@ -18,8 +19,8 @@
           </select>
         </div>
 
-        <label for="planBenefit" class="col-md-2 col-form-label">Benefits</label>
-        <div class="col-md-2">
+        <label *ngIf="isCMC()" for="planBenefit" class="col-md-2 col-form-label">Benefits</label>
+        <div *ngIf="isCMC()" class="col-md-2">
           <select class="form-select form-select-sm mt-1" id="planBenefit" name="planBenefit" [(ngModel)]="benefit"
             (ngModelChange)="onBenefitChange()">
             <option [value]="benefit" disabled hidden>Select</option>
@@ -73,7 +74,7 @@
         <label for="ceiling" class="col-md-2 col-form-label">Available Ceiling</label>
         <div class="col-md-2">
           <input type="text" class="form-control form-control-sm mt-1" id="ceiling" readonly
-            value="{{availableCeiling}}">
+            value="{{availableCeiling | number}}">
         </div>
       </div>
 
@@ -128,28 +129,29 @@
       <div class="row fw-bold fst-italic">
         <label for="printedNote" class="col-md-2 col-form-label">Provider Notes</label>
         <div class="col-md-10">
-          <textarea type="text" class="form-control form-control-sm mt-1" id="printedNote" readonly [value]="approval.printedNotes"></textarea>
+          <textarea type="text" class="form-control form-control-sm mt-1" id="printedNote" readonly
+            [value]="approval.printedNotes"></textarea>
         </div>
       </div>
 
       <div class="row mb-3 fw-bold fst-italic">
         <label for="internalNote" class="col-md-2 col-form-label">Internal Notes</label>
         <div class="col-md-10">
-          <textarea type="text" class="form-control form-control-sm mt-1" id="internalNote"
-            name="internalNotes" [(ngModel)]="approval.internalNotes"></textarea>
+          <textarea type="text" class="form-control form-control-sm mt-1" id="internalNote" name="internalNotes"
+            [(ngModel)]="approval.internalNotes" [readonly]="isProviderUser()"></textarea>
         </div>
       </div>
 
     </div>
 
-    <div class="col-md-2 mb-3">
+    <div *ngIf="isCMC()" class="col-md-3 mb-3">
       <ul class="list-group fw-bold mt-1 ">
-        <li class="list-group-item text-primary">Annual Ceiling : <br> {{ ceiling.annualCeiling | number }} </li>
-        <li class="list-group-item text-primary">Rem. Annual Ceiling : <br> {{ ceiling.remainingAnnual | number}} </li>
-        <li class="list-group-item text-primary">Master Ceiling : <br> {{ ceiling.masterCeiling | number}} </li>
-        <li class="list-group-item text-primary">Rem. Master Ceiling : <br> {{ ceiling.remainingMaster | number}} </li>
-        <li class="list-group-item text-primary">Benefit Ceiling : <br> {{ ceiling.benefitCeiling | number }} </li>
-        <li class="list-group-item text-primary">Rem. Benefit Ceiling : <br> {{ ceiling.remainingBenefit | number }}
+        <li class="list-group-item text-primary">Annual Ceiling: {{ ceiling.annualCeiling | number }} </li>
+        <li class="list-group-item text-primary">Rem. Annual Ceiling: {{ ceiling.remainingAnnual | number}} </li>
+        <li class="list-group-item text-primary">Master Ceiling: {{ ceiling.masterCeiling | number}} </li>
+        <li class="list-group-item text-primary">Rem. Master Ceiling: {{ ceiling.remainingMaster | number}} </li>
+        <li class="list-group-item text-primary">Benefit Ceiling: {{ ceiling.benefitCeiling | number }} </li>
+        <li class="list-group-item text-primary">Rem. Benefit Ceiling: {{ ceiling.remainingBenefit | number }}
         </li>
       </ul>
     </div>
@@ -172,7 +174,7 @@
           <th>Dosgae Per Day</th>
           <th>Dosgae Times</th>
           <th>Dosgae Days</th>
-          <th></th>
+          <th *ngIf="isCMC()"></th>
         </tr>
       </thead>
       <tbody>
@@ -188,12 +190,14 @@
           <td>{{item.dosagePerDay}}</td>
           <td>{{item.dosageTime}}</td>
           <td>{{item.dosageDays}}</td>
-          <td class="text-center fst-italic">
+
+          <td *ngIf="isCMC()" class="text-center fst-italic">
             <button *ngIf="item.status === rejected" type="button" class="btn btn-outline-success btn-sm"
               (click)="toggleItem(item)">Accept</button>
             <button *ngIf="item.status !== rejected" type="button" class="btn btn-outline-danger btn-sm"
               (click)="toggleItem(item)">reject</button>
           </td>
+
         </tr>
       </tbody>
     </table>
@@ -210,10 +214,17 @@
 
   </div>
 
-  <div class="row">
+  <div *ngIf="isCMC()" class="row mb-3">
     <div class="col-md-2 mx-auto">
-      <button type="button" class="btn btn-success me-2" (click)="onSubmitApproval(onlineStatus.accepted)">Accept</button>
+      <button type="button" class="btn btn-success me-2"
+        (click)="onSubmitApproval(onlineStatus.accepted)">Accept</button>
       <button type="button" class="btn btn-danger" (click)="onSubmitApproval(onlineStatus.rejected)">Reject</button>
+    </div>
+  </div>
+
+  <div class="row mb-3" *ngIf="isProviderUser() && this.approval.onlineStatusId !== this.onlineStatus.dispensed">
+    <div class="col-md-2 mx-auto">
+      <button type="button" class="btn btn-success" (click)="onDispense()">Dispense</button>
     </div>
   </div>
 </div>
