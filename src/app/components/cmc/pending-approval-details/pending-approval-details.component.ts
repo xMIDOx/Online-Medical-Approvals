@@ -69,15 +69,13 @@ export class PendingApprovalDetailsComponent implements OnInit {
   public onBenefitChange(): void {
     this.approval.benefitId = this.benefit.benefitId;
     this.approval.approvalCopaymentPer = this.benefit.coPaymentPer;
-    this.approval.approvalCopaymentAmt =
-      this.benefit.coPaymentPer * this.approval.approvalAmt;
+    this.approval.approvalCopaymentAmt = this.benefit.coPaymentPer * this.approval.approvalAmt;
     this.ceiling.benefitCeiling = this.benefit.maxCeilingAmt;
 
-    this.getUtilization().subscribe((res) => {
+    this.getUtilization().pipe(take(1)).subscribe((res) => {
       this.ceiling.benefitUtilization = res;
-      this.ceiling.remainingBenefit =
-        this.ceiling.benefitCeiling - this.ceiling.benefitUtilization;
-      this.getAvailableCeiling();
+      this.ceiling.remainingBenefit = this.ceiling.benefitCeiling - this.ceiling.benefitUtilization;
+      this.availableCeiling = this.getAvailableCeiling();
     });
   }
 
@@ -94,16 +92,15 @@ export class PendingApprovalDetailsComponent implements OnInit {
         this.benefit.coPaymentPer * this.approval.approvalAmt;
   }
 
-  public onSubmitApproval(onlineStatusId: number) {
+  public onSubmitApproval(onlineStatusId: number): void {
     if (onlineStatusId === this.onlineStatus.accepted)
       this.approval.onlineStatusId = this.onlineStatus.accepted;
     else if (onlineStatusId === this.onlineStatus.rejected)
       this.approval.onlineStatusId = this.onlineStatus.rejected;
 
-    console.log(this.approval);
     this.approvalService
       .updateApproval(this.approval)
-      .subscribe((res) => console.log(res));
+      .subscribe((res) => this.router.navigate(['/pending-approvals']));
   }
 
   private fetchPlanBenefits(): void {
@@ -113,7 +110,7 @@ export class PendingApprovalDetailsComponent implements OnInit {
     );
   }
 
-  private getApprovalByIdAndRole(approvalId: number) {
+  private getApprovalByIdAndRole(approvalId: number): void {
     combineLatest([
       this.authService.userToken$,
       this.approvalService.getApprovalById(approvalId),
@@ -203,18 +200,24 @@ export class PendingApprovalDetailsComponent implements OnInit {
     );
   }
 
-  private getAvailableCeiling(): void {
-    let remainingObj = { value1: 0, value2: 0, value3: 0 };
-    remainingObj.value1 = this.ceiling.remainingAnnual;
-    remainingObj.value2 = this.ceiling.remainingMaster;
-    remainingObj.value3 = this.ceiling.remainingBenefit;
+  private getAvailableCeiling(): number {
+    // let remainingObj = { value1: 0, value2: 0, value3: 0 };
+    // remainingObj.value1 = this.ceiling.remainingAnnual;
+    // remainingObj.value2 = this.ceiling.remainingMaster;
+    // remainingObj.value3 = this.ceiling.remainingBenefit;
 
-    this.availableCeiling = Math.min(
-      ...Object.entries(remainingObj).map((o) => o[1])
-    );
+    // return Math.min(
+    //   ...Object.entries(remainingObj).map((o) => o[1])
+    // );
+    const obj = []
+    obj.push(this.ceiling.remainingAnnual);
+    obj.push(this.ceiling.remainingMaster);
+    obj.push(this.ceiling.remainingBenefit);
+
+    return obj.reduce((a, b) => Math.min(a, b));
   }
 
-  private resetCeiling() {
+  private resetCeiling(): void {
     this.ceiling.benefitCeiling = 0;
     this.ceiling.benefitUtilization = 0;
     this.ceiling.remainingBenefit = 0;
@@ -230,11 +233,24 @@ export class PendingApprovalDetailsComponent implements OnInit {
     return this.userRoles.includes(Roles.ProviderUser);
   }
 
-  public onDispense() {
+  public showDispenseBtn(): boolean {
+    return (
+      this.isProviderUser() &&
+      this.approval.onlineStatusId ===
+        (this.onlineStatus.accepted || this.onlineStatus.rejected)
+    );
+  }
+
+  public onDispense(): void {
     this.approval.onlineStatusId = this.onlineStatus.dispensed;
     this.approvalService.updateApproval(this.approval).subscribe((res) => {
       console.log(res);
       this.router.navigate(['/pending-approvals']);
     });
   }
+
+  public isValidApproval(): boolean {
+     return this.approval.approvalAmt > this.availableCeiling
+  }
+
 }

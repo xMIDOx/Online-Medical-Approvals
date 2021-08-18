@@ -48,8 +48,7 @@ export class SignUpComponent implements OnInit {
           this.userRegistration.providerId = user.providerId;
           this.userRegistration.roles.push(Roles.ProviderUser);
           this.branches$ = this.lookupService.getBranches(user.providerId);
-        }
-        else this.roles$ = this.userRolesService.getRoles();
+        } else this.roles$ = this.userRolesService.getRoles();
       });
   }
 
@@ -90,12 +89,11 @@ export class SignUpComponent implements OnInit {
     this.userRegistration.providerId = item.id;
   }
 
-  public isProviderAdmin(): boolean {
+  public isProviderSelected(): boolean {
     return this.userRegistration.roles.includes(this.rolesEnum.ProviderAdmin);
   }
 
   public OnBranchChange() {
     console.log(this.branch);
   }
-
 }

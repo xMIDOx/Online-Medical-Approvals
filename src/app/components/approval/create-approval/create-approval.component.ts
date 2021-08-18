@@ -76,31 +76,39 @@ export class CreateApprovalComponent implements OnInit {
   }
 
   public getMemberInfo(): void {
-    if (this.approval.cardNumber) {
+    if (!this.approval.cardNumber) return;
+
       this.lookupService
         .getMember(this.approval.cardNumber)
+        .pipe(take(1))
         .subscribe((res: Member) => {
           if (res) {
             this.member = res;
             this.approval.planMemberId = res.id;
             this.approval.customerId = res.customerId;
+            this.setStatusName();
+          } else {
+            this.member = <Member>{};
           }
-          this.setStatusName();
         });
-    }
+
   }
 
   public getClaimProvider(): void {
-    if (this.approval.claimNumber) {
-      this.lookupService
-        .getProviderByClaimNum(this.approval.claimNumber)
-        .subscribe((res: any) => {
-          if (res) {
-            this.approval.claimProviderId = res.id;
-            this.claimProviderName = res.name;
-          }
-        });
-    }
+    if (!this.approval.claimNumber) return;
+
+    this.lookupService
+      .getProviderByClaimNum(this.approval.claimNumber)
+      .pipe(take(1))
+      .subscribe((res: KeyValue) => {
+        if (res) {
+          this.approval.claimProviderId = res.id;
+          this.claimProviderName = res.name;
+        } else {
+          this.approval.claimProviderId = 0;
+          this.claimProviderName = '';
+        }
+      });
   }
 
   private setStatusName(): void {

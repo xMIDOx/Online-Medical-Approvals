@@ -1,7 +1,13 @@
 <div class="container-fluid" *ngIf="(approval)">
 
-  <span class="badge rounded-pill bg-warning mb-3 fs-5">Approval Data</span>
+  <div class="row">
+    <span class="col-md-2 badge rounded-pill bg-warning mb-3 fs-5">Approval Data</span>
+    <h3 class="col-md-3 mx-auto text-capitalize fw-bold fst-italic text-decoration-underline text-info">
+        {{this.onlineStatus[this.approval.onlineStatusId]}}.
+    </h3>
+  </div>
 
+  <!-- Approval Master -->
   <div class="row">
 
     <div class="col">
@@ -159,7 +165,7 @@
   </div>
 
   <span class="badge rounded-pill bg-warning mb-3 fs-5">Approval Services</span>
-
+  <!-- Approval Items -->
   <div class="row">
     <table class="table table-bordered table-responsive table-sm">
       <thead class="fst-italic text-center">
@@ -202,7 +208,7 @@
       </tbody>
     </table>
   </div>
-
+  <!-- Approval Price Summary -->
   <div class="row fw-bolder fst-italic text-center text-primary">
 
     <div class="col-md-6">
@@ -213,16 +219,16 @@
     </div>
 
   </div>
-
+  <!-- Accept & Reject Btns for CMC Doctor -->
   <div *ngIf="isCMC()" class="row mb-3">
     <div class="col-md-2 mx-auto">
       <button type="button" class="btn btn-success me-2"
-        (click)="onSubmitApproval(onlineStatus.accepted)">Accept</button>
+        (click)="onSubmitApproval(onlineStatus.accepted)" [disabled]="(isValidApproval())">Accept</button>
       <button type="button" class="btn btn-danger" (click)="onSubmitApproval(onlineStatus.rejected)">Reject</button>
     </div>
   </div>
-
-  <div class="row mb-3" *ngIf="isProviderUser() && this.approval.onlineStatusId !== this.onlineStatus.dispensed">
+  <!-- Dispense Btn For Provider User -->
+  <div class="row mb-3" *ngIf="showDispenseBtn()">
     <div class="col-md-2 mx-auto">
       <button type="button" class="btn btn-success" (click)="onDispense()">Dispense</button>
     </div>

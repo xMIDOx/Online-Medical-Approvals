@@ -33,13 +33,13 @@
         </div>
       </div>
 
-      <div class="col mb-3" *ngIf="isProviderAdmin()">
+      <div class="col mb-3" *ngIf="isProviderSelected()">
         <label for="" class="form-label">Providers</label>
         <app-ng-select [items]="(providers$ | async)" (searching)="fetchProviders($event)"
           (selectedItem)="selectedProvider($event)"></app-ng-select>
       </div>
 
-      <div class="col mb-3" *ngIf="((branches$ | async)?.length != 0)">
+      <div class="col mb-3" *ngIf="userRegistration.providerId">
           <label for="branches" class="col-md-2 col-form-label">Branches</label>
           <select class="form-select mt-1" id="branches" name="branches" [(ngModel)]="branch"
             (ngModelChange)="OnBranchChange()">

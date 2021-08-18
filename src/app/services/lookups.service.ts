@@ -30,10 +30,12 @@ export class LookupsService {
     );
   }
 
-  public getProviderByClaimNum(claimNum: number) {
-    return this.httpRepo.Get(
-      this.lookupsEndpoint + 'getproviderbyclaimNum?claimFromNum=' + claimNum
-    );
+  public getProviderByClaimNum(claimNum: number): Observable<KeyValue> {
+    return this.httpRepo
+      .Get(
+        this.lookupsEndpoint + 'getproviderbyclaimNum?claimFromNum=' + claimNum
+      )
+      .pipe(map((res) => res as KeyValue));
   }
 
   public getProviderById(providerId: number) {

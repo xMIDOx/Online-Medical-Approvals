@@ -9,12 +9,12 @@
     <div class="col-md-3">
       <label for="cardNum" class="form-label">Card Number</label>
       <input id="cardNum" name="cardNum" type="text" class="form-control col-md-3" [(ngModel)]="approval.cardNumber"
-        (focusout)="getMemberInfo()">
+        (ngModelChange)="getMemberInfo()">
     </div>
     <div class="col-md-3">
       <label for="claimFormNum" class="form-label">Claim Form Number</label>
       <input id="claimFormNum" name="claimNum" type="text" class="form-control" [(ngModel)]="approval.claimNumber"
-        (focusout)="getClaimProvider()">
+        (ngModelChange)="getClaimProvider()">
     </div>
     <div class="col-md-3">
       <label for="date" class="form-label">Approval Date</label>
@@ -43,7 +43,7 @@
     </div>
     <div class="col-md-3">
       <label for="claimProvider" class="form-label">Claim Provider</label>
-      <input id="claimProvider" type="text" class="form-control" value="{{claimProviderName}}" readonly>
+      <input id="claimProvider" type="text" class="form-control" [value]="claimProviderName" readonly>
     </div>
   </div>
   <div class="row mb-1">
@@ -57,6 +57,6 @@
     </app-create-approval-items>
   </div>
   <div class="row  justify-content-center">
-    <button type="submit" class="col-md-2 btn btn-primary">Create Approval</button>
+    <button type="submit" class="col-md-2 btn btn-primary" [disabled]="!(member.isActive)">Create Approval</button>
   </div>
 </form>
