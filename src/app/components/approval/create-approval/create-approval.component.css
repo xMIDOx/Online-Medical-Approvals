@@ -1,0 +1,12 @@
+/* .offWhite {
+  background-color:#eee;
+} */
+
+.accordion-button {
+  background-color: #fff;
+}
+
+.accordion-button:focus {
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, #198754 0px 0px 0px 3px;
+  /* box-shadow: rgba(2, 100, 68, 0.74) 0px 5px 15px; */
+}

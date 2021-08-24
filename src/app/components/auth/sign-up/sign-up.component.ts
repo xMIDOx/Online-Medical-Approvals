@@ -3,10 +3,12 @@ import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { defaultIfEmpty, map, take } from 'rxjs/operators';
 import { KeyValue } from 'src/app/models/key-value.model';
+import { Provider } from 'src/app/models/provider.model';
 
 import { Branch } from './../../../models/branch.model';
 import { Register } from './../../../models/register.model';
 import { Roles } from './../../../models/user-roles.enum';
+import { User } from './../../../models/user.model';
 import { AuthService } from './../../../services/auth.service';
 import { LookupsService } from './../../../services/lookups.service';
 import { UserRolesService } from './../../../services/user-roles.service';
@@ -20,6 +22,7 @@ export class SignUpComponent implements OnInit {
   public roles$ = new Observable<KeyValue[]>();
   public providers$ = new Observable<Object>();
   public branches$ = new Observable<Branch[]>();
+  public provider$ = new Observable<Provider>();
   public branch = <Branch>{};
   public rolesEnum = Roles;
   public isLoading = false;
@@ -40,16 +43,7 @@ export class SignUpComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.authService
-      .getUser()
-      .pipe(take(1))
-      .subscribe((user) => {
-        if (user.providerId != 0) {
-          this.userRegistration.providerId = user.providerId;
-          this.userRegistration.roles.push(Roles.ProviderUser);
-          this.branches$ = this.lookupService.getBranches(user.providerId);
-        } else this.roles$ = this.userRolesService.getRoles();
-      });
+    this.getLoggedUser();
   }
 
   public signUp(form: NgForm) {
@@ -95,5 +89,19 @@ export class SignUpComponent implements OnInit {
 
   public OnBranchChange() {
     console.log(this.branch);
+  }
+
+  private getLoggedUser() {
+    this.authService
+      .getUser()
+      .pipe(take(1))
+      .subscribe((user: User) => {
+        if (user.providerId != 0) {
+          this.userRegistration.providerId = user.providerId;
+          this.userRegistration.roles.push(Roles.ProviderUser);
+          this.provider$ = this.lookupService.getProviderById(user.providerId);
+          this.branches$ = this.lookupService.getBranches(user.providerId);
+        } else this.roles$ = this.userRolesService.getRoles();
+      });
   }
 }

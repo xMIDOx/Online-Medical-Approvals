@@ -1,88 +1,97 @@
-<table class="table table-hover table-responsive table-sm">
-  <thead class="text-center">
-    <tr>
-      <th>Service</th>
-      <th>Quantity</th>
-      <ng-container *ngIf="providerCatId === 2">
-        <th>Dosage</th>
-        <th>Dosage Days</th>
-        <th>Dosage PerDay</th>
-        <th>Dosage Time</th>
-      </ng-container>
-      <th>
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#bsModal">
-          <i class="bi bi-plus-square-fill"></i> New
-        </button>
-      </th>
-    </tr>
-  </thead>
-  <tbody class="text-center" *ngFor="let item of approvalItems; index as i; trackBy: trackItems;  ">
-    <tr>
-      <td>{{item.serviceName}}</td>
-      <td>{{item.quantity}}</td>
-      <ng-container *ngIf="providerCatId === 2">
-        <td>{{item.dosage}}</td>
-        <td>{{item.dosageDays}}</td>
-        <td>{{item.dosagePerDay}}</td>
-        <td>{{item.dosageTime}}</td>
-      </ng-container>
-      <td>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bsModal"
-          (click)="Edit(item, i)">Edit</button>
-        <button class="btn btn-danger" (click)="remove(item)">Delete</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<!-- ------------------------------------------------------------------------------------------------------ -->
-<div #modal class="modal fade" id="bsModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
-  aria-labelledby="bsModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="bsModalLabel">Modal title</h5>
-        <button #closeBtn type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form #itemForm="ngForm" (ngSubmit)="onSubmit(itemForm)">
-          <div class="row mb-3">
-            <div class="col-md-9">
-              <label for="serviceId" class="form-label">Services</label>
-              <app-ng-select [items]="priceList$ | async" (searching)="getProviderPriceList($event)"
-                (selectedItem)="getSelectedService($event)">
-              </app-ng-select>
-            </div>
-            <div class="col-md-3">
-              <label for="qty" class="form-label">Quantity</label>
-              <input id="qty" name="quantity" type="number" class="form-control" [(ngModel)]="approvalItem.quantity">
-            </div>
+<div class="row">
+  <button type="button" class="col-md-1 mb-2 btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#bsModal">
+    <i class="bi bi-plus-lg"></i> New
+  </button>
+</div>
+
+<div class="row">
+  <table *ngIf="approvalItems.length > 0" class="table table-bordered table-hover table-responsive table-sm">
+    <thead class="text-center align-middle table-primary">
+      <tr>
+        <th>Service</th>
+        <th>Quantity</th>
+        <ng-container *ngIf="providerCatId === 2">
+          <th>Dosage</th>
+          <th>Dosage Days</th>
+          <th>Dosage PerDay</th>
+          <th>Dosage Time</th>
+        </ng-container>
+        <th> </th>
+      </tr>
+    </thead>
+    <tbody class="text-center align-middle" *ngFor="let item of approvalItems; index as i; trackBy: trackItems;  ">
+      <tr>
+        <td>{{item.serviceName}}</td>
+        <td>{{item.quantity}}</td>
+        <ng-container *ngIf="providerCatId === 2">
+          <td>{{item.dosage}}</td>
+          <td>{{item.dosageDays}}</td>
+          <td>{{item.dosagePerDay}}</td>
+          <td>{{item.dosageTime}}</td>
+        </ng-container>
+        <td>
+          <div class="justify-content-start">
+            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#bsModal"
+              (click)="Edit(item, i)">Edit</button> |
+            <button class="btn btn-outline-danger btn-sm" (click)="remove(item)">Delete</button>
           </div>
-          <div *ngIf="providerCatId === 2" class="row mb-3">
-            <div class="col-md-3">
-              <label for="dosage" class="form-label col">Dosage</label>
-              <input id="dosage" name="dosage" type="number" class="form-control" [(ngModel)]="approvalItem.dosage">
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- --------------------------------------------Bootstrap Modal----------------------------------------------------- -->
+<div class="row">
+  <div #modal class="modal fade" id="bsModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+    aria-labelledby="bsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header text-warning table-info fst-italic fw-bolder">
+          <h5 class="modal-title" id="bsModalLabel">Approval Services</h5>
+          <button #closeBtn type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body offWhite">
+          <form #itemForm="ngForm" (ngSubmit)="onSubmit(itemForm)">
+            <div class="row mb-3">
+              <div class="col-md-9">
+                <label for="serviceId" class="form-label">Services</label>
+                <app-ng-select [items]="priceList$ | async" (searching)="getProviderPriceList($event)"
+                  (selectedItem)="getSelectedService($event)">
+                </app-ng-select>
+              </div>
+              <div class="col-md-3">
+                <label for="qty" class="form-label">Quantity</label>
+                <input id="qty" name="quantity" type="number" class="form-control" [(ngModel)]="approvalItem.quantity">
+              </div>
             </div>
-            <div class="col-md-3">
-              <label for="dosagePerDay" class="form-label col text-nowrap">Dosage Per Day</label>
-              <input id="dosagePerDay" name="dosagePerDay" type="number" class="form-control"
-                [(ngModel)]="approvalItem.dosagePerDay">
+            <div *ngIf="providerCatId === 2" class="row mb-3">
+              <div class="col-md-3">
+                <label for="dosage" class="form-label col">Dosage</label>
+                <input id="dosage" name="dosage" type="number" class="form-control" [(ngModel)]="approvalItem.dosage">
+              </div>
+              <div class="col-md-3">
+                <label for="dosagePerDay" class="form-label col text-nowrap">Dosage Per Day</label>
+                <input id="dosagePerDay" name="dosagePerDay" type="number" class="form-control"
+                  [(ngModel)]="approvalItem.dosagePerDay">
+              </div>
+              <div class="col-md-3">
+                <label for="dosageDays" class="form-label">Dosage Days</label>
+                <input id="dosageDays" name="dosageDays" type="number" class="form-control"
+                  [(ngModel)]="approvalItem.dosageDays">
+              </div>
+              <div class="col-md-3">
+                <label for="dosageTime" class="form-label">Dosage Time</label>
+                <input id="dosageTime" name="dosageTime" type="number" class="form-control"
+                  [(ngModel)]="approvalItem.dosageTime">
+              </div>
             </div>
-            <div class="col-md-3">
-              <label for="dosageDays" class="form-label">Dosage Days</label>
-              <input id="dosageDays" name="dosageDays" type="number" class="form-control"
-                [(ngModel)]="approvalItem.dosageDays">
+            <div class="row modal-footer justify-content-start">
+              <button type="submit" class="btn btn-success col-md-2">Add</button>
+              <button type="button" class="btn btn-secondary col-md-2" data-bs-dismiss="modal">Close</button>
             </div>
-            <div class="col-md-3">
-              <label for="dosageTime" class="form-label">Dosage Time</label>
-              <input id="dosageTime" name="dosageTime" type="number" class="form-control"
-                [(ngModel)]="approvalItem.dosageTime">
-            </div>
-          </div>
-          <div class="modal-footer justify-content-start">
-            <button type="submit" class="btn btn-primary">Save changes</button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   </div>

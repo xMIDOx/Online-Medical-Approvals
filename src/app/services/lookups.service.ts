@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 
 import { Branch } from '../models/branch.model';
 import { PlanMasterBenefit } from '../models/plan-master-benefit.model';
+import { Provider } from '../models/provider.model';
 import { ICDCodeDiagnosis } from './../models/ICDCode-Diagnosis.model';
 import { KeyValue } from './../models/key-value.model';
 import { Member } from './../models/member.model';
@@ -38,10 +39,10 @@ export class LookupsService {
       .pipe(map((res) => res as KeyValue));
   }
 
-  public getProviderById(providerId: number) {
+  public getProviderById(providerId: number): Observable<Provider> {
     return this.httpRepo.Get(
       this.lookupsEndpoint + 'getProviderById?providerId=' + providerId
-    );
+    ).pipe(map(res => res as Provider));
   }
 
   public getICDCodeById(ICDCodeId: number): Observable<ICDCodeDiagnosis> {

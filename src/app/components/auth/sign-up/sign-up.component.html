@@ -1,7 +1,13 @@
-<div class="col-md-2">
-  <h2>Register</h2>
-  <hr>
+<div class="row">
+  <div class="col-md-2">
+    <h2>Register</h2>
+    <hr>
+  </div>
+  <div class="col-md-8 text-center" *ngIf="(provider$ | async) as p">
+    <h4>{{p.name}}</h4>
+  </div>
 </div>
+
 
 <div class="container">
   <div class="row">
@@ -40,14 +46,14 @@
       </div>
 
       <div class="col mb-3" *ngIf="userRegistration.providerId">
-          <label for="branches" class="col-md-2 col-form-label">Branches</label>
-          <select class="form-select mt-1" id="branches" name="branches" [(ngModel)]="branch"
-            (ngModelChange)="OnBranchChange()">
-            <option [value]="branch" disabled>Select</option>
-            <option *ngFor="let b of (branches$ | async)" [ngValue]="branch">
-              {{b.address}}
-            </option>
-          </select>
+        <label for="branches" class="col-md-2 col-form-label">Branches</label>
+        <select class="form-select mt-1" id="branches" name="branches" [(ngModel)]="branch"
+          (ngModelChange)="OnBranchChange()">
+          <option [value]="branch" disabled>Select</option>
+          <option *ngFor="let b of (branches$ | async)" [ngValue]="branch">
+            {{b.address}}
+          </option>
+        </select>
       </div>
 
       <div class="mb-3">

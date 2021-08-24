@@ -47,8 +47,6 @@ export class PendingApprovalDetailsComponent implements OnInit {
   ngOnInit(): void {
     const approvalId = this.route.snapshot.params['id'];
     this.getApprovalByIdAndRole(approvalId);
-    // this.authService.userToken$.pipe(take(1)).subscribe(userToken => this.userRoles = userToken.roles);
-    // this.getApprovalById(approvalId);
   }
 
   public onMasterBenefitChange(): void {
@@ -59,11 +57,16 @@ export class PendingApprovalDetailsComponent implements OnInit {
 
     this.fetchPlanBenefits();
 
-    this.getUtilization().subscribe((res) => {
-      this.ceiling.masterUtilization = res;
-      this.ceiling.remainingMaster =
-        this.ceiling.masterCeiling - this.ceiling.masterUtilization;
-    });
+    if(this.masterBenefit.planId != 0) {
+      this.getCeilingUtilization$().subscribe((res) => {
+        this.ceiling.masterUtilization = res;
+        this.ceiling.remainingMaster =
+          this.ceiling.masterCeiling - this.ceiling.masterUtilization;
+      });
+    } else {
+      // Get Pool Utilization.
+    }
+
   }
 
   public onBenefitChange(): void {
@@ -72,8 +75,8 @@ export class PendingApprovalDetailsComponent implements OnInit {
     this.approval.approvalCopaymentAmt = this.benefit.coPaymentPer * this.approval.approvalAmt;
     this.ceiling.benefitCeiling = this.benefit.maxCeilingAmt;
 
-    this.getUtilization().pipe(take(1)).subscribe((res) => {
-      this.ceiling.benefitUtilization = res;
+    this.getCeilingUtilization$().subscribe((utili: number) => {
+      this.ceiling.benefitUtilization = utili;
       this.ceiling.remainingBenefit = this.ceiling.benefitCeiling - this.ceiling.benefitUtilization;
       this.availableCeiling = this.getAvailableCeiling();
     });
@@ -130,7 +133,7 @@ export class PendingApprovalDetailsComponent implements OnInit {
               if (this.isProviderUser()) return EMPTY; // Return Nothing if Provider User.
               else {
                 this.masterBenefits$ = this.lookupService.getPlanMasterBenefits(member.planId);
-                return this.getUtilization(); // Return Member Utilization If CMC Doctor
+                return this.getCeilingUtilization$(); // Return Member Utilization If CMC Doctor
               }
             })
           );
@@ -143,34 +146,6 @@ export class PendingApprovalDetailsComponent implements OnInit {
         }
       });
   }
-
-  // private getApprovalById(approvalId: number) {
-  //   this.approvalService
-  //     .getApprovalById(approvalId)
-  //     .pipe(
-  //       take(1),
-  //       switchMap((approval) => {
-  //         this.approval = approval;
-  //         return this.lookupService.getMember(approval.cardNumber).pipe(
-  //           take(1),
-  //           switchMap((member) => {
-  //             this.member = member;
-  //             this.ceiling.annualCeiling = member.annualCeilingAmt;
-  //             this.masterBenefits$ = this.lookupService.getPlanMasterBenefits(
-  //               member.planId
-  //             );
-  //             this.setMemberStatus();
-  //             return this.getUtilization();
-  //           })
-  //         );
-  //       })
-  //     )
-  //     .subscribe((utilization) => {
-  //       this.ceiling.annualUtilization = utilization;
-  //       this.ceiling.remainingAnnual =
-  //         this.ceiling.annualCeiling - this.ceiling.annualUtilization;
-  //     });
-  // }
 
   private calculateApprovalAmt(): void {
     this.approval.approvalAmt = 0;
@@ -186,7 +161,7 @@ export class PendingApprovalDetailsComponent implements OnInit {
     this.approval.memberStatus = this.member.isActive ? 'Active' : 'Stopped';
   }
 
-  private getUtilization(): Observable<number> {
+  private getCeilingUtilization$(): Observable<number> {
     let queryParams: any = {};
     queryParams.memberId = this.member.id;
     queryParams.masterId = this.masterBenefit.id;
