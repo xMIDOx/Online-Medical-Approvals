@@ -10,10 +10,10 @@ import { KeyValue } from 'src/app/models/key-value.model';
 })
 export class NgSelectComponent implements OnInit, OnChanges {
   @Input() items: any;
+  @Input() isLoading = false;
   @Output() searching = new EventEmitter<string>();
   @Output() selectedItem = new EventEmitter<any>();
   public itemsBuffer: KeyValue[] = [];
-  public loading = false;
   private bufferSize = 50;
   private fetchMoreAfter = 10;
 
@@ -22,14 +22,19 @@ export class NgSelectComponent implements OnInit, OnChanges {
   ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.items.currentValue && changes.items.currentValue.length > 0) {
+    // changes.items.currentValue && changes.items.currentValue.length > 0
+    if (this.items) {
       this.itemsBuffer = this.items.slice(0, this.bufferSize);
     }
   }
 
   public onScroll(event: any) {
-    if (!this.items) return;
-    if (this.loading || this.items.length <= this.itemsBuffer.length) return;
+    if (
+      !this.items ||
+      this.isLoading ||
+      this.items.length <= this.itemsBuffer.length
+    )
+      return;
     if (event.end + this.fetchMoreAfter >= this.itemsBuffer.length)
       this.fetchMore();
   }
@@ -39,7 +44,9 @@ export class NgSelectComponent implements OnInit, OnChanges {
   }
 
   public onSearch(event: any) {
-    if (event.term.length == 3) this.searching.emit(event.term as string);
+    if (event.term.length == 3) {
+      this.searching.emit(event.term as string);
+    }
     if (event.term.length > 3) this.fetchMore();
   }
 
@@ -50,8 +57,8 @@ export class NgSelectComponent implements OnInit, OnChanges {
   private fetchMore() {
     const length = this.itemsBuffer.length;
     const more = this.items?.slice(length, this.bufferSize + length);
-    this.loading = true;
+    this.isLoading = true;
     this.itemsBuffer = this.itemsBuffer.concat(more);
-    this.loading = false;
+    this.isLoading = false;
   }
 }

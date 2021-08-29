@@ -34,7 +34,7 @@
             </div>
             <div class="col-md-3">
               <label for="diagnosis" class="form-label">Diagnosis</label>
-              <app-ng-select [items]="diagnosis | async" (searching)="getDiagnosis($event)"
+              <app-ng-select [items]="(diagnosis | async)" [isLoading]="loadingDiagnosis" (searching)="getDiagnosis($event)"
                 (selectedItem)="getSelectedDiagnosis($event)"></app-ng-select>
             </div>
           </div>

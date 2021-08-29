@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { ApprovalDisplay } from 'src/app/models/approval-display.model';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -38,6 +38,7 @@ export class CreateApprovalComponent implements OnInit {
   public provider$ = new Observable<any>();
   public diagnosis = new Observable<object>();
   public claimProviderName = '';
+  public loadingDiagnosis = false;
   private queryObj: any = {};
 
   constructor(
@@ -60,7 +61,9 @@ export class CreateApprovalComponent implements OnInit {
 
   public getDiagnosis(searchTerm: string): void {
     this.queryObj.searchTerm = searchTerm;
-    this.diagnosis = this.lookupService.getDiagnosis(this.queryObj);
+    this.loadingDiagnosis = true;
+    this.diagnosis = this.lookupService.getDiagnosis(this.queryObj)
+    .pipe(tap(() => this.loadingDiagnosis = false));
   }
 
   public getSelectedProvider(item: KeyValue): void {

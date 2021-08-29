@@ -7,7 +7,8 @@
         bindValue="id"
         [items]="itemsBuffer"
         [virtualScroll]="true"
-        [loading]="loading"
+        [loading]="isLoading"
+        loadingText = 'Loading...'
         (scroll)="onScroll($event)"
         (scrollToEnd)="onScrollToEnd()"
         (search)="onSearch($event)"
