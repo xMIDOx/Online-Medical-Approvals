@@ -15,7 +15,9 @@
 
     <div *ngIf="isLoading">
       <div class="text-center">
-        <div class="spinner-border text-danger"></div>
+        <div class="spinner-border text-success" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
       </div>
     </div>
 

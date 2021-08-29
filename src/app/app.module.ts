@@ -16,13 +16,13 @@ import {
   PendingApprovalDetailsComponent,
 } from './components/cmc/pending-approval-details/pending-approval-details.component';
 import { PendingApprovalsListComponent } from './components/cmc/pending-approvals-list/pending-approvals-list.component';
+import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { NgSelectComponent } from './components/ng-select/ng-select.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { LoadingSpinner } from './models/loading-spinner.pipe';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
-import { ForbiddenComponent } from './components/forbidden/forbidden.component';
-
 
 @NgModule({
   declarations: [
@@ -38,6 +38,7 @@ import { ForbiddenComponent } from './components/forbidden/forbidden.component';
     SignUpComponent,
     LogInComponent,
     ForbiddenComponent,
+    LoadingSpinner,
   ],
   imports: [
     BrowserModule,

@@ -1,7 +1,9 @@
 <span class="badge rounded-pill bg-warning mb-3 fs-5">Approvals List</span>
 
 <div class="row">
-  <div class="col">
+
+  <div class="col" *ngIf="pendingApprovals$ | async as approvals; else loadingSpinner">
+
     <table class="table table-striped table-hover table-bordered">
       <thead class="text-center">
         <tr>
@@ -15,7 +17,7 @@
         </tr>
       </thead>
       <tbody class="text-center">
-        <tr *ngFor="let app of (pendingApprovals$ | async)">
+        <tr *ngFor="let app of approvals">
           <td>{{app.memberName}}</td>
           <td>{{app.customerName}}</td>
           <td>{{app.approvalDate | date}}</td>
@@ -29,5 +31,13 @@
       </tbody>
     </table>
   </div>
+
+  <ng-template #loadingSpinner>
+    <div class="text-center">
+      <div class="spinner-border text-success" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </ng-template>
 
 </div>

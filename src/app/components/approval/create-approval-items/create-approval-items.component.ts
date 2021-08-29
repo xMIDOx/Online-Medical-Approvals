@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 import { ApprovalItemDisplay } from '../../../models/approval-item-display.model';
 import { ItemStatus } from './../../../models/item-status.enum';
@@ -31,6 +32,7 @@ export class CreateApprovalItemsComponent implements OnInit, OnChanges {
   public approvalItems: ApprovalItemDisplay[] = [];
   public approvalItem = <ApprovalItemDisplay>{};
   public providerCatId = 0;
+  public loadingServices = false;
   private index = -1;
   private queryObj: any = {};
 
@@ -95,14 +97,17 @@ export class CreateApprovalItemsComponent implements OnInit, OnChanges {
   }
 
   private getMedicalServices() {
+    this.loadingServices =  true;
     this.priceList$ = this.lookupService.getMedicalServices(
       this.serviceProviderId,
       this.queryObj
-    );
+    ).pipe(tap(() => this.loadingServices = false));
   }
 
   private getDrugsData() {
-    this.priceList$ = this.lookupService.getMedicinesData(this.queryObj);
+    this.loadingServices = true;
+    this.priceList$ = this.lookupService.getMedicinesData(this.queryObj)
+    .pipe(tap(() => this.loadingServices = false));
   }
 
   private closeModal() {
