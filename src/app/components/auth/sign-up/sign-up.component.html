@@ -1,10 +1,10 @@
 <div class="row">
   <div class="col-md-2">
-    <h2>Register</h2>
+    <h2 class="text-warning fw-bold fst-italic">Register</h2>
     <hr>
   </div>
-  <div class="col-md-8 text-center" *ngIf="(provider$ | async) as p">
-    <h4>{{p.name}}</h4>
+  <div class="col-md-8 text-center mt-1" *ngIf="(provider$ | async) as p">
+    <h4 class="fs-4 fst-italic fw-bolder badge rounded-pill bg-success pb-3">{{p.name}}</h4>
   </div>
 </div>
 
@@ -57,7 +57,7 @@
       </div>
 
       <div class="mb-3">
-        <button type="submit" class="btn btn-primary" [disabled]="!authForm.valid">Sign Up</button>
+        <button type="submit" class="btn btn-success" [disabled]="!authForm.valid">Sign Up</button>
       </div>
 
     </form>

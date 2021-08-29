@@ -3,3 +3,21 @@
   height: 200px;
   left: 50%;
 }
+
+.pending {
+  color: blue;
+}
+
+.accepted {
+  color: green;
+}
+
+.rejected {
+  color: red;
+}
+
+.dispensed {
+  color: orange;
+}
+
+

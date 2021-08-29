@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest, EMPTY, empty, Observable } from 'rxjs';
+import { combineLatest, EMPTY, Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { ApprovalItemCreate } from 'src/app/models/approval-item-create.model';
 import { PlanBenefit } from 'src/app/models/plan-benefit.model';
@@ -57,7 +57,7 @@ export class PendingApprovalDetailsComponent implements OnInit {
 
     this.fetchPlanBenefits();
 
-    if(this.masterBenefit.planId != 0) {
+    if (this.masterBenefit.planId != 0) {
       this.getCeilingUtilization$().subscribe((res) => {
         this.ceiling.masterUtilization = res;
         this.ceiling.remainingMaster =
@@ -66,18 +66,19 @@ export class PendingApprovalDetailsComponent implements OnInit {
     } else {
       // Get Pool Utilization.
     }
-
   }
 
   public onBenefitChange(): void {
     this.approval.benefitId = this.benefit.benefitId;
     this.approval.approvalCopaymentPer = this.benefit.coPaymentPer;
-    this.approval.approvalCopaymentAmt = this.benefit.coPaymentPer * this.approval.approvalAmt;
+    this.approval.approvalCopaymentAmt =
+      this.benefit.coPaymentPer * this.approval.approvalAmt;
     this.ceiling.benefitCeiling = this.benefit.maxCeilingAmt;
 
     this.getCeilingUtilization$().subscribe((utili: number) => {
       this.ceiling.benefitUtilization = utili;
-      this.ceiling.remainingBenefit = this.ceiling.benefitCeiling - this.ceiling.benefitUtilization;
+      this.ceiling.remainingBenefit =
+        this.ceiling.benefitCeiling - this.ceiling.benefitUtilization;
       this.availableCeiling = this.getAvailableCeiling();
     });
   }
@@ -130,9 +131,12 @@ export class PendingApprovalDetailsComponent implements OnInit {
               this.member = member;
               this.ceiling.annualCeiling = member.annualCeilingAmt;
               this.setMemberStatus();
-              if (this.isProviderUser()) return EMPTY; // Return Nothing if Provider User.
+              if (this.isProviderUser()) return EMPTY;
+              // Return Nothing if Provider User.
               else {
-                this.masterBenefits$ = this.lookupService.getPlanMasterBenefits(member.planId);
+                this.masterBenefits$ = this.lookupService.getPlanMasterBenefits(
+                  member.planId
+                );
                 return this.getCeilingUtilization$(); // Return Member Utilization If CMC Doctor
               }
             })
@@ -142,7 +146,8 @@ export class PendingApprovalDetailsComponent implements OnInit {
       .subscribe((result) => {
         if (typeof result === 'number') {
           this.ceiling.annualUtilization = result;
-          this.ceiling.remainingAnnual = this.ceiling.annualCeiling - this.ceiling.annualUtilization;
+          this.ceiling.remainingAnnual =
+            this.ceiling.annualCeiling - this.ceiling.annualUtilization;
         }
       });
   }
@@ -184,7 +189,7 @@ export class PendingApprovalDetailsComponent implements OnInit {
     // return Math.min(
     //   ...Object.entries(remainingObj).map((o) => o[1])
     // );
-    const obj = []
+    const obj = [];
     obj.push(this.ceiling.remainingAnnual);
     obj.push(this.ceiling.remainingMaster);
     obj.push(this.ceiling.remainingBenefit);
@@ -225,7 +230,6 @@ export class PendingApprovalDetailsComponent implements OnInit {
   }
 
   public isValidApproval(): boolean {
-     return this.approval.approvalAmt > this.availableCeiling
+    return this.approval.approvalAmt > this.availableCeiling;
   }
-
 }

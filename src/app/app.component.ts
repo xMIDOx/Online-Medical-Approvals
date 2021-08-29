@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -9,9 +10,13 @@ import { AuthService } from 'src/app/services/auth.service';
 export class AppComponent implements OnInit{
   title = 'OnlinePortal-WebUI';
 
-  constructor(private authService: AuthService){}
+  constructor(private authService: AuthService, private location: Location){}
 
   ngOnInit(): void {
     this.authService.autoLogin();
+  }
+
+  goBack() {
+    this.location.back();
   }
 }

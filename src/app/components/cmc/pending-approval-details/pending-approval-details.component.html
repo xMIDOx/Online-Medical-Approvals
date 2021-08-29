@@ -2,8 +2,9 @@
 
   <div class="row">
     <span class="col-md-2 badge rounded-pill bg-warning mb-3 fs-5">Approval Data</span>
-    <h3 class="col-md-3 mx-auto text-capitalize fw-bold fst-italic text-decoration-underline text-info">
-        {{this.onlineStatus[this.approval.onlineStatusId]}}.
+    <h3 class="col-md-3 mx-auto text-capitalize fw-bold fst-italic text-decoration-underline"
+      [ngClass]="this.onlineStatus[this.approval.onlineStatusId]">
+      {{this.onlineStatus[this.approval.onlineStatusId]}}.
     </h3>
   </div>
 
@@ -222,8 +223,8 @@
   <!-- Accept & Reject Btns for CMC Doctor -->
   <div *ngIf="isCMC()" class="row mb-3">
     <div class="col-md-2 mx-auto">
-      <button type="button" class="btn btn-success me-2"
-        (click)="onSubmitApproval(onlineStatus.accepted)" [disabled]="(isValidApproval())">Accept</button>
+      <button type="button" class="btn btn-success me-2" (click)="onSubmitApproval(onlineStatus.accepted)"
+        [disabled]="(isValidApproval())">Accept</button>
       <button type="button" class="btn btn-danger" (click)="onSubmitApproval(onlineStatus.rejected)">Reject</button>
     </div>
   </div>

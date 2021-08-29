@@ -1,26 +1,33 @@
-<table class="table table-striped table-hover">
-  <thead>
-    <tr>
-      <th>Member</th>
-      <th>Customer</th>
-      <th>Approval Date</th>
-      <th>Provider</th>
-      <th>Amount</th>
-      <th>Status</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let app of (pendingApprovals$ | async)">
-      <td>{{app.memberName}}</td>
-      <td>{{app.customerName}}</td>
-      <td>{{app.approvalDate | date}}</td>
-      <td>{{app.providerName}}</td>
-      <td>{{app.approvalAmt}}</td>
-      <td>{{app.onlineStatus}}</td>
-      <td>
-        <a [routerLink]="['/pending-approval-details', app.id]" class="link-primary">Details</a>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<span class="badge rounded-pill bg-warning mb-3 fs-5">Approvals List</span>
+
+<div class="row">
+  <div class="col">
+    <table class="table table-striped table-hover table-bordered">
+      <thead class="text-center">
+        <tr>
+          <th>Member</th>
+          <th>Customer</th>
+          <th>Approval Date</th>
+          <th>Provider</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody class="text-center">
+        <tr *ngFor="let app of (pendingApprovals$ | async)">
+          <td>{{app.memberName}}</td>
+          <td>{{app.customerName}}</td>
+          <td>{{app.approvalDate | date}}</td>
+          <td>{{app.providerName}}</td>
+          <td>{{app.approvalAmt}}</td>
+          <td>{{app.onlineStatus}}</td>
+          <td>
+            <a [routerLink]="['/pending-approval-details', app.id]" class="link-primary">Details</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

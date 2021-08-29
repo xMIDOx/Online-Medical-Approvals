@@ -1,5 +1,41 @@
 .active {
-  font-weight: bold;
+  font-weight: bolder;
   font-style: italic;
-  color: #fff;
+  border-bottom: 3px solid #35b86b;
+  font-size: large;
+  /* color: #fff !important; */
+  /* background-color: #198754; */
+  /* border-color: #198754; */
+  /* border-radius: 0.25rem; */
+}
+
+userName:hover {
+  font-weight: bolder;
+  font-style: italic;
+  border-bottom: 3px solid #35b86b;
+  font-size: large;
+}
+
+.logo {
+  width: 70px;
+  background-color: white;
+  border: 0;
+}
+
+.navbar {
+  /* box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
+    rgba(14, 30, 37, 0.32) 0px 2px 16px 0px; */
+
+  /* box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset; */
+
+  /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
+
+  /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
+
+  /* box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px,
+    rgba(0, 0, 0, 0.07) 0px 4px 4px, rgba(0, 0, 0, 0.07) 0px 8px 8px,
+    rgba(0, 0, 0, 0.07) 0px 16px 16px; */
+
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
