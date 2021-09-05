@@ -18,7 +18,8 @@ userName:hover {
 
 .logo {
   width: 70px;
-  background-color: white;
+  background-color: #f8f9fa;
+  color: #f8f9fa;
   border: 0;
 }
 

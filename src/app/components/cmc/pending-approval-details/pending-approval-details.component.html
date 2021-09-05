@@ -152,7 +152,39 @@
     </div>
 
     <div *ngIf="isCMC()" class="col-md-3 mb-3">
-      <ul class="list-group fw-bold mt-1 ">
+      <table class="table table-sm table-bordered">
+        <thead>
+          <tr>
+            <th>Ceiling</th>
+            <th>Amount</th>
+          </tr>
+          <tr>
+            <td>Annual</td>
+            <td class="fw-bold text-success">{{ ceiling.annualCeiling | number }}</td>
+          </tr>
+          <tr>
+            <td>Remaining Annual</td>
+            <td class="fw-bold text-success">{{ ceiling.remainingAnnual | number }}</td>
+          </tr>
+          <tr>
+            <td>Master Benefit</td>
+            <td class="fw-bold text-success">{{ ceiling.masterCeiling | number }}</td>
+          </tr>
+          <tr>
+            <td>Remainig Master</td>
+            <td class="fw-bold text-success">{{ ceiling.remainingMaster | number }}</td>
+          </tr>
+          <tr>
+            <td>Benefit</td>
+            <td class="fw-bold text-success">{{ ceiling.benefitCeiling | number }}</td>
+          </tr>
+          <tr>
+            <td>Remianig Benefit</td>
+            <td class="fw-bold text-success">{{ ceiling.remainingBenefit | number }}</td>
+          </tr>
+        </thead>
+      </table>
+      <!-- <ul class="list-group fw-bold mt-1 ">
         <li class="list-group-item text-primary">Annual Ceiling: {{ ceiling.annualCeiling | number }} </li>
         <li class="list-group-item text-primary">Rem. Annual Ceiling: {{ ceiling.remainingAnnual | number}} </li>
         <li class="list-group-item text-primary">Master Ceiling: {{ ceiling.masterCeiling | number}} </li>
@@ -160,7 +192,7 @@
         <li class="list-group-item text-primary">Benefit Ceiling: {{ ceiling.benefitCeiling | number }} </li>
         <li class="list-group-item text-primary">Rem. Benefit Ceiling: {{ ceiling.remainingBenefit | number }}
         </li>
-      </ul>
+      </ul> -->
     </div>
 
   </div>
