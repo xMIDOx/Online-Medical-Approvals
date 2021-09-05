@@ -8,19 +8,19 @@ export class NotificationService {
 
   constructor(private toastr: ToastrService) { }
 
-  public showSuccess(message: string, title: string): void {
-    this.toastr.success(message, title);
+  public showSuccess(message: string): void {
+    this.toastr.success(message, 'Success');
   }
 
-  public showError(message: string, title: string): void {
-    this.toastr.error(message, title);
+  public showError(message: string): void {
+    this.toastr.error(message, 'Error');
   }
 
-  public showInfo(message: string, title: string): void {
-    this.toastr.info(message, title);
+  public showInfo(message: string): void {
+    this.toastr.info(message, 'Info');
   }
 
-  public showWarning(message: string, title: string): void {
-    this.toastr.warning(message, title);
+  public showWarning(message: string): void {
+    this.toastr.warning(message, 'Warning');
   }
 }

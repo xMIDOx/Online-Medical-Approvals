@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastrModule } from 'ngx-toastr';
 
+import { AppErrorhandler } from './app-error-handler';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CreateApprovalItemsComponent } from './components/approval/create-approval-items/create-approval-items.component';
@@ -24,6 +25,8 @@ import { NgSelectComponent } from './components/ng-select/ng-select.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { LoadingSpinner } from './models/loading-spinner.pipe';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
+import { NotificationService } from './services/notification.service';
+
 
 @NgModule({
   declarations: [
@@ -62,6 +65,7 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
       useClass: AuthInterceptorService,
       multi: true,
     },
+    { provide: ErrorHandler, useClass: AppErrorhandler }
   ],
   bootstrap: [AppComponent],
 })
