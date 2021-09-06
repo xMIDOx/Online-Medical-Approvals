@@ -1,6 +1,7 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { combineLatest, Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { combineLatest, Observable, throwError } from 'rxjs';
+import { catchError, map, take } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
 
 import { ApprovalOnlineStatus } from './../../../models/approval-online-status.enum';
@@ -17,36 +18,48 @@ import { ApprovalService } from './../../../services/approval.service';
 })
 export class PendingApprovalsListComponent implements OnInit {
   public pendingApprovals$ = new Observable<PendingApproval[]>();
-  private onlineStatus = ApprovalOnlineStatus;
   public isProviderUser = false;
+  public errorObject!: HttpErrorResponse;
+  private onlineStatus = ApprovalOnlineStatus;
   constructor(
     private approvalService: ApprovalService,
     private authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    this.getPendingApprovalsBasedOnUserRole();
+    this.getPendingApprovals();
   }
 
-  private getPendingApprovalsBasedOnUserRole(): void {
+  private getPendingApprovals(): void {
     combineLatest([this.authService.userToken$, this.authService.getUser()])
       .pipe(
         take(1),
         map((combined: [UserToken, User]) => {
-          const isCMC = combined[0].roles.includes(Roles.CMCDoctor);
-          const isProviderUser = combined[0].roles.includes(Roles.ProviderUser);
-          if (isCMC) {
-            return this.approvalService
-            .getApprovals(this.onlineStatus.pending, 0);
-          }
-          else if (isProviderUser) {
-            this.isProviderUser = true;
-            return this.approvalService
-            .getApprovals(0, combined[1].providerId, combined[1].id);
-          }
-          return this.approvalService.getApprovals(0, 0);
+          return this.approvalsByUserRole(combined[0], combined[1]);
         })
       )
-      .subscribe((res) => (this.pendingApprovals$ = res));
+      .subscribe((result: Observable<PendingApproval[]>) => {
+        this.pendingApprovals$ = result.pipe(
+          catchError((error: HttpErrorResponse) => {
+            this.errorObject = error;
+            return throwError(error);
+          })
+        );
+      });
+  }
+
+  private approvalsByUserRole(
+    userToken: UserToken,
+    user: User
+  ): Observable<PendingApproval[]> {
+    const isCMC = userToken.roles.includes(Roles.CMCDoctor);
+    const isProviderUser = userToken.roles.includes(Roles.ProviderUser);
+    if (isCMC)
+      return this.approvalService.getApprovals(this.onlineStatus.pending, 0);
+    else if (isProviderUser) {
+      this.isProviderUser = true;
+      return this.approvalService.getApprovals(0, user.providerId, user.id);
+    }
+    return this.approvalService.getApprovals(0, 0);
   }
 }

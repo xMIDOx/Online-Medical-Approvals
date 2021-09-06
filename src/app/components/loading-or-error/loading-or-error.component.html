@@ -1,0 +1,12 @@
+<div *ngIf="error; else loading">
+  <div class="text-center text-danger fw-bold">
+    <p> {{message}}</p>
+  </div>
+</div>
+<ng-template class="text-center" #loading>
+  <div class="text-center">
+    <div class="spinner-border text-success" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+</ng-template>

@@ -3,7 +3,6 @@ import { ErrorHandler, Injectable, Injector, NgZone } from '@angular/core';
 
 import { NotificationService } from './services/notification.service';
 
-
 @Injectable()
 export class AppErrorhandler implements ErrorHandler {
   constructor(private injector: Injector, private ngZone: NgZone) {}
@@ -11,8 +10,8 @@ export class AppErrorhandler implements ErrorHandler {
   handleError(error: HttpErrorResponse): void {
     this.ngZone.run(() => {
       const notification = this.injector.get(NotificationService);
-      notification.showError(error.message);
+      notification.showError(error.error.exceptionMessage);
+      console.log(error);
     })
-
   }
 }

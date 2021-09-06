@@ -20,13 +20,13 @@ import {
 import { PendingApprovalsListComponent } from './components/cmc/pending-approvals-list/pending-approvals-list.component';
 import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 import { HomeComponent } from './components/home/home.component';
+import { LoadingOrErrorComponent } from './components/loading-or-error/loading-or-error.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { NgSelectComponent } from './components/ng-select/ng-select.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { LoadingSpinner } from './models/loading-spinner.pipe';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { NotificationService } from './services/notification.service';
-
 
 @NgModule({
   declarations: [
@@ -43,6 +43,7 @@ import { NotificationService } from './services/notification.service';
     LogInComponent,
     ForbiddenComponent,
     LoadingSpinner,
+    LoadingOrErrorComponent,
   ],
   imports: [
     BrowserModule,
@@ -65,7 +66,7 @@ import { NotificationService } from './services/notification.service';
       useClass: AuthInterceptorService,
       multi: true,
     },
-    { provide: ErrorHandler, useClass: AppErrorhandler }
+    { provide: ErrorHandler, useClass: AppErrorhandler },
   ],
   bootstrap: [AppComponent],
 })
