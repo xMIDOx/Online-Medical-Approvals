@@ -5,11 +5,13 @@ import { Observable } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
 import { ApprovalDisplay } from 'src/app/models/approval-display.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { NotificationService } from 'src/app/services/notification.service';
 
 import { ApprovalItemDisplay } from '../../../models/approval-item-display.model';
 import { ApprovalOnlineStatus } from './../../../models/approval-online-status.enum';
 import { KeyValue } from './../../../models/key-value.model';
 import { Member } from './../../../models/member.model';
+import { User } from './../../../models/user.model';
 import { ApprovalService } from './../../../services/approval.service';
 import { LookupsService } from './../../../services/lookups.service';
 
@@ -19,21 +21,22 @@ import { LookupsService } from './../../../services/lookups.service';
   styleUrls: ['./create-approval.component.css'],
 })
 export class CreateApprovalComponent implements OnInit {
-  public approval: ApprovalDisplay = {
-    id: 0,
-    approvalDate: new Date(),
-    cardNumber: 0,
-    customerId: 0,
-    planMemberId: 0,
-    claimNumber: 0,
-    claimProviderId: 0,
-    serviceProviderId: 0,
-    ICDCodeId: 0,
-    onlineStatusId: 0,
-    issuedBy: '',
-    printedNotes: '',
-    approvalItems: [],
-  };
+  // public approval: ApprovalDisplay = {
+  //   id: 0,
+  //   approvalDate: new Date(),
+  //   cardNumber: 0,
+  //   customerId: 0,
+  //   planMemberId: 0,
+  //   claimNumber: 0,
+  //   claimProviderId: 0,
+  //   serviceProviderId: 0,
+  //   ICDCodeId: 0,
+  //   onlineStatusId: 0,
+  //   issuedBy: '',
+  //   printedNotes: '',
+  //   approvalItems: [],
+  // };
+  public approval = <ApprovalDisplay>{};
   public member = <Member>{};
   public provider$ = new Observable<any>();
   public diagnosis = new Observable<object>();
@@ -45,18 +48,12 @@ export class CreateApprovalComponent implements OnInit {
     private lookupService: LookupsService,
     private approvalService: ApprovalService,
     private authService: AuthService,
+    private notification: NotificationService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.authService
-      .getUser()
-      .pipe(take(1))
-      .subscribe((user) => {
-        this.approval.serviceProviderId = user.providerId;
-        this.approval.issuedBy = user.id;
-        this.provider$ = this.lookupService.getProviderById(user.providerId);
-      });
+    this.getAuthenticatedUser();
   }
 
   public getDiagnosis(searchTerm: string): void {
@@ -114,14 +111,8 @@ export class CreateApprovalComponent implements OnInit {
       });
   }
 
-  private setStatusName(): void {
-    if (this.member.isActive) this.member.statusName = 'Active';
-    else this.member.statusName = 'Stopped';
-  }
-
   public setDate(date: any): void {
     this.approval.approvalDate = date;
-    console.log(typeof date, this.approval.approvalDate);
   }
 
   public onSubmit(form: NgForm): void {
@@ -132,7 +123,26 @@ export class CreateApprovalComponent implements OnInit {
         .createApproval(this.approval)
         .pipe(take(1))
         .subscribe((res) => {
+          this.notification.showSuccess('Approval Created Successfully.');
           this.router.navigate(['/pending-approvals']);
+        }, error => {
+          this.notification.showError("Could Not Create Approval");
         });
+  }
+
+  private getAuthenticatedUser(): void {
+    this.authService
+    .getUser()
+    .pipe(take(1))
+    .subscribe((user: User) => {
+      this.approval.serviceProviderId = user.providerId;
+      this.approval.issuedBy = user.id;
+      this.provider$ = this.lookupService.getProviderById(user.providerId);
+    });
+  }
+
+  private setStatusName(): void {
+    if (this.member.isActive) this.member.statusName = 'Active';
+    else this.member.statusName = 'Stopped';
   }
 }
