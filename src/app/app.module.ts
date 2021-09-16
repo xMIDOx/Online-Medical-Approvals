@@ -27,6 +27,7 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { LoadingSpinner } from './models/loading-spinner.pipe';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { NotificationService } from './services/notification.service';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { NotificationService } from './services/notification.service';
     ForbiddenComponent,
     LoadingSpinner,
     LoadingOrErrorComponent,
+    DashboardComponent,
   ],
   imports: [
     BrowserModule,

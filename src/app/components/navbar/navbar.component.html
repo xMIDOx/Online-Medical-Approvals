@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-light bg-light">
+<nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
   <div class="container-fluid">
     <a class="navbar-brand" routerLink="/home">
       <img class="img-thumbnail img-responsive logo" src="assets/images/Logo.png" alt="">
@@ -10,8 +10,9 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a class="nav-link" routerLink="/home" routerLinkActive="active current">Home</a>
-        <a class="nav-link" routerLink="/create-approval"   routerLinkActive="active current">Add Approval</a>
-        <a class="nav-link" routerLink="/pending-approvals" routerLinkActive="active current">Pending Approvals</a>
+        <a *ngIf="!isProviderAdmin()" class="nav-link" routerLink="/create-approval"   routerLinkActive="active current">Add Approval</a>
+        <a *ngIf="!isProviderAdmin()" class="nav-link" routerLink="/pending-approvals" routerLinkActive="active current">Pending Approvals</a>
+        <a *ngIf="isProviderAdmin()" class="nav-link" routerLink="/dashboard" routerLinkActive="active current">Dashboard</a>
       </div>
       <div class="navbar-nav d-flex ms-auto">
         <ul *ngIf="isAuthenticated" class="navbar-nav me-auto">

@@ -8,6 +8,7 @@ import {
   PendingApprovalDetailsComponent,
 } from './components/cmc/pending-approval-details/pending-approval-details.component';
 import { PendingApprovalsListComponent } from './components/cmc/pending-approvals-list/pending-approvals-list.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 import { HomeComponent } from './components/home/home.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
@@ -36,6 +37,12 @@ const routes: Routes = [
   {
     path: 'home',
     component: HomeComponent,
+    canActivate: [AuthGuard],
+  },
+
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
     canActivate: [AuthGuard],
   },
 

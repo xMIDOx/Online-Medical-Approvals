@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 
 import { UserToken } from '../../models/user-token.model';
+import { Roles } from './../../models/user-roles.enum';
 
 @Component({
   selector: 'app-navbar',
@@ -13,6 +14,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private userSub = new Subscription();
   public isAuthenticated = false;
   public user = <UserToken>{};
+  public roles = Roles;
 
   constructor(private authService: AuthService) {}
 
@@ -21,6 +23,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.isAuthenticated = !!user; // user ? true : false;
       this.user = user;
     });
+  }
+
+  public isProviderAdmin() {
+    if (this.isAuthenticated)
+      return this.user.roles.includes(this.roles.ProviderAdmin);
+    else return false;
   }
 
   ngOnDestroy(): void {
