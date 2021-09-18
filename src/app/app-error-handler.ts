@@ -7,10 +7,10 @@ import { NotificationService } from './services/notification.service';
 export class AppErrorhandler implements ErrorHandler {
   constructor(private injector: Injector, private ngZone: NgZone) {}
 
-  handleError(error: Error): void {
+  handleError(error: HttpErrorResponse): void {
     this.ngZone.run(() => {
       const notification = this.injector.get(NotificationService);
-      notification.showError(error.message);
+      notification.showError((error.error.message) ?? 'Oops! Something went wrong.');
       console.log(error);
     })
   }

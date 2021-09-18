@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { defaultIfEmpty, map, take } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { KeyValue } from 'src/app/models/key-value.model';
 import { Provider } from 'src/app/models/provider.model';
 
@@ -11,6 +11,7 @@ import { Roles } from './../../../models/user-roles.enum';
 import { User } from './../../../models/user.model';
 import { AuthService } from './../../../services/auth.service';
 import { LookupsService } from './../../../services/lookups.service';
+import { NotificationService } from './../../../services/notification.service';
 import { UserRolesService } from './../../../services/user-roles.service';
 
 @Component({
@@ -39,7 +40,8 @@ export class SignUpComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private userRolesService: UserRolesService,
-    private lookupService: LookupsService
+    private lookupService: LookupsService,
+    private notification: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -47,26 +49,39 @@ export class SignUpComponent implements OnInit {
   }
 
   public signUp(form: NgForm) {
-    if (form.valid) {
-      this.userRegistration.email = form.value.email;
-      this.userRegistration.password = form.value.password;
-      this.userRegistration.confirmPassword = form.value.password;
+    this.userRegistration.email = form.value.email;
+    this.userRegistration.password = form.value.password;
+    this.userRegistration.confirmPassword = form.value.password;
 
-      this.isLoading = true;
-      this.authService.signup(this.userRegistration).subscribe(
-        (res) => (this.isLoading = false),
-        (err) => {
-          console.log(err);
-          this.error = err.error.message;
-          this.isLoading = false;
-        }
-      );
-    }
+    this.isLoading = true;
+    if (this.userRegistration.providerId == 0)
+      this.notification.showError('The user has no assigned provider.');
+    else this.registerUser(this.userRegistration);
+    this.isLoading = false;
+
     form.reset();
     this.userRegistration.roles = [];
   }
 
-  public onRoleToggle(roleName: string, $event: any) {
+  private getLoggedUser(): void {
+    this.authService
+      .getUser()
+      .pipe(take(1))
+      .subscribe((user: User) => {
+        if (user.providerId != 0) this.providerUserRegistration(user);
+        else this.roles$ = this.userRolesService.getRoles();
+      });
+  }
+
+  private registerUser(user: Register): void {
+    this.authService.signup(user).subscribe(
+      () => (this.isLoading = false),
+      (err) => (this.error = err.error.message)
+    );
+  }
+
+  //#region >> Provider Admin Registration Logic
+  public addOrRemoveRoles(roleName: string, $event: any) {
     if ($event.target.checked) this.userRegistration.roles.push(roleName);
     else {
       const index = this.userRegistration.roles.indexOf(roleName);
@@ -86,22 +101,20 @@ export class SignUpComponent implements OnInit {
   public isProviderSelected(): boolean {
     return this.userRegistration.roles.includes(this.rolesEnum.ProviderAdmin);
   }
+  //#endregion
 
+  //#region >> Provider User Registration Logic
   public OnBranchChange() {
     console.log(this.branch);
   }
 
-  private getLoggedUser() {
-    this.authService
-      .getUser()
-      .pipe(take(1))
-      .subscribe((user: User) => {
-        if (user.providerId != 0) {
-          this.userRegistration.providerId = user.providerId;
-          this.userRegistration.roles.push(Roles.ProviderUser);
-          this.provider$ = this.lookupService.getProviderById(user.providerId);
-          this.branches$ = this.lookupService.getBranches(user.providerId);
-        } else this.roles$ = this.userRolesService.getRoles();
-      });
+  private providerUserRegistration(providerAdmin: User): void {
+    this.userRegistration.providerId = providerAdmin.providerId;
+    this.userRegistration.roles.push(Roles.ProviderUser);
+    this.provider$ = this.lookupService.getProviderById(
+      providerAdmin.providerId
+    );
+    this.branches$ = this.lookupService.getBranches(providerAdmin.providerId);
   }
+  //#endregion
 }

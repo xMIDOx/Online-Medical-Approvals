@@ -20,7 +20,6 @@ export class PendingApprovalsListComponent implements OnInit {
   public pendingApprovals$ = new Observable<PendingApproval[]>();
   public isProviderUser = false;
   public errorObject!: HttpErrorResponse;
-  private onlineStatus = ApprovalOnlineStatus;
   constructor(
     private approvalService: ApprovalService,
     private authService: AuthService
@@ -54,12 +53,17 @@ export class PendingApprovalsListComponent implements OnInit {
   ): Observable<PendingApproval[]> {
     const isCMC = userToken.roles.includes(Roles.CMCDoctor);
     const isProviderUser = userToken.roles.includes(Roles.ProviderUser);
+    const isProviderAdmin = userToken.roles.includes(Roles.ProviderAdmin);
+
+    if(isProviderAdmin)
+      return this.approvalService.getApprovals(ApprovalOnlineStatus.default, user.providerId);
     if (isCMC)
-      return this.approvalService.getApprovals(this.onlineStatus.pending, 0);
-    else if (isProviderUser) {
+      return this.approvalService.getApprovals(ApprovalOnlineStatus.pending, 0);
+    if (isProviderUser) {
       this.isProviderUser = true;
-      return this.approvalService.getApprovals(0, user.providerId, user.id);
+      return this.approvalService.getApprovals(ApprovalOnlineStatus.default, user.providerId, user.id);
     }
-    return this.approvalService.getApprovals(0, 0);
+
+    return this.approvalService.getApprovals(ApprovalOnlineStatus.default, 0);
   }
 }
