@@ -54,7 +54,7 @@ export class SignUpComponent implements OnInit {
     this.userRegistration.confirmPassword = form.value.password;
 
     this.isLoading = true;
-    if (this.userRegistration.providerId == 0)
+    if ((this.userRegistration.providerId == 0) && (this.userRegistration.roles.includes(Roles.ProviderUser)))
       this.notification.showError('The user has no assigned provider.');
     else this.registerUser(this.userRegistration);
     this.isLoading = false;

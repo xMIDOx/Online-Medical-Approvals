@@ -34,11 +34,11 @@ export class ApprovalService {
   }
 
   public getApprovals(
-    statusId: number,
-    providerId: number,
+    onlineStatusId?: number,
+    providerId?: number,
     userId?: string
   ): Observable<PendingApproval[]> {
-    const queryParams = { statusId: statusId, providerId: providerId, userId };
+    const queryParams = { onlineStatusId: onlineStatusId, providerId: providerId, userId };
     return this.http
       .Get(
         this.approvalEndPoint +

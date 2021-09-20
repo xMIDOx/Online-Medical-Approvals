@@ -31,9 +31,9 @@
         </ng-container>
         <td>
           <div class="justify-content-start">
-            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#bsModal"
+            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#bsModal"
               (click)="Edit(item, i)">Edit</button> |
-            <button class="btn btn-outline-danger btn-sm" (click)="remove(item)">Delete</button>
+            <button type="button" class="btn btn-outline-danger btn-sm" (click)="remove(item)">Delete</button>
           </div>
         </td>
       </tr>
@@ -88,7 +88,7 @@
             </div>
             <div class="row modal-footer justify-content-start">
               <button type="submit" class="btn btn-success col-md-2">Add</button>
-              <button type="button" class="btn btn-secondary col-md-2" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-secondary col-md-2" data-bs-dismiss="modal" (click)="cancelEdit(itemForm)">Close</button>
             </div>
           </form>
         </div>

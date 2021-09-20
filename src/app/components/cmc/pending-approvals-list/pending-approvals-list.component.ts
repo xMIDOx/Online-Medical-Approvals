@@ -55,15 +55,15 @@ export class PendingApprovalsListComponent implements OnInit {
     const isProviderUser = userToken.roles.includes(Roles.ProviderUser);
     const isProviderAdmin = userToken.roles.includes(Roles.ProviderAdmin);
 
-    if(isProviderAdmin)
-      return this.approvalService.getApprovals(ApprovalOnlineStatus.default, user.providerId);
+    if (isProviderAdmin)
+      return this.approvalService.getApprovals(undefined, user.providerId);
     if (isCMC)
-      return this.approvalService.getApprovals(ApprovalOnlineStatus.pending, 0);
+      return this.approvalService.getApprovals(ApprovalOnlineStatus.pending);
     if (isProviderUser) {
       this.isProviderUser = true;
       return this.approvalService.getApprovals(ApprovalOnlineStatus.default, user.providerId, user.id);
     }
 
-    return this.approvalService.getApprovals(ApprovalOnlineStatus.default, 0);
+    return this.approvalService.getApprovals();
   }
 }

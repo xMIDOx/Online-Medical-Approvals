@@ -68,6 +68,12 @@ export class CreateApprovalItemsComponent implements OnInit, OnChanges {
     this.index = i;
   }
 
+  public cancelEdit(itemForm: NgForm) {
+    this.approvalItem = <ApprovalItemDisplay>{}
+    this.index = -1;
+    itemForm.reset();
+  }
+
   public remove(item: ApprovalItemDisplay) {
     const index = this.approvalItems.indexOf(item);
     this.approvalItems.splice(index, 1);
