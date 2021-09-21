@@ -6,6 +6,7 @@ import { ApprovalDisplay } from '../models/approval-display.model';
 import { ApprovalCreate } from './../models/approval-create.model';
 import { ApprovalItemCreate } from './../models/approval-item-create.model';
 import { ApprovalItemDisplay } from './../models/approval-item-display.model';
+import { ClientApproval } from './../models/client-approval';
 import { PendingApprovalDetails } from './../models/pending-approval-details.model';
 import { PendingApproval } from './../models/pending-approval.model';
 import { GenericCRUDService } from './generic-crud.service';
@@ -18,6 +19,16 @@ export class ApprovalService {
   private approvalCreate = <ApprovalCreate>{};
   constructor(private http: GenericCRUDService) {}
 
+  public getMemberApprovalsHistory(
+    memberId: number
+  ): Observable<ClientApproval[]> {
+    return this.http
+      .Get(
+        this.approvalEndPoint + 'MemberApprovalsHistory?memberId=' + memberId
+      )
+      .pipe(map((res) => res as ClientApproval[]));
+  }
+
   public createApproval(approval: ApprovalDisplay) {
     this.fetchApprovalCreateObject(approval);
     return this.http.Create(
@@ -27,10 +38,7 @@ export class ApprovalService {
   }
 
   public updateApproval(approval: any) {
-    return this.http.Create(
-      this.approvalEndPoint + 'CreateOrUpdate',
-      approval
-    );
+    return this.http.Create(this.approvalEndPoint + 'CreateOrUpdate', approval);
   }
 
   public getApprovals(
@@ -38,7 +46,11 @@ export class ApprovalService {
     providerId?: number,
     userId?: string
   ): Observable<PendingApproval[]> {
-    const queryParams = { onlineStatusId: onlineStatusId, providerId: providerId, userId };
+    const queryParams = {
+      onlineStatusId: onlineStatusId,
+      providerId: providerId,
+      userId,
+    };
     return this.http
       .Get(
         this.approvalEndPoint +

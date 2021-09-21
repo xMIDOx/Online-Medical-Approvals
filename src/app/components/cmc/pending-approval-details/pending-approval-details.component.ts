@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, EMPTY, Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { ApprovalItemCreate } from 'src/app/models/approval-item-create.model';
+import { ClientApproval } from 'src/app/models/client-approval';
 import { PlanBenefit } from 'src/app/models/plan-benefit.model';
 
 import { PlanMasterBenefit } from '../../../models/plan-master-benefit.model';
@@ -35,6 +36,7 @@ export class PendingApprovalDetailsComponent implements OnInit {
   public onlineStatus = ApprovalOnlineStatus;
   public availableCeiling = 0;
   public userRoles: string[] = [];
+  public approvalsHistory$ = new Observable<ClientApproval[]>();
 
   constructor(
     private route: ActivatedRoute,
@@ -47,6 +49,11 @@ export class PendingApprovalDetailsComponent implements OnInit {
   ngOnInit(): void {
     const approvalId = this.route.snapshot.params['id'];
     this.getApprovalByIdAndRole(approvalId);
+  }
+
+  public getMemberApprovals(memberId: number) {
+    console.log(memberId);
+    this.approvalsHistory$ = this.approvalService.getMemberApprovalsHistory(memberId);
   }
 
   public onMasterBenefitChange(): void {

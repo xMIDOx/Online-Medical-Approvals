@@ -61,7 +61,7 @@ export class PendingApprovalsListComponent implements OnInit {
       return this.approvalService.getApprovals(ApprovalOnlineStatus.pending);
     if (isProviderUser) {
       this.isProviderUser = true;
-      return this.approvalService.getApprovals(ApprovalOnlineStatus.default, user.providerId, user.id);
+      return this.approvalService.getApprovals(undefined, user.providerId, user.id);
     }
 
     return this.approvalService.getApprovals();

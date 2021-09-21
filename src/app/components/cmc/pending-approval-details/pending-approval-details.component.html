@@ -151,54 +151,53 @@
 
     </div>
 
-    <div *ngIf="isCMC()" class="col-md-3 mb-3">
-      <table class="table table-sm table-bordered">
-        <thead>
-          <tr>
-            <th>Ceiling</th>
-            <th>Amount</th>
-          </tr>
-          <tr>
-            <td>Annual</td>
-            <td class="fw-bold text-success">{{ ceiling.annualCeiling | number }}</td>
-          </tr>
-          <tr>
-            <td>Remaining Annual</td>
-            <td class="fw-bold text-success">{{ ceiling.remainingAnnual | number }}</td>
-          </tr>
-          <tr>
-            <td>Master Benefit</td>
-            <td class="fw-bold text-success">{{ ceiling.masterCeiling | number }}</td>
-          </tr>
-          <tr>
-            <td>Remainig Master</td>
-            <td class="fw-bold text-success">{{ ceiling.remainingMaster | number }}</td>
-          </tr>
-          <tr>
-            <td>Benefit</td>
-            <td class="fw-bold text-success">{{ ceiling.benefitCeiling | number }}</td>
-          </tr>
-          <tr>
-            <td>Remianig Benefit</td>
-            <td class="fw-bold text-success">{{ ceiling.remainingBenefit | number }}</td>
-          </tr>
-        </thead>
-      </table>
-      <!-- <ul class="list-group fw-bold mt-1 ">
-        <li class="list-group-item text-primary">Annual Ceiling: {{ ceiling.annualCeiling | number }} </li>
-        <li class="list-group-item text-primary">Rem. Annual Ceiling: {{ ceiling.remainingAnnual | number}} </li>
-        <li class="list-group-item text-primary">Master Ceiling: {{ ceiling.masterCeiling | number}} </li>
-        <li class="list-group-item text-primary">Rem. Master Ceiling: {{ ceiling.remainingMaster | number}} </li>
-        <li class="list-group-item text-primary">Benefit Ceiling: {{ ceiling.benefitCeiling | number }} </li>
-        <li class="list-group-item text-primary">Rem. Benefit Ceiling: {{ ceiling.remainingBenefit | number }}
-        </li>
-      </ul> -->
+    <!-- CMC Ceiling Summary -->
+    <div *ngIf="isCMC()" class="col-md-3 mb-1 mt-1">
+      <div>
+        <table class="table table-sm table-bordered mb-1">
+          <thead>
+            <tr class="bg-warning text-white">
+              <th>Ceiling</th>
+              <th>Amount</th>
+            </tr>
+            <tr>
+              <td>Annual</td>
+              <td class="fw-bold text-success">{{ ceiling.annualCeiling | number }}</td>
+            </tr>
+            <tr>
+              <td>Remaining Annual</td>
+              <td class="fw-bold text-success">{{ ceiling.remainingAnnual | number }}</td>
+            </tr>
+            <tr>
+              <td>Master Benefit</td>
+              <td class="fw-bold text-success">{{ ceiling.masterCeiling | number }}</td>
+            </tr>
+            <tr>
+              <td>Remainig Master</td>
+              <td class="fw-bold text-success">{{ ceiling.remainingMaster | number }}</td>
+            </tr>
+            <tr>
+              <td>Benefit</td>
+              <td class="fw-bold text-success">{{ ceiling.benefitCeiling | number }}</td>
+            </tr>
+            <tr>
+              <td>Remianig Benefit</td>
+              <td class="fw-bold text-success">{{ ceiling.remainingBenefit | number }}</td>
+            </tr>
+          </thead>
+        </table>
+      </div>
+
+      <div class="d-grid gap">
+        <button type="button" class="btn btn-primary btn-sm fw-bold" data-bs-toggle="modal"
+          data-bs-target="#approvalHistoryId" (click)="getMemberApprovals(approval.planMemberId)">Approvals History</button>
+      </div>
     </div>
 
   </div>
 
-  <span class="badge rounded-pill bg-warning mb-3 fs-5">Approval Services</span>
   <!-- Approval Items -->
+  <span class="badge rounded-pill bg-warning mb-3 fs-5">Approval Services</span>
   <div class="row">
     <table class="table table-bordered table-responsive table-sm">
       <thead class="fst-italic text-center">
@@ -241,6 +240,7 @@
       </tbody>
     </table>
   </div>
+
   <!-- Approval Price Summary -->
   <div class="row fw-bolder fst-italic text-center text-primary">
 
@@ -252,6 +252,7 @@
     </div>
 
   </div>
+
   <!-- Accept & Reject Btns for CMC Doctor -->
   <div *ngIf="isCMC()" class="row mb-3">
     <div class="col-md-2 mx-auto">
@@ -260,10 +261,62 @@
       <button type="button" class="btn btn-danger" (click)="onSubmitApproval(onlineStatus.rejected)">Reject</button>
     </div>
   </div>
+
   <!-- Dispense Btn For Provider User -->
   <div class="row mb-3" *ngIf="showDispenseBtn()">
     <div class="col-md-2 mx-auto">
       <button type="button" class="btn btn-success" (click)="onDispense()">Dispense</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- --------------------------------------------Bootstrap Modal----------------------------------------------------- -->
+<div class="row">
+  <div #modal class="modal fade" id="approvalHistoryId" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+    aria-labelledby="bsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-fullscreen-xxl-down">
+      <div class="modal-content">
+        <div class="modal-header text-warning table-info fst-italic fw-bolder">
+          <h5 class="modal-title" id="bsModalLabel">Approval Services</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body offWhite">
+          <table class="table table-sm table-responsive table-bordered ">
+            <thead>
+              <tr>
+                <th>MemberName</th>
+                <th>ApprovalNum</th>
+                <th>ApprovalDate</th>
+                <th>ApprovalAmt</th>
+                <th>ClaimNum</th>
+                <th>ProviderName</th>
+                <th>MasterBenefitName</th>
+                <th>BenfitName</th>
+                <th>Diagnosis</th>
+                <th>PrintedNotes</th>
+                <th>UserName</th>
+              </tr>
+
+            </thead>
+            <tbody *ngFor="let app of (approvalsHistory$ | async)">
+              <tr>
+                <td>{{app.memberName}}</td>
+                <td>{{app.approvalNum}}</td>
+                <td>{{app.pprovalDate | date}}</td>
+                <td>{{app.approvalAmt | currency}}</td>
+                <td>{{app.claimNum}}</td>
+                <td>{{app.providerName}}</td>
+                <td>{{app.masterBenefitName}}</td>
+                <td>{{app.benfitName}}</td>
+                <td>{{app.diagnosis}}</td>
+                <td>{{app.printedNotes}}</td>
+                <td>{{app.userName}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </div>
