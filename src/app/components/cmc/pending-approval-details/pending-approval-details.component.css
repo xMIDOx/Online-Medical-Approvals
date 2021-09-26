@@ -20,4 +20,11 @@
   color: orange;
 }
 
-
+/* .accordion-button:focus {
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, #198754 0px 0px 0px 3px;
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
+    rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: rgba(2, 100, 68, 0.74) 0px 5px 15px;
+} */

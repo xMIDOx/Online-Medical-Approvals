@@ -190,7 +190,8 @@
 
       <div class="d-grid gap">
         <button type="button" class="btn btn-primary btn-sm fw-bold" data-bs-toggle="modal"
-          data-bs-target="#approvalHistoryId" (click)="getMemberApprovals(approval.planMemberId)">Approvals History</button>
+          data-bs-target="#approvalHistoryId" (click)="getMemberApprovals(approval.planMemberId)">Approvals
+          History</button>
       </div>
     </div>
 
@@ -273,48 +274,104 @@
 
 <!-- --------------------------------------------Bootstrap Modal----------------------------------------------------- -->
 <div class="row">
-  <div #modal class="modal fade" id="approvalHistoryId" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
-    aria-labelledby="bsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-fullscreen-xxl-down">
-      <div class="modal-content">
-        <div class="modal-header text-warning table-info fst-italic fw-bolder">
-          <h5 class="modal-title" id="bsModalLabel">Approval Services</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body offWhite">
-          <table class="table table-sm table-responsive table-bordered ">
-            <thead>
-              <tr>
-                <th>MemberName</th>
-                <th>ApprovalNum</th>
-                <th>ApprovalDate</th>
-                <th>ApprovalAmt</th>
-                <th>ClaimNum</th>
-                <th>ProviderName</th>
-                <th>MasterBenefitName</th>
-                <th>BenfitName</th>
-                <th>Diagnosis</th>
-                <th>PrintedNotes</th>
-                <th>UserName</th>
-              </tr>
-
-            </thead>
-            <tbody *ngFor="let app of (approvalsHistory$ | async)">
-              <tr>
-                <td>{{app.memberName}}</td>
-                <td>{{app.approvalNum}}</td>
-                <td>{{app.pprovalDate | date}}</td>
-                <td>{{app.approvalAmt | currency}}</td>
-                <td>{{app.claimNum}}</td>
-                <td>{{app.providerName}}</td>
-                <td>{{app.masterBenefitName}}</td>
-                <td>{{app.benfitName}}</td>
-                <td>{{app.diagnosis}}</td>
-                <td>{{app.printedNotes}}</td>
-                <td>{{app.userName}}</td>
-              </tr>
-            </tbody>
-          </table>
+  <div class="col">
+    <div #modal class="modal fade" id="approvalHistoryId" tabindex="-1" data-bs-backdrop="static"
+      data-bs-keyboard="false" aria-labelledby="bsModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen">
+        <div class="modal-content">
+          <div class="modal-header text-warning table-info fst-italic fw-bolder">
+            <h5 class="modal-title" id="bsModalLabel">Approval Services</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Approval Master Table -->
+            <table class="table table-sm table-responsive table-bordered">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>MemberName</th>
+                  <th>ApprovalNum</th>
+                  <th>ApprovalDate</th>
+                  <th>ApprovalAmt</th>
+                  <th>ClaimNum</th>
+                  <th>ProviderName</th>
+                  <th>MasterBenefitName</th>
+                  <th>BenfitName</th>
+                  <th>Diagnosis</th>
+                  <th>PrintedNotes</th>
+                  <th>UserName</th>
+                </tr>
+              </thead>
+              <tbody *ngFor="let app of (approvalsHistory$ | async)">
+                <tr>
+                  <td>
+                    <div class="accordion" id="accordionExample">
+                      <div class="accordion-item ">
+                        <div class="accordion-header" id="headingOne">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{app.memberName}}</td>
+                  <td>{{app.approvalNum}}</td>
+                  <td>{{app.pprovalDate | date}}</td>
+                  <td>{{app.approvalAmt | currency}}</td>
+                  <td>{{app.claimNum}}</td>
+                  <td>{{app.providerName}}</td>
+                  <td>{{app.masterBenefitName}}</td>
+                  <td>{{app.benfitName}}</td>
+                  <td>{{app.diagnosis}}</td>
+                  <td>{{app.printedNotes}}</td>
+                  <td>{{app.userName}}</td>
+                </tr>
+                <tr>
+                  <td colspan="12">
+                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                      data-bs-parent="#accordionExample">
+                      <div class="accordion-body">
+                        <!-- Client Approval Items Table-->
+                        <table class="table table-responsive table-sm mb-0 table-bordered">
+                          <thead>
+                            <tr>
+                              <th>Service Name</th>
+                              <th>Service Qnt</th>
+                              <th>Service Unit Amt</th>
+                              <th>Service Total Amt</th>
+                              <th>Service Co-Payment Per</th>
+                              <th>Service Co-Payment Amt</th>
+                              <th>Service Net Amt</th>
+                              <th>Dosage</th>
+                              <th>Dosage Times</th>
+                              <th>Dosage Per Day</th>
+                              <th>Dosage Days</th>
+                            </tr>
+                          </thead>
+                          <tbody *ngFor="let item of app.clientApprovalItems">
+                            <tr>
+                              <td>{{item.serviceName}}</td>
+                              <td>{{item.serviceQnt}}</td>
+                              <td>{{item.serviceUnitAmt}}</td>
+                              <td>{{item.serviceTotalAmt}}</td>
+                              <td>{{item.serviceCoPaymentPer}}</td>
+                              <td>{{item.serviceCoPaymentAmt}}</td>
+                              <td>{{item.serviceNetAmt}}</td>
+                              <td>{{item.dosage}}</td>
+                              <td>{{item.dosageDays}}</td>
+                              <td>{{item.dosageTimes}}</td>
+                              <td>{{item.dosagePerDay}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

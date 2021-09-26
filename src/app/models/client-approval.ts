@@ -1,3 +1,5 @@
+import { ClientApprovalItem } from './client-approval-item';
+
 export interface ClientApproval {
   memberName: string;
   approvalNum: number;
@@ -10,4 +12,5 @@ export interface ClientApproval {
   diagnosis: string;
   printedNotes: string;
   userName: string;
+  clientApprovalItems: ClientApprovalItem[];
 }
