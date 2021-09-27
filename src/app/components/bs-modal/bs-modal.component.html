@@ -1,12 +1,12 @@
-<div #modal class="modal fade" id="approvalHistoryId" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
-  aria-labelledby="bsModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen">
+<div #modal class="modal fade" id="{{id}}" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+  attr.aria-labelledby="{{id + 'Label'}}" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable {{modalSize}}">
     <div class="modal-content">
       <div class="modal-header text-warning table-info fst-italic fw-bolder">
-        <h5 class="modal-title" id="bsModalLabel">Approvals History</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title" id="{{id + 'Label'}}">{{title}}</h5>
+        <button #closeBtn type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body {{cssClass}}">
         <ng-content>
           <!-- Content Rendered Here. -->
         </ng-content>

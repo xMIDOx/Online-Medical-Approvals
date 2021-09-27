@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { ApprovalItemDisplay } from '../../../models/approval-item-display.model';
+import { BsModalComponent } from '../../bs-modal/bs-modal.component';
 import { ItemStatus } from './../../../models/item-status.enum';
 import { ServicePrice } from './../../../models/service-price.model';
 import { LookupsService } from './../../../services/lookups.service';
@@ -27,7 +28,7 @@ import { LookupsService } from './../../../services/lookups.service';
 export class CreateApprovalItemsComponent implements OnInit, OnChanges {
   @Input() serviceProviderId = 0;
   @Output() getApprovalItems = new EventEmitter<ApprovalItemDisplay[]>();
-  @ViewChild('closeBtn') closeBtn!: ElementRef;
+  @ViewChild('childComp') childComp!: BsModalComponent;
   public priceList$ = new Observable<object>();
   public approvalItems: ApprovalItemDisplay[] = [];
   public approvalItem = <ApprovalItemDisplay>{};
@@ -117,6 +118,6 @@ export class CreateApprovalItemsComponent implements OnInit, OnChanges {
   }
 
   private closeModal() {
-    this.closeBtn.nativeElement.click();
+    this.childComp.closeBtn.nativeElement.click();
   }
 }

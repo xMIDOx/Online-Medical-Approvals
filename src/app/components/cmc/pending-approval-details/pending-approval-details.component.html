@@ -190,7 +190,7 @@
 
       <div class="d-grid gap">
         <button type="button" class="btn btn-primary btn-sm fw-bold" data-bs-toggle="modal"
-          data-bs-target="#approvalHistoryId" (click)="getMemberApprovals(approval.planMemberId)">Approvals
+          data-bs-target="#approvalHistory" (click)="getMemberApprovals(approval.planMemberId)">Approvals
           History</button>
       </div>
     </div>
@@ -273,7 +273,7 @@
 </div>
 
 <!-- Bootstrap Modal For CMC -->
-<app-bs-modal>
+<app-bs-modal [id]="'approvalHistory'" [title]="'Approvals History'" [fullScreen]= true>
   <!-- modal body Content -->
   <app-display-approvals-list [approvals$]="approvalsHistory$"></app-display-approvals-list>
 </app-bs-modal>
