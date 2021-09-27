@@ -1,0 +1,68 @@
+<div class="row">
+
+  <div class="col" *ngIf="(approvals$ | async) as approvals; else loadingOrError">
+    <!-- Approval Master -->
+    <table class="table table-sm table-responsive table-bordered">
+      <thead>
+        <tr>
+          <th></th>
+          <th>MemberName</th>
+          <th>ApprovalNum</th>
+          <th>ApprovalDate</th>
+          <th>ApprovalAmt</th>
+          <th>ClaimNum</th>
+          <th>ProviderName</th>
+          <th>MasterBenefitName</th>
+          <th>BenfitName</th>
+          <th>Diagnosis</th>
+          <th>PrintedNotes</th>
+          <th>UserName</th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let app of approvals">
+        <tr>
+          <!-- Accordion button -->
+          <td>
+            <div class="accordion" id="accordionExample">
+              <div class="accordion-item ">
+                <div class="accordion-header" id="headingOne">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                  </button>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>{{app.memberName}}</td>
+          <td>{{app.approvalNum}}</td>
+          <td>{{app.pprovalDate | date}}</td>
+          <td>{{app.approvalAmt | currency}}</td>
+          <td>{{app.claimNum}}</td>
+          <td>{{app.providerName}}</td>
+          <td>{{app.masterBenefitName}}</td>
+          <td>{{app.benfitName}}</td>
+          <td>{{app.diagnosis}}</td>
+          <td>{{app.printedNotes}}</td>
+          <td>{{app.userName}}</td>
+        </tr>
+        <tr>
+          <td colspan="12">
+            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+              data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <!-- Approval Items -->
+                <app-display-approval-items [approvalItems]="app.clientApprovalItems"></app-display-approval-items>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #loadingOrError>
+    <app-loading-or-error [error]="errorObject" [message]="'Error Loading Approvals.Please try again later.'">
+    </app-loading-or-error>
+  </ng-template>
+
+</div>

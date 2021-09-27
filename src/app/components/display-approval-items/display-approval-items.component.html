@@ -1,0 +1,32 @@
+<table class="table table-sm table-bordered table-responsive">
+  <thead>
+    <tr>
+      <th>Service Name</th>
+      <th>Service Qnt</th>
+      <th>Service Unit Amt</th>
+      <th>Service Total Amt</th>
+      <th>Service Co-Payment Per</th>
+      <th>Service Co-Payment Amt</th>
+      <th>Service Net Amt</th>
+      <th>Dosage</th>
+      <th>Dosage Times</th>
+      <th>Dosage Per Day</th>
+      <th>Dosage Days</th>
+    </tr>
+  </thead>
+  <tbody *ngFor="let item of approvalItems">
+    <tr>
+      <td>{{item.serviceName}}</td>
+      <td>{{item.serviceQnt}}</td>
+      <td>{{item.serviceUnitAmt}}</td>
+      <td>{{item.serviceTotalAmt}}</td>
+      <td>{{item.serviceCoPaymentPer}}</td>
+      <td>{{item.serviceCoPaymentAmt}}</td>
+      <td>{{item.serviceNetAmt}}</td>
+      <td>{{item.dosage}}</td>
+      <td>{{item.dosageDays}}</td>
+      <td>{{item.dosageTimes}}</td>
+      <td>{{item.dosagePerDay}}</td>
+    </tr>
+  </tbody>
+</table>

@@ -28,6 +28,9 @@ import { LoadingSpinner } from './models/loading-spinner.pipe';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { NotificationService } from './services/notification.service';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { BsModalComponent } from './components/bs-modal/bs-modal.component';
+import { DisplayApprovalItemsComponent } from './components/display-approval-items/display-approval-items.component';
+import { DisplayApprovalsListComponent } from './components/display-approvals-list/display-approvals-list.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +49,9 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     LoadingSpinner,
     LoadingOrErrorComponent,
     DashboardComponent,
+    BsModalComponent,
+    DisplayApprovalItemsComponent,
+    DisplayApprovalsListComponent,
   ],
   imports: [
     BrowserModule,

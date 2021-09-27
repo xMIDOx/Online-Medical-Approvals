@@ -52,7 +52,6 @@ export class PendingApprovalDetailsComponent implements OnInit {
   }
 
   public getMemberApprovals(memberId: number) {
-    console.log(memberId);
     this.approvalsHistory$ = this.approvalService.getMemberApprovalsHistory(memberId);
   }
 
