@@ -249,7 +249,7 @@
       <p class="mx-auto">Total Approval Amount: {{approval.approvalAmt}}</p>
     </div>
     <div class="col-md-6">
-      <p class="mx-auto">Total Copayment Amount: {{approval.approvalCopaymentAmt}}</p>
+      <p class="mx-auto">Total Copayment Amount: {{approval.approvalCopaymentAmt | number}}</p>
     </div>
 
   </div>
@@ -270,10 +270,16 @@
     </div>
   </div>
 
+  <div class="row-mb-3">
+    <div class="col-md-2 mx-auto">
+      <button type="button" class="btn btn-primary" (click)="print()">Print</button>
+    </div>
+  </div>
+
 </div>
 
 <!-- Bootstrap Modal For CMC -->
-<app-bs-modal [id]="'approvalHistory'" [title]="'Approvals History'" [fullScreen]= true>
+<app-bs-modal [id]="'approvalHistory'" [title]="'Approvals History'" [fullScreen]=true>
   <!-- modal body Content -->
   <app-display-approvals-list [approvals$]="approvalsHistory$"></app-display-approvals-list>
 </app-bs-modal>

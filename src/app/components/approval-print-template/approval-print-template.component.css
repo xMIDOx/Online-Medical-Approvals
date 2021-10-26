@@ -1,0 +1,15 @@
+/* @media print {
+  button {
+    display: none;
+  }
+}
+
+@media screen {
+  :host {
+    display: none;
+  }
+} */
+
+/* img {
+  -webkit-print-color-adjust: exact;
+} */

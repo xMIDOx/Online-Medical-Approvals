@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { ApprovalPrintTemplateComponent } from './components/approval-print-template/approval-print-template.component';
 import { CreateApprovalComponent } from './components/approval/create-approval/create-approval.component';
 import { LogInComponent } from './components/auth/log-in/log-in.component';
 import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
@@ -38,6 +39,12 @@ const routes: Routes = [
     path: 'home',
     component: HomeComponent,
     canActivate: [AuthGuard],
+  },
+
+  {
+    path: 'print',
+    outlet: 'print',
+    component: ApprovalPrintTemplateComponent,
   },
 
   {

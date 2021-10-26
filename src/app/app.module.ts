@@ -31,6 +31,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { BsModalComponent } from './components/bs-modal/bs-modal.component';
 import { DisplayApprovalItemsComponent } from './components/display-approval-items/display-approval-items.component';
 import { DisplayApprovalsListComponent } from './components/display-approvals-list/display-approvals-list.component';
+import { ApprovalPrintTemplateComponent } from './components/approval-print-template/approval-print-template.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { DisplayApprovalsListComponent } from './components/display-approvals-li
     BsModalComponent,
     DisplayApprovalItemsComponent,
     DisplayApprovalsListComponent,
+    ApprovalPrintTemplateComponent,
   ],
   imports: [
     BrowserModule,

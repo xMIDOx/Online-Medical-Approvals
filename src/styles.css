@@ -3,3 +3,9 @@
   background-color:#eee;
 }
 
+@media print {
+  /* app-root > * { display: none; } */
+  app-root app-navbar { display: none; }
+  app-root app-pending-approval-details { display: none; }
+  app-root app-approval-print-template { display: block; }
+}

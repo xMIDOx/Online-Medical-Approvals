@@ -52,7 +52,8 @@ export class PendingApprovalDetailsComponent implements OnInit {
   }
 
   public getMemberApprovals(memberId: number) {
-    this.approvalsHistory$ = this.approvalService.getMemberApprovalsHistory(memberId);
+    this.approvalsHistory$ =
+      this.approvalService.getMemberApprovalsHistory(memberId);
   }
 
   public onMasterBenefitChange(): void {
@@ -225,6 +226,11 @@ export class PendingApprovalDetailsComponent implements OnInit {
       this.approval.onlineStatusId ===
         (this.onlineStatus.accepted || this.onlineStatus.rejected)
     );
+  }
+
+  public print(): void {
+    // window.open('/(print:print)');
+    this.router.navigate(['/', { outlets: { print: ['print'] } }]);
   }
 
   public onDispense(): void {
