@@ -1,0 +1,29 @@
+.header .header-space {
+  height: 40px;
+  width: 80%;
+}
+
+.footer .footer-space {
+  height: 80px;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+@media screen {
+  :host {
+    display: none;
+  }
+}
+
+img {
+  -webkit-print-color-adjust: exact;
+}

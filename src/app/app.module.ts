@@ -32,6 +32,7 @@ import { BsModalComponent } from './components/bs-modal/bs-modal.component';
 import { DisplayApprovalItemsComponent } from './components/display-approval-items/display-approval-items.component';
 import { DisplayApprovalsListComponent } from './components/display-approvals-list/display-approvals-list.component';
 import { ApprovalPrintTemplateComponent } from './components/approval-print-template/approval-print-template.component';
+import { PrintLayoutComponent } from './components/print-layout/print-layout.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { ApprovalPrintTemplateComponent } from './components/approval-print-temp
     DisplayApprovalItemsComponent,
     DisplayApprovalsListComponent,
     ApprovalPrintTemplateComponent,
+    PrintLayoutComponent,
   ],
   imports: [
     BrowserModule,

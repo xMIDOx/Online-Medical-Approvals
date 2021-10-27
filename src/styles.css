@@ -1,11 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
 .offWhite {
-  background-color:#eee;
+  background-color: #eee;
+}
+
+@page {
+  margin: 0mm;
+}
+
+.page {
+  page-break-after: always;
 }
 
 @media print {
   /* app-root > * { display: none; } */
-  app-root app-navbar { display: none; }
-  app-root app-pending-approval-details { display: none; }
-  app-root app-approval-print-template { display: block; }
+  app-root app-navbar {
+    display: none;
+  }
+  app-root app-pending-approval-details {
+    display: none;
+  }
+  app-root app-print-layout {
+    display: block;
+  }
 }

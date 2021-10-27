@@ -13,6 +13,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 import { HomeComponent } from './components/home/home.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { PrintLayoutComponent } from './components/print-layout/print-layout.component';
 import { AuthGuard } from './models/auth.guard';
 import { Roles } from './models/user-roles.enum';
 
@@ -32,7 +33,7 @@ const routes: Routes = [
     path: 'sign-up',
     component: SignUpComponent,
     canActivate: [AuthGuard],
-    data: { roles: [Roles.Admin, Roles.ProviderAdmin] }
+    data: { roles: [Roles.Admin, Roles.ProviderAdmin] },
   },
 
   {
@@ -44,7 +45,8 @@ const routes: Routes = [
   {
     path: 'print',
     outlet: 'print',
-    component: ApprovalPrintTemplateComponent,
+    component: PrintLayoutComponent,
+    children: [{ path: 'approval', component: ApprovalPrintTemplateComponent }],
   },
 
   {
@@ -57,21 +59,21 @@ const routes: Routes = [
     path: 'create-approval',
     component: CreateApprovalComponent,
     canActivate: [AuthGuard],
-    data: {roles: [Roles.ProviderUser]}
+    data: { roles: [Roles.ProviderUser] },
   },
 
   {
     path: 'pending-approvals',
     component: PendingApprovalsListComponent,
     canActivate: [AuthGuard],
-    data: {roles: [Roles.CMCDoctor, Roles.ProviderUser]}
+    data: { roles: [Roles.CMCDoctor, Roles.ProviderUser] },
   },
 
   {
     path: 'pending-approval-details/:id',
     component: PendingApprovalDetailsComponent,
     canActivate: [AuthGuard],
-    data: {roles: [Roles.CMCDoctor, Roles.ProviderUser]}
+    data: { roles: [Roles.CMCDoctor, Roles.ProviderUser] },
   },
 
   {

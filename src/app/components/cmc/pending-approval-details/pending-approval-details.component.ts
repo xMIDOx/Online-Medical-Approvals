@@ -229,8 +229,8 @@ export class PendingApprovalDetailsComponent implements OnInit {
   }
 
   public print(): void {
-    // window.open('/(print:print)');
-    this.router.navigate(['/', { outlets: { print: ['print'] } }]);
+    //window.open('/(print:print/approval)');
+    this.router.navigate(['/', { outlets: { print: ['print', 'approval'] } }]);
   }
 
   public onDispense(): void {
