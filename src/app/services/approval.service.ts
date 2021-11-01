@@ -6,6 +6,7 @@ import { ApprovalDisplay } from '../models/approval-display.model';
 import { ApprovalCreate } from './../models/approval-create.model';
 import { ApprovalItemCreate } from './../models/approval-item-create.model';
 import { ApprovalItemDisplay } from './../models/approval-item-display.model';
+import { ApprovalPrint } from './../models/approval-print.model';
 import { ClientApproval } from './../models/client-approval';
 import { PendingApprovalDetails } from './../models/pending-approval-details.model';
 import { PendingApproval } from './../models/pending-approval.model';
@@ -72,6 +73,12 @@ export class ApprovalService {
         this.approvalEndPoint + 'getUtilization?' + this.http.toQueryString(obj)
       )
       .pipe(map((res) => res as number));
+  }
+
+  public getApprovalPrintData(id: number): Observable<ApprovalPrint> {
+    return this.http
+      .Get(this.approvalEndPoint + 'ApprovalPrint?id=' + id)
+      .pipe(map((res) => res as ApprovalPrint));
   }
 
   private fetchApprovalCreateObject(approvalDisplay: ApprovalDisplay) {

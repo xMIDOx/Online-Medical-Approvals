@@ -1,11 +1,15 @@
 <div class="container-fluid" *ngIf="(approval)">
 
   <div class="row">
-    <span class="col-md-2 badge rounded-pill bg-warning mb-3 fs-5">Approval Data</span>
-    <h3 class="col-md-3 mx-auto text-capitalize fw-bold fst-italic text-decoration-underline"
+    <span class="col-md-2 badge rounded-pill bg-warning mb-3 fs-5 start">Approval Data</span>
+    <h3 class="col-md-2 mx-auto text-capitalize fw-bold fst-italic text-decoration-underline"
       [ngClass]="this.onlineStatus[this.approval.onlineStatusId]">
       {{this.onlineStatus[this.approval.onlineStatusId]}}.
     </h3>
+    <button type="button" class="btn btn-success col-md-1 end mb-3" (click)="print()">
+      <i class="bi bi-printer"></i> Print
+    </button>
+
   </div>
 
   <!-- Approval Master -->
@@ -198,7 +202,7 @@
   </div>
 
   <!-- Approval Items -->
-  <span class="badge rounded-pill bg-warning mb-3 fs-5">Approval Services</span>
+  <span class="badge rounded-pill bg-warning mb-3 fs-5 start">Approval Services</span>
   <div class="row">
     <table class="table table-bordered table-responsive table-sm">
       <thead class="fst-italic text-center">
@@ -270,11 +274,13 @@
     </div>
   </div>
 
-  <div class="row-mb-3">
+  <!-- <div class="row-mb-3">
     <div class="col-md-2 mx-auto">
-      <button type="button" class="btn btn-primary" (click)="print()">Print</button>
+      <button type="button" class="btn btn-success" (click)="print()">
+        <i class="bi bi-printer"></i> Print
+      </button>
     </div>
-  </div>
+  </div> -->
 
 </div>
 

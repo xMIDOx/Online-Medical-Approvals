@@ -46,7 +46,7 @@ const routes: Routes = [
     path: 'print',
     outlet: 'print',
     component: PrintLayoutComponent,
-    children: [{ path: 'approval', component: ApprovalPrintTemplateComponent }],
+    children: [{ path: 'approval/:id', component: ApprovalPrintTemplateComponent }],
   },
 
   {

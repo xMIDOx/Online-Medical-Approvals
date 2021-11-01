@@ -17,6 +17,8 @@ import { UserToken } from './../../../models/user-token.model';
 import { ApprovalService } from './../../../services/approval.service';
 import { AuthService } from './../../../services/auth.service';
 import { LookupsService } from './../../../services/lookups.service';
+import { PrintService } from './../../../services/print.service';
+
 
 @Component({
   selector: 'app-pending-approval-details',
@@ -43,7 +45,8 @@ export class PendingApprovalDetailsComponent implements OnInit {
     private router: Router,
     private approvalService: ApprovalService,
     private lookupService: LookupsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private printService: PrintService
   ) {}
 
   ngOnInit(): void {
@@ -229,8 +232,7 @@ export class PendingApprovalDetailsComponent implements OnInit {
   }
 
   public print(): void {
-    //window.open('/(print:print/approval)');
-    this.router.navigate(['/', { outlets: { print: ['print', 'approval'] } }]);
+    this.printService.printDocument('approval', this.approval.id);
   }
 
   public onDispense(): void {

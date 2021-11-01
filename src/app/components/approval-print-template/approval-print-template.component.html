@@ -1,97 +1,99 @@
-<div class="row fs-5 fw-bold text-center mb-2 mt-0">
-  <span>Approval</span>
-</div>
-
-<div class="row">
-  <table class="table tables-responsive table-bordered table-sm">
-    <thead>
-      <tr>
-        <th>Approval Number</th>
-        <td>10001580</td>
-        <th>Approval Date</th>
-        <td>24/10/2021</td>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th>Customer Name</th>
-        <td>Vitro</td>
-        <th>Branch Name</th>
-        <td></td>
-      </tr>
-      <tr>
-        <th>Member Name</th>
-        <td>سعيد حبيب سعيد خليل</td>
-        <th>Card Number</th>
-        <td>1100001</td>
-      </tr>
-      <tr>
-        <th>Co-Payement</th>
-        <td>0%</td>
-        <th>Claim Number</th>
-        <td>0</td>
-      </tr>
-      <tr>
-        <th>Service Name</th>
-        <td colspan="3">In-Patient</td>
-      </tr>
-      <tr>
-        <th>Provider Name</th>
-        <td colspan="3">مستشفى الاقباط بالزيتون</td>
-      </tr>
-      <tr>
-        <th>Medical ICD 1</th>
-        <td colspan="3">Aluminium bone disease</td>
-      </tr>
-      <tr>
-        <th>Medical ICD 2</th>
-        <td colspan="3"></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<div class="row">
-  <table class="table table-responsive table-bordered">
-    <thead>
-      <tr>
-        <th>Medical Procedure</th>
-        <th>Quntity</th>
-        <th>Notes</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>كشف عظام</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <th>Notes</th>
-        <td colspan="2"></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<div class="row mb-0 fw-bold">
-  <div class="col text-start">
-    <p>Mohamed Mahmoud /دكتور</p>
+<div *ngIf="(approval | async) as approval">
+  <div class="approval row fs-5 fw-bold text-center mb-2 mt-0">
+    <span>Approval</span>
   </div>
-  <div class="col text-end">
-    <p>........................ توفيع العميل</p>
-  </div>
-</div>
 
-<img src="assets/images/Signature.ico" class="img-fluid col-md-2 mx-auto d-block mb-3" alt="Medi Gold Signature"
-  (load)=isLoaded($event)>
-
-<div class="row fw-bold">
-  <div class="col text-start">
-    <p>يعتمد البريد الالكترونى كأصل تحويل</p>
+  <div class="row">
+    <table class="table tables-responsive table-bordered table-sm">
+      <thead>
+        <tr>
+          <th>Approval Number</th>
+          <td>{{approval.approvalNumber}}</td>
+          <th>Approval Date</th>
+          <td>{{approval.approvalDate | date}}</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Customer Name</th>
+          <td>{{approval.customerName}}</td>
+          <th>Branch Name</th>
+          <td>{{approval.branchName}}</td>
+        </tr>
+        <tr>
+          <th>Member Name</th>
+          <td>{{approval.memberName}}</td>
+          <th>Card Number</th>
+          <td>{{approval.cardNumber}}</td>
+        </tr>
+        <tr>
+          <th>Co-Payement</th>
+          <td>{{approval.approvalCopaymentPer}}</td>
+          <th>Claim Number</th>
+          <td>{{approval.claimNumber}}</td>
+        </tr>
+        <tr>
+          <th>Service Name</th>
+          <td colspan="3">{{approval.masterBenefitName}}</td>
+        </tr>
+        <tr>
+          <th>Provider Name</th>
+          <td colspan="3">{{approval.providerName}}</td>
+        </tr>
+        <tr>
+          <th>Medical ICD 1</th>
+          <td colspan="3">{{approval.diagnosis}}</td>
+        </tr>
+        <tr>
+          <th>Medical ICD 2</th>
+          <td colspan="3"></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-  <div class="col text-end">
-    <span>Valid for 10 days only</span> <br>
-    <span>سارى حتى 10 يوم فقط</span>
+
+  <div class="row">
+    <table class="table table-responsive table-bordered">
+      <thead>
+        <tr>
+          <th>Medical Procedure</th>
+          <th>Quntity</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of approval.approvalItems">
+          <td>{{item.serviceName}}</td>
+          <td>{{item.serviceQnt}}</td>
+          <td>{{item.serviceNotes}}</td>
+        </tr>
+        <tr>
+          <th>Notes</th>
+          <td colspan="2"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="row mb-0 fw-bold">
+    <div class="col text-start">
+      <p>Mohamed Mahmoud /دكتور</p>
+    </div>
+    <div class="col text-end">
+      <p>........................ توفيع العميل</p>
+    </div>
+  </div>
+
+  <img src="assets/images/Signature.ico" class="img-fluid col-md-2 mx-auto d-block mb-3" alt="Medi Gold Signature"
+    (load)=isLoaded($event)>
+
+  <div class="row fw-bold">
+    <div class="col text-start">
+      <p>يعتمد البريد الالكترونى كأصل تحويل</p>
+    </div>
+    <div class="col text-end">
+      <span>Valid for 10 days only</span> <br>
+      <span>سارى حتى 10 يوم فقط</span>
+    </div>
   </div>
 </div>
