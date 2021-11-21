@@ -10,29 +10,29 @@ import { ToastrModule } from 'ngx-toastr';
 import { AppErrorhandler } from './app-error-handler';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { ApprovalPrintTemplateComponent } from './components/approval-print-template/approval-print-template.component';
 import { CreateApprovalItemsComponent } from './components/approval/create-approval-items/create-approval-items.component';
 import { CreateApprovalComponent } from './components/approval/create-approval/create-approval.component';
 import { LogInComponent } from './components/auth/log-in/log-in.component';
 import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
+import { BsModalComponent } from './components/bs-modal/bs-modal.component';
 import {
   PendingApprovalDetailsComponent,
 } from './components/cmc/pending-approval-details/pending-approval-details.component';
 import { PendingApprovalsListComponent } from './components/cmc/pending-approvals-list/pending-approvals-list.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { DisplayApprovalItemsComponent } from './components/display-approval-items/display-approval-items.component';
+import { DisplayApprovalsListComponent } from './components/display-approvals-list/display-approvals-list.component';
 import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoadingOrErrorComponent } from './components/loading-or-error/loading-or-error.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { NgSelectComponent } from './components/ng-select/ng-select.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { PrintLayoutComponent } from './components/print-layout/print-layout.component';
+import { MaxApprovalAmtDirective } from './custom/directives/max-approval-amt.directive';
 import { LoadingSpinner } from './models/loading-spinner.pipe';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
-import { NotificationService } from './services/notification.service';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { BsModalComponent } from './components/bs-modal/bs-modal.component';
-import { DisplayApprovalItemsComponent } from './components/display-approval-items/display-approval-items.component';
-import { DisplayApprovalsListComponent } from './components/display-approvals-list/display-approvals-list.component';
-import { ApprovalPrintTemplateComponent } from './components/approval-print-template/approval-print-template.component';
-import { PrintLayoutComponent } from './components/print-layout/print-layout.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +56,7 @@ import { PrintLayoutComponent } from './components/print-layout/print-layout.com
     DisplayApprovalsListComponent,
     ApprovalPrintTemplateComponent,
     PrintLayoutComponent,
+    MaxApprovalAmtDirective,
   ],
   imports: [
     BrowserModule,

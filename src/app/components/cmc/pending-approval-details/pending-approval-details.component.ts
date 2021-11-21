@@ -19,7 +19,6 @@ import { AuthService } from './../../../services/auth.service';
 import { LookupsService } from './../../../services/lookups.service';
 import { PrintService } from './../../../services/print.service';
 
-
 @Component({
   selector: 'app-pending-approval-details',
   templateUrl: './pending-approval-details.component.html',
@@ -81,9 +80,14 @@ export class PendingApprovalDetailsComponent implements OnInit {
   public onBenefitChange(): void {
     this.approval.benefitId = this.benefit.benefitId;
     this.approval.approvalCopaymentPer = this.benefit.coPaymentPer;
-    this.approval.approvalCopaymentAmt =
-      this.benefit.coPaymentPer * this.approval.approvalAmt;
     this.ceiling.benefitCeiling = this.benefit.maxCeilingAmt;
+
+    this.approval.approvalCopaymentAmt =
+      this.approval.maxApprovalAmt == 0
+        ? this.benefit.coPaymentPer * this.approval.approvalAmt
+        : this.maxAmtCopayment();
+
+      // this.approval.approvalCopaymentAmt = this.benefit.coPaymentPer * this.approval.approvalAmt;
 
     this.getCeilingUtilization$().subscribe((utili: number) => {
       this.ceiling.benefitUtilization = utili;
@@ -101,9 +105,13 @@ export class PendingApprovalDetailsComponent implements OnInit {
 
     this.calculateApprovalAmt();
 
-    if (this.approval.approvalCopaymentPer != 0)
+    if (this.approval.approvalCopaymentPer != 0) {
       this.approval.approvalCopaymentAmt =
-        this.benefit.coPaymentPer * this.approval.approvalAmt;
+        this.approval.maxApprovalAmt == 0
+          ? this.benefit.coPaymentPer * this.approval.approvalAmt
+          : this.maxAmtCopayment();
+    }
+
   }
 
   public onSubmitApproval(onlineStatusId: number): void {
@@ -115,6 +123,13 @@ export class PendingApprovalDetailsComponent implements OnInit {
     this.approvalService
       .updateApproval(this.approval)
       .subscribe((res) => this.router.navigate(['/pending-approvals']));
+  }
+
+  public maxAmtCopayment(): number {
+    if(this.approval.maxApprovalAmt != 0)
+      return  this.approval.approvalCopaymentAmt = this.benefit.coPaymentPer * this.approval.maxApprovalAmt;
+
+      return  this.approval.approvalCopaymentAmt = this.benefit.coPaymentPer * this.approval.approvalAmt;
   }
 
   private fetchPlanBenefits(): void {
@@ -132,8 +147,8 @@ export class PendingApprovalDetailsComponent implements OnInit {
       .pipe(
         take(1),
         switchMap((combined: [UserToken, PendingApprovalDetails]) => {
-          this.approval = combined[1];
           this.userRoles = combined[0].roles;
+          this.approval = combined[1];
 
           return this.lookupService.getMember(combined[1].cardNumber).pipe(
             take(1),

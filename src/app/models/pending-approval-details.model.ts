@@ -20,6 +20,9 @@ export interface PendingApprovalDetails {
   approvalCopaymentPer: number;
   approvalCopaymentAmt: number;
   approvalDate: Date;
+  maxApprovalAmt: number;
+  batchId: number;
+  batchNumber: number;
 
   // For Display
   planName: string;
