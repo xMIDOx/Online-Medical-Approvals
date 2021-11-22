@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { DataTablesModule } from 'angular-datatables';
 import { ToastrModule } from 'ngx-toastr';
 
 import { AppErrorhandler } from './app-error-handler';
@@ -33,6 +34,7 @@ import { PrintLayoutComponent } from './components/print-layout/print-layout.com
 import { MaxApprovalAmtDirective } from './custom/directives/max-approval-amt.directive';
 import { LoadingSpinner } from './models/loading-spinner.pipe';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
+
 
 @NgModule({
   declarations: [
@@ -66,6 +68,7 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
     FormsModule,
     NgSelectModule,
     CommonModule,
+    DataTablesModule,
     ToastrModule.forRoot({
       positionClass: 'toast-top-right',
       preventDuplicates: true,
