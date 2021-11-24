@@ -11,7 +11,8 @@
   <div class="accordion mb-3">
     <div class="accordion-item">
       <h6 class="accordion-header" id="dataHeading">
-        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseData" aria-expanded="true" aria-controls="collapseOne">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseData"
+          aria-expanded="true" aria-controls="collapseOne">
           <span class="text-warning fst-italic fw-bolder fs-4">Approval Data</span>
         </button>
       </h6>
@@ -30,13 +31,13 @@
             </div>
             <div class="col-md-3">
               <label for="date" class="form-label">Approval Date</label>
-              <input id="date" name="date" type="date" class="form-control form-control-sm"
-                [ngModel]="approval.approvalDate | date:'yyyy-MM-dd'" (ngModelChange)="setDate($event)">
+              <input id="date" name="date" type="datetime-local" class="form-control form-control-sm"
+                [(ngModel)]="approval.approvalDate">
             </div>
             <div class="col-md-3">
               <label for="diagnosis" class="form-label">Diagnosis</label>
-              <app-ng-select [items]="(diagnosis | async)" [isLoading]="loadingDiagnosis" (searching)="getDiagnosis($event)"
-                (selectedItem)="getSelectedDiagnosis($event)"></app-ng-select>
+              <app-ng-select [items]="(diagnosis | async)" [isLoading]="loadingDiagnosis"
+                (searching)="getDiagnosis($event)" (selectedItem)="getSelectedDiagnosis($event)"></app-ng-select>
             </div>
           </div>
           <div class="row mb-1">
@@ -46,7 +47,8 @@
             </div>
             <div class="col-md-3">
               <label for="customer" class="form-label">Customer</label>
-              <input id="customer" value={{member.customerName}} type="text" class="form-control form-control-sm" readonly>
+              <input id="customer" value={{member.customerName}} type="text" class="form-control form-control-sm"
+                readonly>
             </div>
             <div class="col-md-3">
               <label for="status" class="form-label">Status</label>
@@ -55,7 +57,8 @@
             </div>
             <div class="col-md-3">
               <label for="claimProvider" class="form-label">Claim Provider</label>
-              <input id="claimProvider" type="text" class="form-control form-control-sm" [value]="claimProviderName" readonly>
+              <input id="claimProvider" type="text" class="form-control form-control-sm" [value]="claimProviderName"
+                readonly>
             </div>
           </div>
           <div class="row">
@@ -73,7 +76,8 @@
   <div class="accordion mb-3">
     <div class="accordion-item">
       <h2 class="accordion-header" id="approvalServices">
-        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseServices" aria-expanded="true" aria-controls="collapseOne">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseServices"
+          aria-expanded="true" aria-controls="collapseOne">
           <span class="text-warning fst-italic fw-bolder fs-4">Approval Services</span>
         </button>
       </h2>

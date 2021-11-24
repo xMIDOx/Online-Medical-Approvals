@@ -21,21 +21,6 @@ import { LookupsService } from './../../../services/lookups.service';
   styleUrls: ['./create-approval.component.css'],
 })
 export class CreateApprovalComponent implements OnInit {
-  // public approval: ApprovalDisplay = {
-  //   id: 0,
-  //   approvalDate: new Date(),
-  //   cardNumber: 0,
-  //   customerId: 0,
-  //   planMemberId: 0,
-  //   claimNumber: 0,
-  //   claimProviderId: 0,
-  //   serviceProviderId: 0,
-  //   ICDCodeId: 0,
-  //   onlineStatusId: 0,
-  //   issuedBy: '',
-  //   printedNotes: '',
-  //   approvalItems: [],
-  // };
   public approval = <ApprovalDisplay>{};
   public member = <Member>{};
   public provider$ = new Observable<any>();

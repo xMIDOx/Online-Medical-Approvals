@@ -18,6 +18,7 @@ import { ApprovalService } from './../../../services/approval.service';
 })
 export class PendingApprovalsListComponent implements OnInit {
   public pendingApprovals$ = new Observable<PendingApproval[]>();
+  public dtOptions: DataTables.Settings = {};
   public isProviderUser = false;
   public errorObject!: HttpErrorResponse;
   constructor(
@@ -27,6 +28,7 @@ export class PendingApprovalsListComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPendingApprovals();
+    this.dtOptions = { order: [] };
   }
 
   private getPendingApprovals(): void {
@@ -61,7 +63,11 @@ export class PendingApprovalsListComponent implements OnInit {
       return this.approvalService.getApprovals(ApprovalOnlineStatus.pending);
     if (isProviderUser) {
       this.isProviderUser = true;
-      return this.approvalService.getApprovals(undefined, user.providerId, user.id);
+      return this.approvalService.getApprovals(
+        undefined,
+        user.providerId,
+        user.id
+      );
     }
 
     return this.approvalService.getApprovals();
