@@ -1,14 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -18,7 +8,6 @@ import { BsModalComponent } from '../../bs-modal/bs-modal.component';
 import { ItemStatus } from './../../../models/item-status.enum';
 import { ServicePrice } from './../../../models/service-price.model';
 import { LookupsService } from './../../../services/lookups.service';
-
 
 @Component({
   selector: 'app-create-approval-items',
@@ -56,12 +45,18 @@ export class CreateApprovalItemsComponent implements OnInit, OnChanges {
   }
 
   public getSelectedService(service: ServicePrice) {
-    if (service) {
-      this.approvalItem.serviceId = this.providerCatId === 2 ? service.id : service.serviceId;
+    if (!service) return;
 
-      this.approvalItem.servicePrice = service.servicePrice;
-      this.approvalItem.serviceName = service.name;
+    this.approvalItem.servicePrice = service.servicePrice;
+    this.approvalItem.serviceName = service.name;
+    if (this.providerCatId === 2) {
+      this.approvalItem.serviceId = service.id;
+      this.approvalItem.isCovered = service.isCovered;
+    } else {
+      this.approvalItem.serviceId = service.serviceId;
+      this.approvalItem.isCovered = true;
     }
+    // this.approvalItem.serviceId = this.providerCatId === 2 ? service.id : service.serviceId;
   }
 
   public Edit(item: ApprovalItemDisplay, i: number) {
@@ -70,7 +65,7 @@ export class CreateApprovalItemsComponent implements OnInit, OnChanges {
   }
 
   public cancelEdit(itemForm: NgForm) {
-    this.approvalItem = <ApprovalItemDisplay>{}
+    this.approvalItem = <ApprovalItemDisplay>{};
     this.index = -1;
     itemForm.reset();
   }
@@ -104,17 +99,17 @@ export class CreateApprovalItemsComponent implements OnInit, OnChanges {
   }
 
   private getMedicalServices() {
-    this.loadingServices =  true;
-    this.priceList$ = this.lookupService.getMedicalServices(
-      this.serviceProviderId,
-      this.queryObj
-    ).pipe(tap(() => this.loadingServices = false));
+    this.loadingServices = true;
+    this.priceList$ = this.lookupService
+      .getMedicalServices(this.serviceProviderId, this.queryObj)
+      .pipe(tap(() => (this.loadingServices = false)));
   }
 
   private getDrugsData() {
     this.loadingServices = true;
-    this.priceList$ = this.lookupService.getMedicinesData(this.queryObj)
-    .pipe(tap(() => this.loadingServices = false));
+    this.priceList$ = this.lookupService
+      .getMedicinesData(this.queryObj)
+      .pipe(tap(() => (this.loadingServices = false)));
   }
 
   private closeModal() {

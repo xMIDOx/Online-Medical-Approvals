@@ -115,6 +115,7 @@ export class ApprovalService {
       itemCreate.dosagePerDay = item.dosagePerDay;
       itemCreate.dosageTime = item.dosageTime;
       itemCreate.status = item.status;
+      itemCreate.isCovered = item.isCovered;
 
       this.approvalCreate.approvalItems.push(itemCreate);
     });

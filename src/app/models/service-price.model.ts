@@ -4,4 +4,5 @@ export interface ServicePrice {
   serviceId: number;
   servicePrice: number;
   servicDiscountPer: number;
+  isCovered: boolean;
 }

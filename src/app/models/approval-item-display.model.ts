@@ -8,4 +8,5 @@ export interface ApprovalItemDisplay {
   dosagePerDay: number;
   dosageTime: number;
   status: number;
+  isCovered: boolean;
 }

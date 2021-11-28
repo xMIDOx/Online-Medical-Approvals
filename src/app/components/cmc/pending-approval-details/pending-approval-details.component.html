@@ -227,7 +227,10 @@
       <tbody>
         <tr *ngFor="let item of approval.approvalItems" class="text-center"
           [class.text-decoration-line-through]="item.status === rejected">
-          <td>{{item.serviceName}}</td>
+          <td>
+            {{item.serviceName}} <br>
+            <span class="badge rounded-pill bg-warning text-dark" *ngIf="isCMC() && !item.isCovered">Not Covered</span>
+          </td>
           <td>{{item.serviceQnt}}</td>
           <td>{{item.serviceUnitAmt}}</td>
           <td>{{item.serviceTotalAmt}}</td>

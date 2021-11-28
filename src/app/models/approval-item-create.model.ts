@@ -17,4 +17,5 @@ export interface ApprovalItemCreate {
   dosagePerDay: number;
   dosageTime: number;
   status: number;
+  isCovered: boolean;
 }
