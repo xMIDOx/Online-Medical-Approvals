@@ -19,15 +19,16 @@
           <th>UserName</th>
         </tr>
       </thead>
-      <tbody *ngFor="let app of approvals">
+      <tbody *ngFor="let app of approvals; index as i">
         <tr>
           <!-- Accordion button -->
           <td>
-            <div class="accordion" id="accordionExample">
+            <div class="accordion" [id]="'accordion-' + i">
               <div class="accordion-item ">
-                <div class="accordion-header" id="headingOne">
+                <div class="accordion-header" [id]="'heading-' + i">
                   <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                    [attr.data-bs-target]="'#collapse-' + i" aria-expanded="false"
+                    [attr.aria-controls]="'collapse-' + i">
                   </button>
                 </div>
               </div>
@@ -47,8 +48,8 @@
         </tr>
         <tr>
           <td colspan="12">
-            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
-              data-bs-parent="#accordionExample">
+            <div [id]="'collapse-' + i" class="accordion-collapse collapse" [attr.aria-labelledby]="'heading-' + i"
+              [attr.data-bs-parent]="'#accordion-' + i">
               <div class="accordion-body">
                 <!-- Approval Items -->
                 <app-display-approval-items [approvalItems]="app.clientApprovalItems"></app-display-approval-items>

@@ -6,7 +6,8 @@
       [ngClass]="this.onlineStatus[this.approval.onlineStatusId]">
       {{this.onlineStatus[this.approval.onlineStatusId]}}.
     </h3>
-    <button *ngIf="approval.onlineStatusId == onlineStatus.dispensed" type="button" class="btn btn-success col-md-1 end mb-3" (click)="print()">
+    <button *ngIf="approval.onlineStatusId == onlineStatus.dispensed" type="button"
+      class="btn btn-success col-md-1 end mb-3" (click)="print()">
       <i class="bi bi-printer"></i> Print
     </button>
 
@@ -191,14 +192,17 @@
           </thead>
         </table>
       </div>
-
       <div class="d-grid gap">
-        <button type="button" class="btn btn-primary btn-sm fw-bold" data-bs-toggle="modal"
-          data-bs-target="#approvalHistory" (click)="getMemberApprovals(approval.planMemberId)">Approvals
-          History</button>
+        <p class="fw-bold">
+          The last action date was
+          <span class="text-warning">{{approval.lastActionDate | date}}</span>,
+          for more details see
+          <a type="button" class="link-primary " data-bs-toggle="modal" data-bs-target="#approvalHistory"
+            (click)="getMemberApprovals(approval.planMemberId)">approvals
+            history</a>
+        </p>
       </div>
     </div>
-
   </div>
 
   <!-- Approval Items -->
@@ -246,7 +250,7 @@
     </table>
   </div>
 
-  <!-- Approval Price Summary -->
+  <!-- Approval Total Prices Summary -->
   <div class="row fw-bolder fst-italic text-center text-primary">
     <label for="appAmt" class="form-label col-md-3">Total Approval Amount</label>
     <div class="col-md-1">
@@ -255,13 +259,14 @@
 
     <label for="copaymentAmt" class="form-label col-md-3">Total Copayment Amount</label>
     <div class="col-md-1">
-      <input type="number" class="form-control form-control-sm" value="{{approval.approvalCopaymentAmt | number}}" readonly>
+      <input type="number" class="form-control form-control-sm" value="{{approval.approvalCopaymentAmt | number}}"
+        readonly>
     </div>
 
     <label for="maxAmt" class="form-label col-md-3">Maximum Approval Amount</label>
     <div class="col-md-1">
       <input type="number" class="form-control form-control-sm" [(ngModel)]="approval.maxApprovalAmt"
-      [disabled]="isProviderUser()" (change)="maxAmtCopayment()">
+        [disabled]="isProviderUser()" (change)="maxAmtCopayment()">
     </div>
     <span class="text-danger" *ngIf="approval.maxApprovalAmt > approval.approvalAmt">
       Maximum amount should be smaller than total approval amount.
@@ -286,7 +291,7 @@
   </div>
 </div>
 
-<!-- Bootstrap Modal For CMC -->
+<!-- Bootstrap Modal For CMC (Approval History) -->
 <app-bs-modal [id]="'approvalHistory'" [title]="'Approvals History'" [fullScreen]=true>
   <!-- modal body Content -->
   <app-display-approvals-list [approvals$]="approvalsHistory$"></app-display-approvals-list>
