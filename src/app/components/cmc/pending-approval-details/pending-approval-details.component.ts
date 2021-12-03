@@ -87,7 +87,7 @@ export class PendingApprovalDetailsComponent implements OnInit {
         ? this.benefit.coPaymentPer * this.approval.approvalAmt
         : this.maxAmtCopayment();
 
-      // this.approval.approvalCopaymentAmt = this.benefit.coPaymentPer * this.approval.approvalAmt;
+    // this.approval.approvalCopaymentAmt = this.benefit.coPaymentPer * this.approval.approvalAmt;
 
     this.getCeilingUtilization$().subscribe((utili: number) => {
       this.ceiling.benefitUtilization = utili;
@@ -111,7 +111,6 @@ export class PendingApprovalDetailsComponent implements OnInit {
           ? this.benefit.coPaymentPer * this.approval.approvalAmt
           : this.maxAmtCopayment();
     }
-
   }
 
   public onSubmitApproval(onlineStatusId: number): void {
@@ -126,10 +125,12 @@ export class PendingApprovalDetailsComponent implements OnInit {
   }
 
   public maxAmtCopayment(): number {
-    if(this.approval.maxApprovalAmt != 0)
-      return  this.approval.approvalCopaymentAmt = this.benefit.coPaymentPer * this.approval.maxApprovalAmt;
+    if (this.approval.maxApprovalAmt != 0)
+      return (this.approval.approvalCopaymentAmt =
+        this.benefit.coPaymentPer * this.approval.maxApprovalAmt);
 
-      return  this.approval.approvalCopaymentAmt = this.benefit.coPaymentPer * this.approval.approvalAmt;
+    return (this.approval.approvalCopaymentAmt =
+      this.benefit.coPaymentPer * this.approval.approvalAmt);
   }
 
   private fetchPlanBenefits(): void {
@@ -238,7 +239,7 @@ export class PendingApprovalDetailsComponent implements OnInit {
     return this.userRoles.includes(Roles.ProviderUser);
   }
 
-  public showDispenseBtn(): boolean {
+  public isReviewedByCMC(): boolean {
     return (
       this.isProviderUser() &&
       this.approval.onlineStatusId ===
@@ -252,6 +253,17 @@ export class PendingApprovalDetailsComponent implements OnInit {
 
   public onDispense(): void {
     this.approval.onlineStatusId = this.onlineStatus.dispensed;
+    this.updateApproval();
+  }
+
+  public onCancel(): void {
+    if (confirm('Are you sure ?')) {
+      this.approval.onlineStatusId = this.onlineStatus.canceled;
+      this.updateApproval();
+    }
+  }
+
+  private updateApproval(): void {
     this.approvalService.updateApproval(this.approval).subscribe((res) => {
       console.log(res);
       this.router.navigate(['/pending-approvals']);
