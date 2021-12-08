@@ -81,6 +81,13 @@ export class ApprovalService {
       .pipe(map((res) => res as ApprovalPrint));
   }
 
+  public checkClaimNumber(claimNum: number, providerId: number): Observable<boolean> {
+    const params = {claimNum: claimNum, providerId: providerId};
+    return this.http
+      .Get(this.approvalEndPoint + 'CheckClaimNumber?' + this.http.toQueryString(params))
+      .pipe(map((res) => res as boolean));
+  }
+
   private fetchApprovalCreateObject(approvalDisplay: ApprovalDisplay) {
     this.approvalCreate.id = approvalDisplay.id;
     this.approvalCreate.providerId = approvalDisplay.serviceProviderId;

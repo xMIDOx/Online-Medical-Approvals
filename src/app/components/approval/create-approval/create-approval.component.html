@@ -1,5 +1,5 @@
 <div class="row mb-1">
-  <div class="col text-center " *ngIf="(provider$ | async) as provider">
+  <div class="col text-center " *ngIf="provider">
     <h5 class="fs-4 fst-italic fw-bolder badge rounded-pill bg-success pb-3">
       {{provider.name}}
     </h5>
@@ -22,12 +22,12 @@
             <div class="col-md-3">
               <label for="cardNum" class="form-label">Card Number</label>
               <input id="cardNum" name="cardNum" type="text" class="form-control form-control-sm"
-                [(ngModel)]="approval.cardNumber" (ngModelChange)="getMemberInfo()">
+                [(ngModel)]="approval.cardNumber" (change)="getMemberInfo()">
             </div>
             <div class="col-md-3">
               <label for="claimFormNum" class="form-label">Claim Form Number</label>
               <input id="claimFormNum" name="claimNum" type="text" class="form-control form-control-sm"
-                [(ngModel)]="approval.claimNumber" (ngModelChange)="getClaimProvider()">
+                [(ngModel)]="approval.claimNumber" (change)="getClaimProvider()">
             </div>
             <div class="col-md-3">
               <label for="date" class="form-label">Approval Date</label>
