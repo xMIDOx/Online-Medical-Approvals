@@ -1,5 +1,7 @@
+import { ThrowStmt } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { data } from 'jquery';
 import { combineLatest, EMPTY, Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { ApprovalItemCreate } from 'src/app/models/approval-item-create.model';
@@ -14,6 +16,7 @@ import { Member } from './../../../models/member.model';
 import { PendingApprovalDetails } from './../../../models/pending-approval-details.model';
 import { Roles } from './../../../models/user-roles.enum';
 import { UserToken } from './../../../models/user-token.model';
+import { User } from './../../../models/user.model';
 import { ApprovalService } from './../../../services/approval.service';
 import { AuthService } from './../../../services/auth.service';
 import { LookupsService } from './../../../services/lookups.service';
@@ -119,8 +122,16 @@ export class PendingApprovalDetailsComponent implements OnInit {
     else if (onlineStatusId === this.onlineStatus.rejected)
       this.approval.onlineStatusId = this.onlineStatus.rejected;
 
-    this.approvalService
-      .updateApproval(this.approval)
+    this.authService
+      .getUser()
+      .pipe(
+        take(1),
+        switchMap((user: User) => {
+          this.approval.cmcUserId = user.id;
+          this.approval.responseDate = new Date();
+          return this.approvalService.updateApproval(this.approval);
+        })
+      )
       .subscribe((res) => this.router.navigate(['/pending-approvals']));
   }
 
@@ -253,24 +264,31 @@ export class PendingApprovalDetailsComponent implements OnInit {
 
   public onDispense(): void {
     this.approval.onlineStatusId = this.onlineStatus.dispensed;
+    this.approval.completionDate = new Date();
     this.updateApproval();
   }
 
   public onCancel(): void {
     if (confirm('Are you sure ?')) {
       this.approval.onlineStatusId = this.onlineStatus.canceled;
+      this.approval.completionDate = new Date();
       this.updateApproval();
     }
   }
 
   private updateApproval(): void {
     this.approvalService.updateApproval(this.approval).subscribe((res) => {
-      console.log(res);
       this.router.navigate(['/pending-approvals']);
     });
   }
 
   public isValidApproval(): boolean {
     return this.approval.approvalAmt > this.availableCeiling;
+  }
+
+  private getAuthenticatedUser() {
+    this.authService.getUser().pipe(take(1)).subscribe((user: User) =>  {
+      this.approval.cmcUserId = user.id;
+    })
   }
 }

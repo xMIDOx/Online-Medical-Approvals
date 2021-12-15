@@ -146,6 +146,7 @@ export class CreateApprovalComponent implements OnInit {
     this.authService
       .getUser()
       .pipe(
+        take(1),
         switchMap((user: User) => {
           this.approval.serviceProviderId = user.providerId;
           this.approval.issuedBy = user.id;

@@ -38,7 +38,7 @@ export class ApprovalService {
     );
   }
 
-  public updateApproval(approval: any) {
+  public updateApproval(approval: PendingApprovalDetails) {
     return this.http.Create(this.approvalEndPoint + 'CreateOrUpdate', approval);
   }
 
@@ -94,10 +94,10 @@ export class ApprovalService {
     this.approvalCreate.planMemberId = approvalDisplay.planMemberId;
     this.approvalCreate.customerId = approvalDisplay.customerId;
     this.approvalCreate.cardNumber = approvalDisplay.cardNumber;
-    this.approvalCreate.approvalDate = approvalDisplay.approvalDate;
+    this.approvalCreate.procedureDate = approvalDisplay.approvalDate;
     this.approvalCreate.claimNumber = approvalDisplay.claimNumber;
     this.approvalCreate.ICDCodeId = approvalDisplay.ICDCodeId;
-    this.approvalCreate.issuedBy = approvalDisplay.issuedBy;
+    this.approvalCreate.providerUserId = approvalDisplay.issuedBy;
     this.approvalCreate.printedNotes = approvalDisplay.printedNotes;
     this.approvalCreate.onlineStatusId = approvalDisplay.onlineStatusId;
     this.approvalCreate.approvalNumber = this.getApprovalNumber();
