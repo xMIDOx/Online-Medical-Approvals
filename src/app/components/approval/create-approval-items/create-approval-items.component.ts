@@ -6,6 +6,7 @@ import { tap } from 'rxjs/operators';
 import { ApprovalItemDisplay } from '../../../models/approval-item-display.model';
 import { BsModalComponent } from '../../bs-modal/bs-modal.component';
 import { ItemStatus } from './../../../models/item-status.enum';
+import { Provider } from './../../../models/provider.model';
 import { ServicePrice } from './../../../models/service-price.model';
 import { LookupsService } from './../../../services/lookups.service';
 
@@ -14,14 +15,13 @@ import { LookupsService } from './../../../services/lookups.service';
   templateUrl: './create-approval-items.component.html',
   styleUrls: ['./create-approval-items.component.css'],
 })
-export class CreateApprovalItemsComponent implements OnInit, OnChanges {
-  @Input() serviceProviderId = 0;
+export class CreateApprovalItemsComponent implements OnInit {
+  @Input() provider = <Provider>{};
   @Output() getApprovalItems = new EventEmitter<ApprovalItemDisplay[]>();
   @ViewChild('childComp') childComp!: BsModalComponent;
   public priceList$ = new Observable<object>();
   public approvalItems: ApprovalItemDisplay[] = [];
   public approvalItem = <ApprovalItemDisplay>{};
-  public providerCatId = 0;
   public loadingServices = false;
   private index = -1;
   private queryObj: any = {};
@@ -33,14 +33,9 @@ export class CreateApprovalItemsComponent implements OnInit, OnChanges {
     this.approvalItem.status = ItemStatus.Accepted;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.getProviderData();
-    this.approvalItems.length = 0;
-  }
-
   public getProviderPriceList(searchTerm: string) {
     this.queryObj.searchTerm = searchTerm;
-    if (this.providerCatId === 2) this.getDrugsData();
+    if (this.provider.providerCatId === 2) this.getDrugsData();
     else this.getMedicalServices();
   }
 
@@ -49,7 +44,7 @@ export class CreateApprovalItemsComponent implements OnInit, OnChanges {
 
     this.approvalItem.servicePrice = service.servicePrice;
     this.approvalItem.serviceName = service.name;
-    if (this.providerCatId === 2) {
+    if (this.provider.providerCatId === 2) {
       this.approvalItem.serviceId = service.id;
       this.approvalItem.isCovered = service.isCovered;
     } else {
@@ -90,18 +85,10 @@ export class CreateApprovalItemsComponent implements OnInit, OnChanges {
     item ? item.id : undefined;
   }
 
-  private getProviderData() {
-    if (this.serviceProviderId) {
-      this.lookupService
-        .getProviderById(this.serviceProviderId)
-        .subscribe((res: any) => (this.providerCatId = res.providerCatId));
-    }
-  }
-
   private getMedicalServices() {
     this.loadingServices = true;
     this.priceList$ = this.lookupService
-      .getMedicalServices(this.serviceProviderId, this.queryObj)
+      .getMedicalServices(this.provider.id, this.queryObj)
       .pipe(tap(() => (this.loadingServices = false)));
   }
 

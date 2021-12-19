@@ -105,21 +105,6 @@ export class CreateApprovalComponent implements OnInit {
       });
   }
 
-  private getProviderByCalimNum(): Observable<KeyValue> {
-    return this.lookupService
-      .getProviderByClaimNum(this.approval.claimNumber)
-      .pipe(take(1));
-    // .subscribe((res: KeyValue) => {
-    //   if (res) {
-    //     this.approval.claimProviderId = res.id;
-    //     this.claimProviderName = res.name;
-    //   } else {
-    //     this.approval.claimProviderId = 0;
-    //     this.claimProviderName = '';
-    //   }
-    // });
-  }
-
   public setDate(date: any): void {
     this.approval.approvalDate = date;
   }
@@ -143,20 +128,21 @@ export class CreateApprovalComponent implements OnInit {
   }
 
   private getAuthenticatedUser(): void {
-    this.authService
-      .getUser()
-      .pipe(
-        take(1),
+    this.authService.getUser().pipe(
         switchMap((user: User) => {
           this.approval.serviceProviderId = user.providerId;
           this.approval.issuedBy = user.id;
           return this.lookupService.getProviderById(user.providerId);
         })
-      )
-      .pipe(take(1))
-      .subscribe((provider: Provider) => {
+      ).pipe(take(1)).subscribe((provider: Provider) => {
         this.provider = provider;
       });
+  }
+
+  private getProviderByCalimNum(): Observable<KeyValue> {
+    return this.lookupService
+      .getProviderByClaimNum(this.approval.claimNumber)
+      .pipe(take(1));
   }
 
   private setStatusName(): void {

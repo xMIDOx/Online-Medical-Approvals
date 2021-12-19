@@ -12,7 +12,7 @@
       <tr>
         <th>Service</th>
         <th>Quantity</th>
-        <ng-container *ngIf="providerCatId === 2">
+        <ng-container *ngIf="provider.providerCatId === 2">
           <th>Dosage</th>
           <th>Dosage Days</th>
           <th>Dosage PerDay</th>
@@ -25,7 +25,7 @@
       <tr>
         <td>{{item.serviceName}}</td>
         <td>{{item.quantity}}</td>
-        <ng-container *ngIf="providerCatId === 2">
+        <ng-container *ngIf="provider.providerCatId === 2">
           <td>{{item.dosage}}</td>
           <td>{{item.dosageDays}}</td>
           <td>{{item.dosagePerDay}}</td>
@@ -59,7 +59,7 @@
           [(ngModel)]="approvalItem.quantity">
       </div>
     </div>
-    <div *ngIf="providerCatId === 2" class="row mb-3">
+    <div *ngIf="provider.providerCatId === 2" class="row mb-3">
       <div class="col-md-3">
         <label for="dosage" class="form-label col">Dosage</label>
         <input id="dosage" name="dosage" type="number" class="form-control form-control-sm"

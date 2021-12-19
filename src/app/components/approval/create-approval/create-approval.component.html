@@ -84,7 +84,7 @@
       <div id="collapseServices" class="accordion-collapse collapse show" aria-labelledby="approvalServices">
         <div class=" accordion-body offWhite">
           <div class="row mb-1">
-            <app-create-approval-items [serviceProviderId]="approval.serviceProviderId"
+            <app-create-approval-items [provider]="provider"
               (getApprovalItems)="getItems($event)">
             </app-create-approval-items>
           </div>
