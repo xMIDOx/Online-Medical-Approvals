@@ -44,10 +44,9 @@ export class NgSelectComponent implements OnInit, OnChanges {
   }
 
   public onSearch(event: any) {
-    if (event.term.length == 3) {
-      this.searching.emit(event.term as string);
-    }
-    if (event.term.length > 3) this.fetchMore();
+    event.term.length == 3
+      ? this.searching.emit(event.term as string)
+      : this.fetchMore();
   }
 
   public onChange(item: any) {
@@ -55,8 +54,10 @@ export class NgSelectComponent implements OnInit, OnChanges {
   }
 
   private fetchMore() {
+    if (this.items == null) return;
+
     const length = this.itemsBuffer.length;
-    const more = this.items?.slice(length, this.bufferSize + length);
+    const more = this.items.slice(length, this.bufferSize + length);
     this.isLoading = true;
     this.itemsBuffer = this.itemsBuffer.concat(more);
     this.isLoading = false;

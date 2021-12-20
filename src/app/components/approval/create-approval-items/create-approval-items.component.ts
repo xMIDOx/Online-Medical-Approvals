@@ -35,8 +35,7 @@ export class CreateApprovalItemsComponent implements OnInit {
 
   public getProviderPriceList(searchTerm: string) {
     this.queryObj.searchTerm = searchTerm;
-    if (this.provider.providerCatId === 2) this.getDrugsData();
-    else this.getMedicalServices();
+    (this.provider.providerCatId === 2) ? this.getDrugsData() : this.getMedicalServices();
   }
 
   public getSelectedService(service: ServicePrice) {
