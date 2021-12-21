@@ -39,7 +39,7 @@ export class CreateApprovalComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getAuthenticatedUser();
+    this.getUserWithProvider();
   }
 
   public getDiagnosis(searchTerm: string): void {
@@ -127,15 +127,14 @@ export class CreateApprovalComponent implements OnInit {
         );
   }
 
-  private getAuthenticatedUser(): void {
-    this.authService.getUser().pipe(
-        switchMap((user: User) => {
-          this.approval.serviceProviderId = user.providerId;
-          this.approval.issuedBy = user.id;
-          return this.lookupService.getProviderById(user.providerId);
-        })
-      ).pipe(take(1)).subscribe((provider: Provider) => {
-        this.provider = provider;
+  private getUserWithProvider(): void {
+    this.authService
+      .getAuthProviderUser()
+      .pipe(take(1))
+      .subscribe((user: User) => {
+        this.approval.serviceProviderId = user.providerId;
+        this.approval.issuedBy = user.id;
+        this.provider = user.provider;
       });
   }
 

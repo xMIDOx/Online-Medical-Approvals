@@ -7,6 +7,7 @@ import { EnvironmentUrlService } from './environment-url.service';
   providedIn: 'root',
 })
 export class GenericCRUDService {
+
   constructor(
     private http: HttpClient,
     private envURL: EnvironmentUrlService

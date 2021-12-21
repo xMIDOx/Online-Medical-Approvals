@@ -99,4 +99,10 @@ export class AuthService {
       map(res => res as User)
     )
   }
+
+  public getAuthProviderUser(): Observable<User> {
+    return this.http.Get('api/user/GetProviderUser').pipe(
+      map(res => res as User)
+    )
+  }
 }

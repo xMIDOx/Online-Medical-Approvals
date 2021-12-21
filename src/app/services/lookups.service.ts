@@ -40,9 +40,9 @@ export class LookupsService {
   }
 
   public getProviderById(providerId: number): Observable<Provider> {
-    return this.httpRepo.Get(
-      this.lookupsEndpoint + 'getProviderById?providerId=' + providerId
-    ).pipe(map(res => res as Provider));
+    return this.httpRepo
+      .Get(this.lookupsEndpoint + 'getProviderById?providerId=' + providerId)
+      .pipe(map((res) => res as Provider));
   }
 
   public getICDCodeById(ICDCodeId: number): Observable<ICDCodeDiagnosis> {
@@ -96,6 +96,12 @@ export class LookupsService {
       .pipe(map((res) => res as PlanBenefit[]));
   }
 
+  public getBranches(providerId: number): Observable<Branch[]> {
+    return this.httpRepo
+      .Get(this.lookupsEndpoint + 'getBranches?providerId=' + providerId)
+      .pipe(map((res) => res as Branch[]));
+  }
+
   private toQueryString(obj: QueryObject) {
     var parts = [];
     for (let [key, value] of Object.entries(obj)) {
@@ -103,11 +109,5 @@ export class LookupsService {
         parts.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
     }
     return parts.join('&');
-  }
-
-  public getBranches(providerId: number): Observable<Branch[]> {
-    return this.httpRepo
-      .Get(this.lookupsEndpoint + 'getBranches?providerId=' + providerId)
-      .pipe(map((res) => res as Branch[]));
   }
 }
