@@ -39,48 +39,22 @@ export class CreateApprovalComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getUserWithProvider();
-  }
-
-  public getDiagnosis(searchTerm: string): void {
-    this.queryObj.searchTerm = searchTerm;
-    this.loadingDiagnosis = true;
-    this.diagnosis = this.lookupService
-      .getDiagnosis(this.queryObj)
-      .pipe(tap(() => (this.loadingDiagnosis = false)));
-  }
-
-  public getSelectedProvider(item: KeyValue): void {
-    if (item) this.approval.serviceProviderId = item.id;
-  }
-
-  public getSelectedDiagnosis(item: KeyValue): void {
-    if (item) this.approval.ICDCodeId = item.id;
-  }
-
-  public getItems(items: ApprovalItemDisplay[]): void {
-    this.approval.approvalItems = items;
+    this.getProviderUser();
   }
 
   public getMemberInfo(): void {
     if (!this.approval.cardNumber) return;
 
     this.lookupService
-      .getMember(this.approval.cardNumber)
+      .getMemberByCardNum(this.approval.cardNumber)
       .pipe(take(1))
-      .subscribe((res: Member) => {
-        if (res) {
-          this.member = res;
-          this.approval.planMemberId = res.id;
-          this.approval.customerId = res.customerId;
-          this.setStatusName();
-        } else {
-          this.member = <Member>{};
-        }
-      });
+      .subscribe(
+        (result: Member) => this.fetchMemberData(result),
+        () => this.notification.showError('Not Found.')
+      );
   }
 
-  public getClaimProvider(): void {
+  public checkClaimFormNum(): void {
     if (!this.approval.claimNumber) return;
 
     this.approvalService
@@ -105,6 +79,26 @@ export class CreateApprovalComponent implements OnInit {
       });
   }
 
+  public getDiagnosis(searchTerm: string): void {
+    this.queryObj.searchTerm = searchTerm;
+    this.loadingDiagnosis = true;
+    this.diagnosis = this.lookupService
+      .getDiagnosis(this.queryObj)
+      .pipe(tap(() => (this.loadingDiagnosis = false)));
+  }
+
+  public getSelectedProvider(item: KeyValue): void {
+    if (item) this.approval.serviceProviderId = item.id;
+  }
+
+  public getSelectedDiagnosis(item: KeyValue): void {
+    if (item) this.approval.ICDCodeId = item.id;
+  }
+
+  public getItems(items: ApprovalItemDisplay[]): void {
+    this.approval.approvalItems = items;
+  }
+
   public setDate(date: any): void {
     this.approval.approvalDate = date;
   }
@@ -127,7 +121,7 @@ export class CreateApprovalComponent implements OnInit {
         );
   }
 
-  private getUserWithProvider(): void {
+  private getProviderUser(): void {
     this.authService
       .getAuthProviderUser()
       .pipe(take(1))
@@ -144,8 +138,10 @@ export class CreateApprovalComponent implements OnInit {
       .pipe(take(1));
   }
 
-  private setStatusName(): void {
-    if (this.member.isActive) this.member.statusName = 'Active';
-    else this.member.statusName = 'Stopped';
+  private fetchMemberData(member: Member): void {
+    this.member = member;
+    this.member.statusName = member.isActive ? 'Active' : 'Stopped';
+    this.approval.planMemberId = member.id;
+    this.approval.customerId = member.customerId;
   }
 }

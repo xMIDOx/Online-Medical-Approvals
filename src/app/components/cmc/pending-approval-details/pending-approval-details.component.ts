@@ -162,7 +162,7 @@ export class PendingApprovalDetailsComponent implements OnInit {
           this.userRoles = combined[0].roles;
           this.approval = combined[1];
 
-          return this.lookupService.getMember(combined[1].cardNumber).pipe(
+          return this.lookupService.getMemberByCardNum(combined[1].cardNumber).pipe(
             take(1),
             switchMap((member: Member) => {
               this.member = member;

@@ -57,9 +57,9 @@ export class LookupsService {
     );
   }
 
-  public getMember(cardNumber: number): Observable<Member> {
+  public getMemberByCardNum(cardNumber: number): Observable<Member> {
     return this.httpRepo
-      .Get('api/lookups/getmember?cardnumber=' + cardNumber)
+      .Get('api/lookups/GetMemberByCardNum?cardnumber=' + cardNumber)
       .pipe(map((res) => res as Member));
   }
 

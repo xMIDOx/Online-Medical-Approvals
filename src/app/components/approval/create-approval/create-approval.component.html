@@ -28,7 +28,7 @@
               <div class="col-md-3">
                 <label for="claimFormNum" class="form-label">Claim Form Number</label>
                 <input id="claimFormNum" name="claimNum" type="text" class="form-control form-control-sm"
-                  [(ngModel)]="approval.claimNumber" (change)="getClaimProvider()">
+                  [(ngModel)]="approval.claimNumber" (change)="checkClaimFormNum()">
               </div>
               <div class="col-md-3">
                 <label for="date" class="form-label">Approval Date</label>
