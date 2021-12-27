@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EMPTY, Observable } from 'rxjs';
-import { catchError, switchMap, take, tap } from 'rxjs/operators';
+import { switchMap, take, tap } from 'rxjs/operators';
 import { ApprovalDisplay } from 'src/app/models/approval-display.model';
 import { KeyValue } from 'src/app/models/key-value.model';
 import { Provider } from 'src/app/models/provider.model';
@@ -25,7 +25,7 @@ export class CreateApprovalComponent implements OnInit {
   public approval = <ApprovalDisplay>{};
   public member = <Member>{};
   public provider = <Provider>{};
-  public diagnosis = new Observable<object>();
+  public diagnostics$ = new Observable<object>();
   public claimProviderName = '';
   public loadingDiagnosis = false;
   private queryObj: any = {};
@@ -40,6 +40,7 @@ export class CreateApprovalComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProviderUser();
+    this.approval.onlineStatusId = ApprovalOnlineStatus.pending;
   }
 
   public getMemberInfo(): void {
@@ -49,7 +50,7 @@ export class CreateApprovalComponent implements OnInit {
       .getMemberByCardNum(this.approval.cardNumber)
       .pipe(take(1))
       .subscribe(
-        (result: Member) => this.fetchMemberData(result),
+        (member: Member) => this.fetchMemberData(member),
         () => this.notification.showError('Not Found.')
       );
   }
@@ -79,56 +80,46 @@ export class CreateApprovalComponent implements OnInit {
       });
   }
 
-  public getDiagnosis(searchTerm: string): void {
+  public getDiagnosticsList(searchTerm: string): void {
     this.queryObj.searchTerm = searchTerm;
     this.loadingDiagnosis = true;
-    this.diagnosis = this.lookupService
+
+    this.diagnostics$ = this.lookupService
       .getDiagnosis(this.queryObj)
       .pipe(tap(() => (this.loadingDiagnosis = false)));
   }
 
-  public getSelectedProvider(item: KeyValue): void {
-    if (item) this.approval.serviceProviderId = item.id;
-  }
-
-  public getSelectedDiagnosis(item: KeyValue): void {
-    if (item) this.approval.ICDCodeId = item.id;
+  public selectedDiagnosis(diagnosis: KeyValue): void {
+    if (diagnosis) this.approval.ICDCodeId = diagnosis.id;
   }
 
   public getItems(items: ApprovalItemDisplay[]): void {
     this.approval.approvalItems = items;
   }
 
-  public setDate(date: any): void {
-    this.approval.approvalDate = date;
-  }
-
   public onSubmit(form: NgForm): void {
-    this.approval.onlineStatusId = ApprovalOnlineStatus.pending;
-
-    if (form.valid)
+    if (form.valid) {
       this.approvalService
         .createApproval(this.approval)
         .pipe(take(1))
         .subscribe(
-          (res) => {
+          () => {
             this.notification.showSuccess('Approval Created Successfully.');
             this.router.navigate(['/pending-approvals']);
           },
-          (error) => {
+          () => {
             this.notification.showError('Could Not Create Approval');
           }
         );
+    } else this.notification.showError('Form not valid');
   }
 
   private getProviderUser(): void {
     this.authService
       .getAuthProviderUser()
       .pipe(take(1))
-      .subscribe((user: User) => {
-        this.approval.serviceProviderId = user.providerId;
-        this.approval.issuedBy = user.id;
-        this.provider = user.provider;
+      .subscribe((providerUser: User) => {
+        this.fetchProvideruserData(providerUser);
       });
   }
 
@@ -143,5 +134,11 @@ export class CreateApprovalComponent implements OnInit {
     this.member.statusName = member.isActive ? 'Active' : 'Stopped';
     this.approval.planMemberId = member.id;
     this.approval.customerId = member.customerId;
+  }
+
+  private fetchProvideruserData(providerUser: User): void {
+    this.approval.serviceProviderId = providerUser.providerId;
+    this.approval.issuedBy = providerUser.id;
+    this.provider = providerUser.provider;
   }
 }
