@@ -21,19 +21,30 @@
           <div class="accordion-body offWhite">
             <div class="row mb-1">
               <div class="col-md-3">
-                <label for="cardNum" class="form-label">Card Number</label>
-                <input id="cardNum" name="cardNum" type="text" class="form-control form-control-sm"
-                  [(ngModel)]="approval.cardNumber" (change)="getMemberInfo()" required>
+                <label for="cardNumber" class="form-label">Card Number</label>
+                <input id="cardNumber" name="cardNumber" type="text" class="form-control form-control-sm"
+                  [(ngModel)]="approval.cardNumber" (change)="getMemberInfo()" #cardNumber="ngModel" required>
+                <div *ngIf="!cardNumber.valid && cardNumber.touched" class="text-danger">
+                  <div *ngIf="cardNumber.errors?.required">Card Number is required.</div>
+                  <div *ngIf="cardNumber.errors?.invalid">Card Number is invalid.</div>
+                </div>
               </div>
               <div class="col-md-3">
-                <label for="claimFormNum" class="form-label">Claim Form Number</label>
-                <input id="claimFormNum" name="claimNum" type="text" class="form-control form-control-sm"
-                  [(ngModel)]="approval.claimNumber" (change)="checkClaimFormNum()" required>
+                <label for="claimNumber" class="form-label">Claim Form Number</label>
+                <input id="claimNumber" name="claimNumber" type="text" class="form-control form-control-sm"
+                  [(ngModel)]="approval.claimNumber" (change)="checkClaimFormNum()" #claimNumber="ngModel" required>
+                <div *ngIf="!claimNumber.valid && claimNumber.touched" class="text-danger">
+                  <div *ngIf="claimNumber.errors?.required">Claim form number is required.</div>
+                  <div *ngIf="claimNumber.errors?.invalid">Claim form number is invalid.</div>
+                </div>
               </div>
               <div class="col-md-3">
-                <label for="date" class="form-label">Approval Date</label>
-                <input id="date" name="date" type="datetime-local" class="form-control form-control-sm"
-                  [(ngModel)]="approval.approvalDate" required>
+                <label for="approvalDate" class="form-label">Approval Date</label>
+                <input id="approvalDate" name="approvalDate" type="datetime-local" class="form-control form-control-sm"
+                  [(ngModel)]="approval.approvalDate" #approvalDate="ngModel" required>
+                <div *ngIf="!approvalDate.valid && approvalDate.touched" class="text-danger">
+                  <div *ngIf="approvalDate.errors?.required">Approval Date is required.</div>
+                </div>
               </div>
               <div class="col-md-3">
                 <label for="diagnosis" class="form-label">Diagnosis</label>
@@ -94,7 +105,7 @@
       </div>
     </div>
     <!-- Submit Button -->
-    <div class="row  justify-content-center">
+    <div class="row justify-content-center">
       <button type="submit" class="col-md-2 btn btn-success" [disabled]="!(member.isActive)">Create Approval</button>
     </div>
   </form>

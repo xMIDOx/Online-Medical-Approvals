@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EMPTY, Observable } from 'rxjs';
 import { switchMap, take, tap } from 'rxjs/operators';
@@ -22,6 +22,9 @@ import { LookupsService } from './../../../services/lookups.service';
   styleUrls: ['./create-approval.component.css'],
 })
 export class CreateApprovalComponent implements OnInit {
+  @ViewChild('approvalForm', { static: false })
+  approvalForm!: NgForm;
+
   public approval = <ApprovalDisplay>{};
   public member = <Member>{};
   public provider = <Provider>{};
@@ -51,7 +54,7 @@ export class CreateApprovalComponent implements OnInit {
       .pipe(take(1))
       .subscribe(
         (member: Member) => this.fetchMemberData(member),
-        () => this.notification.showError('Not Found.')
+        () => this.approvalForm.controls.cardNumber.setErrors({ invalid: true })
       );
   }
 
@@ -63,7 +66,7 @@ export class CreateApprovalComponent implements OnInit {
       .pipe(
         tap((isValid) => {
           if (!isValid) {
-            this.notification.showError('Claim Number is not valid.');
+            this.approvalForm.controls.claimNumber.setErrors({ invalid: true })
             this.claimProviderName = '';
           }
         }),

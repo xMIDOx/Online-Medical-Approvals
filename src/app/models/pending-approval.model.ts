@@ -1,6 +1,6 @@
 export interface PendingApproval {
   id: number;
-  approvalDate: Date;
+  procedureDate: Date;
   memberName: string;
   customerName: string;
   providerName: string;

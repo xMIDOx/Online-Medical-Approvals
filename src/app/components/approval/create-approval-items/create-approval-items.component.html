@@ -56,7 +56,10 @@
       <div class="col-md-3">
         <label for="qty" class="form-label">Quantity</label>
         <input id="qty" name="quantity" type="number" class="form-control form-control-sm"
-          [(ngModel)]="approvalItem.quantity" required>
+          [(ngModel)]="approvalItem.quantity" #quantity="ngModel" required>
+          <div *ngIf="!quantity.valid && quantity.touched" class="text-danger">
+            <div *ngIf="quantity.errors?.required">Quantity is required.</div>
+          </div>
       </div>
     </div>
     <div *ngIf="provider.providerCatId === 2" class="row mb-3">
