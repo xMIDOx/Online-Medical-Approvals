@@ -11,6 +11,7 @@ export class AppErrorhandler implements ErrorHandler {
     this.ngZone.run(() => {
       const notification = this.injector.get(NotificationService);
       notification.showError((error.error?.message) ?? 'Oops! Something went wrong.');
+      console.log(error);
     })
   }
 }

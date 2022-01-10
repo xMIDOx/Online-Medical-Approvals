@@ -1,6 +1,6 @@
 <div class="row">
   <button type="button" class="col-md-1 mb-2 btn btn-success btn-sm" data-bs-toggle="modal"
-    data-bs-target="#approvalItem">
+    data-bs-target="#approvalItem" (click)="newSelection()">
     <i class="bi bi-plus-lg"></i> New
   </button>
 </div>
@@ -21,11 +21,11 @@
         <th> </th>
       </tr>
     </thead>
-    <tbody class="text-center align-middle" *ngFor="let item of approvalItems; index as i; trackBy: trackItems;  ">
+    <tbody class="text-center align-middle" *ngFor="let item of approvalItems; index as i; trackBy: trackItems;">
       <tr>
         <td>{{item.serviceName}}</td>
         <td>{{item.quantity}}</td>
-        <ng-container *ngIf="provider.providerCatId === 2">
+        <ng-container *ngIf="provider.providerCatId === providerCat.pharmacies">
           <td>{{item.dosage}}</td>
           <td>{{item.dosageDays}}</td>
           <td>{{item.dosagePerDay}}</td>
@@ -49,7 +49,7 @@
     <div class="row mb-3">
       <div class="col-md-9">
         <label for="serviceId" class="form-label">Services</label>
-        <app-ng-select [items]="(priceList$ | async)" [isLoading]="loadingServices"
+        <app-ng-select #ngSelectServices [items]="(priceList$ | async)" [isLoading]="loadingServices"
           (searching)="getProviderPriceList($event)" (selectedItem)="getSelectedService($event)">
         </app-ng-select>
       </div>
@@ -57,9 +57,9 @@
         <label for="qty" class="form-label">Quantity</label>
         <input id="qty" name="quantity" type="number" class="form-control form-control-sm"
           [(ngModel)]="approvalItem.quantity" #quantity="ngModel" required>
-          <div *ngIf="!quantity.valid && quantity.touched" class="text-danger">
-            <div *ngIf="quantity.errors?.required">Quantity is required.</div>
-          </div>
+        <div *ngIf="!quantity.valid && quantity.touched" class="text-danger">
+          <div *ngIf="quantity.errors?.required">Quantity is required.</div>
+        </div>
       </div>
     </div>
     <div *ngIf="provider.providerCatId === 2" class="row mb-3">

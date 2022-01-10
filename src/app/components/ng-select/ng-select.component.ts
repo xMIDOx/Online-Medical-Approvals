@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ControlContainer, NgForm } from '@angular/forms';
 import { KeyValue } from 'src/app/models/key-value.model';
 
@@ -9,6 +9,7 @@ import { KeyValue } from 'src/app/models/key-value.model';
   viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
 })
 export class NgSelectComponent implements OnInit, OnChanges {
+  @ViewChild('ngSelect') ngSelect: any;
   @Input() items: any;
   @Input() isLoading = false;
   @Output() searching = new EventEmitter<string>();
@@ -61,5 +62,9 @@ export class NgSelectComponent implements OnInit, OnChanges {
     this.isLoading = true;
     this.itemsBuffer = this.itemsBuffer.concat(more);
     this.isLoading = false;
+  }
+
+  public clear() {
+    this.ngSelect.handleClearClick();
   }
 }

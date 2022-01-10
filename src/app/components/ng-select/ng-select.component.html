@@ -1,10 +1,10 @@
 <div ngModelGroup="ngSelect">
-    <ng-select
-        id="ngSelectId"
-        name="id"
+    <ng-select #ngSelect
+        id="ngSelect"
+        name="ngSelect"
         placeholder="search with 3 letters"
-        bindLabel="name"
         bindValue="id"
+        bindLabel="name"
         [items]="itemsBuffer"
         [virtualScroll]="true"
         [loading]="isLoading"
@@ -13,7 +13,6 @@
         (scrollToEnd)="onScrollToEnd()"
         (search)="onSearch($event)"
         (change)="onChange($event)"
-        ngModel
         required>
         <ng-template ng-option-tmp let-item="item" let-index="index">
             <div title="{{item.name}}">{{item.name}}</div>
