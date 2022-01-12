@@ -1,19 +1,26 @@
-<div ngModelGroup="ngSelect">
-    <ng-select #ngSelect
-        id="ngSelect"
-        name="ngSelect"
-        placeholder="search with 3 letters"
-        bindValue="id"
+<div ngModelGroup="ngSelectGroup" #ngSelectGroup="ngModelGroup">
+
+    <ng-select #ngSelectControl
+        id={{id}}
+        name={{name}}
         bindLabel="name"
+        placeholder="search with 3 letters"
+        loadingText = 'Loading...'
+
         [items]="itemsBuffer"
         [virtualScroll]="true"
         [loading]="isLoading"
-        loadingText = 'Loading...'
+        [compareWith]="compareFn"
+
         (scroll)="onScroll($event)"
         (scrollToEnd)="onScrollToEnd()"
         (search)="onSearch($event)"
         (change)="onChange($event)"
-        required>
+
+        [(ngModel)]="selectedItem"
+
+        required
+        >
         <ng-template ng-option-tmp let-item="item" let-index="index">
             <div title="{{item.name}}">{{item.name}}</div>
         </ng-template>

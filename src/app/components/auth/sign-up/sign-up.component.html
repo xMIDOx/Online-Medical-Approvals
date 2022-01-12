@@ -44,7 +44,7 @@
       <div class="col mb-3" *ngIf="isProviderSelected()">
         <label for="" class="form-label">Providers</label>
         <app-ng-select [items]="(providers$ | async)" (searching)="fetchProviders($event)"
-          (selectedItem)="selectedProvider($event)"></app-ng-select>
+          (onSelecting)="selectedProvider($event)"></app-ng-select>
       </div>
 
       <div class="col mb-3" *ngIf="userRegistration.providerId">

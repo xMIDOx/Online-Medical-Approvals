@@ -9,18 +9,24 @@ import { KeyValue } from 'src/app/models/key-value.model';
   viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
 })
 export class NgSelectComponent implements OnInit, OnChanges {
-  @ViewChild('ngSelect') ngSelect: any;
+  @Input() id!: string;
+  @Input() name!: string;
   @Input() items: any;
   @Input() isLoading = false;
+  public selectedItem: any;
+
   @Output() searching = new EventEmitter<string>();
-  @Output() selectedItem = new EventEmitter<any>();
+  @Output() onSelecting = new EventEmitter<any>();
+  @ViewChild('ngSelectControl') ngSelectControl: any;
+
   public itemsBuffer: KeyValue[] = [];
   private bufferSize = 50;
   private fetchMoreAfter = 10;
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     // changes.items.currentValue && changes.items.currentValue.length > 0
@@ -50,8 +56,8 @@ export class NgSelectComponent implements OnInit, OnChanges {
       : this.fetchMore();
   }
 
-  public onChange(item: any) {
-    this.selectedItem.emit(item);
+  public onChange(selection: any) {
+    this.onSelecting.emit(selection);
   }
 
   private fetchMore() {
@@ -65,6 +71,10 @@ export class NgSelectComponent implements OnInit, OnChanges {
   }
 
   public clear() {
-    this.ngSelect.handleClearClick();
+    this.ngSelectControl.handleClearClick();
+  }
+
+  public compareFn(item: any, selected: any): boolean {
+    return item.value === selected.value;
   }
 }

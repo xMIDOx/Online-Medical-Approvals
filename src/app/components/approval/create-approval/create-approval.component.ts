@@ -15,6 +15,7 @@ import { Member } from './../../../models/member.model';
 import { User } from './../../../models/user.model';
 import { ApprovalService } from './../../../services/approval.service';
 import { LookupsService } from './../../../services/lookups.service';
+import { NgSelectComponent } from './../../ng-select/ng-select.component';
 
 @Component({
   selector: 'app-create-approval',
@@ -22,8 +23,7 @@ import { LookupsService } from './../../../services/lookups.service';
   styleUrls: ['./create-approval.component.css'],
 })
 export class CreateApprovalComponent implements OnInit {
-  @ViewChild('approvalForm', { static: false })
-  approvalForm!: NgForm;
+  @ViewChild('approvalForm', { static: false }) approvalForm!: NgForm;
 
   public approval = <ApprovalDisplay>{};
   public member = <Member>{};

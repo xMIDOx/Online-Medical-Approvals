@@ -33,8 +33,8 @@
         </ng-container>
         <td>
           <div class="justify-content-start">
-            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
-              data-bs-target="#approvalItem" (click)="Edit(item, i)">Edit</button> |
+            <!-- <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
+              data-bs-target="#approvalItem" (click)="Edit(item, i)">Edit</button> | -->
             <button type="button" class="btn btn-outline-danger btn-sm" (click)="remove(item)">Delete</button>
           </div>
         </td>
@@ -49,8 +49,13 @@
     <div class="row mb-3">
       <div class="col-md-9">
         <label for="serviceId" class="form-label">Services</label>
-        <app-ng-select #ngSelectServices [items]="(priceList$ | async)" [isLoading]="loadingServices"
-          (searching)="getProviderPriceList($event)" (selectedItem)="getSelectedService($event)">
+        <app-ng-select #ngSelectItems
+        [id]='"ngSelectItems"'
+        [name]='"ngSelectItems"'
+        [items]="(priceList$ | async)"
+        [isLoading]="loadingServices"
+        (searching)="getProviderPriceList($event)"
+        (onSelecting)="getSelectedService($event)"        >
         </app-ng-select>
       </div>
       <div class="col-md-3">

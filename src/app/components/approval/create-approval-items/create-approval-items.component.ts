@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { ProviderCategories } from 'src/app/models/provider-category.enum';
 
 import { ApprovalItemDisplay } from '../../../models/approval-item-display.model';
@@ -12,7 +12,6 @@ import { ServicePrice } from './../../../models/service-price.model';
 import { LookupsService } from './../../../services/lookups.service';
 import { NgSelectComponent } from './../../ng-select/ng-select.component';
 
-
 @Component({
   selector: 'app-create-approval-items',
   templateUrl: './create-approval-items.component.html',
@@ -21,7 +20,7 @@ import { NgSelectComponent } from './../../ng-select/ng-select.component';
 export class CreateApprovalItemsComponent implements OnInit {
   @Input() provider = <Provider>{};
   @ViewChild('childComp') childComp!: BsModalComponent;
-  @ViewChild('ngSelectServices') ngSelectServices!: NgSelectComponent;
+  @ViewChild('ngSelectItems') ngSelectItems!: NgSelectComponent;
   @Output() getApprovalItems = new EventEmitter<ApprovalItemDisplay[]>();
 
   public priceList$ = new Observable<object>();
@@ -29,7 +28,6 @@ export class CreateApprovalItemsComponent implements OnInit {
   public approvalItem = <ApprovalItemDisplay>{};
   public providerCat = ProviderCategories;
   public loadingServices = false;
-
   private index = -1;
   private queryObj: any = {};
 
@@ -118,6 +116,6 @@ export class CreateApprovalItemsComponent implements OnInit {
   }
 
   public newSelection() {
-    this.ngSelectServices.clear();
+    this.ngSelectItems.clear();
   }
 }

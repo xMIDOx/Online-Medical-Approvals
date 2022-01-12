@@ -10,6 +10,7 @@ import { KeyValue } from './../models/key-value.model';
 import { Member } from './../models/member.model';
 import { PlanBenefit } from './../models/plan-benefit.model';
 import { QueryObject } from './../models/query-object';
+import { ServicePrice } from './../models/service-price.model';
 import { GenericCRUDService } from './generic-crud.service';
 
 @Injectable({
@@ -100,6 +101,12 @@ export class LookupsService {
     return this.httpRepo
       .Get(this.lookupsEndpoint + 'getBranches?providerId=' + providerId)
       .pipe(map((res) => res as Branch[]));
+  }
+
+  public getMedicineById(medicineId: number): Observable<ServicePrice> {
+    return this.httpRepo
+      .Get(this.lookupsEndpoint + 'GetMedicineById?id=' + medicineId)
+      .pipe(map((res) => res as ServicePrice));
   }
 
   private toQueryString(obj: QueryObject) {
