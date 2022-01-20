@@ -1,16 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
-import { take, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { ProviderCategories } from 'src/app/models/provider-category.enum';
 
-import { ApprovalItemDisplay } from '../../../models/approval-item-display.model';
-import { BsModalComponent } from '../../bs-modal/bs-modal.component';
+import { ApprovalItemDisplay } from './../../../models/approval-item-display.model';
 import { ItemStatus } from './../../../models/item-status.enum';
 import { Provider } from './../../../models/provider.model';
 import { ServicePrice } from './../../../models/service-price.model';
 import { LookupsService } from './../../../services/lookups.service';
-import { NgSelectComponent } from './../../ng-select/ng-select.component';
 
 @Component({
   selector: 'app-create-approval-items',
@@ -19,16 +16,12 @@ import { NgSelectComponent } from './../../ng-select/ng-select.component';
 })
 export class CreateApprovalItemsComponent implements OnInit {
   @Input() provider = <Provider>{};
-  @ViewChild('childComp') childComp!: BsModalComponent;
-  @ViewChild('ngSelectItems') ngSelectItems!: NgSelectComponent;
   @Output() getApprovalItems = new EventEmitter<ApprovalItemDisplay[]>();
-
   public priceList$ = new Observable<object>();
   public approvalItems: ApprovalItemDisplay[] = [];
   public approvalItem = <ApprovalItemDisplay>{};
-  public providerCat = ProviderCategories;
+  public providerCatEnum = ProviderCategories;
   public loadingServices = false;
-  private index = -1;
   private queryObj: any = {};
 
   constructor(private lookupService: LookupsService) {}
@@ -40,7 +33,7 @@ export class CreateApprovalItemsComponent implements OnInit {
   public getProviderPriceList(searchTerm: string) {
     this.queryObj.searchTerm = searchTerm;
 
-    this.provider.providerCatId === this.providerCat.pharmacies
+    this.provider.providerCatId === this.providerCatEnum.pharmacies
       ? this.getDrugsData()
       : this.getMedicalServices();
   }
@@ -48,35 +41,54 @@ export class CreateApprovalItemsComponent implements OnInit {
   public getSelectedService(service: ServicePrice) {
     if (!service) return;
 
-    this.provider.providerCatId === this.providerCat.pharmacies
+    this.provider.providerCatId === this.providerCatEnum.pharmacies
       ? this.fetchSelectedDrug(service)
       : this.fetchSelectedService(service);
   }
 
-  public onSubmit(form: NgForm) {
-    const item = Object.assign({}, this.approvalItem);
-    if (this.index === -1) this.approvalItems.push(item);
-    else this.approvalItems[this.index] = item;
-    this.getApprovalItems.emit(this.approvalItems);
-    this.index = -1;
-    form.reset();
-    this.closeModal();
+  public newSelection() {
+    var isRowOpen = false;
+
+    this.approvalItems.forEach((item) => {
+      if (item.creationMode) isRowOpen = true;
+    });
+
+    if (!isRowOpen) {
+      this.approvalItem.creationMode = true;
+      this.approvalItems.push(this.approvalItem);
+    }
   }
 
-  public Edit(item: ApprovalItemDisplay, i: number) {
-    this.approvalItem = item;
-    this.index = i;
+  public onEdit(item: ApprovalItemDisplay, index: number) {
+    var _item = Object.assign({}, this.approvalItems[index]);
+
+    this.approvalItem = _item;
+
+    this.approvalItems.forEach((item) => {
+      item.editMode = false;
+      item.creationMode = false;
+    });
+
+    item.editMode = true;
   }
 
-  public cancelEdit(itemForm: NgForm) {
+  public onCanelEdit(item: any): void {
     this.approvalItem = <ApprovalItemDisplay>{};
-    this.index = -1;
-    itemForm.reset();
+    item.editMode = !item.editMode;
+  }
+
+  public updateItem(item: any, index: any): void {
+    item.creationMode = false;
+    var _item = Object.assign({}, this.approvalItem);
+    this.approvalItems[index] = _item;
+    this.getApprovalItems.emit(this.approvalItems);
+    this.resetObj(this.approvalItem);
   }
 
   public remove(item: ApprovalItemDisplay) {
     const index = this.approvalItems.indexOf(item);
     this.approvalItems.splice(index, 1);
+    this.resetObj(this.approvalItem);
   }
 
   public trackItems(index: number, item: any) {
@@ -111,11 +123,10 @@ export class CreateApprovalItemsComponent implements OnInit {
     this.approvalItem.isCovered = true;
   }
 
-  private closeModal() {
-    this.childComp.closeBtn.nativeElement.click();
-  }
-
-  public newSelection() {
-    this.ngSelectItems.clear();
+  private resetObj(obj: any) {
+    var props = Object.getOwnPropertyNames(obj);
+    for (var i = 0; i < props.length; i++) {
+      delete obj[props[i]];
+    }
   }
 }

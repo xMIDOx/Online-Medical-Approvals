@@ -9,4 +9,6 @@ export interface ApprovalItemDisplay {
   dosageTime: number;
   status: number;
   isCovered: boolean;
+  editMode:boolean;
+  creationMode: boolean;
 }

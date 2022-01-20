@@ -102,6 +102,7 @@ export class CreateApprovalComponent implements OnInit {
 
   public onSubmit(form: NgForm): void {
     if (form.valid) {
+      console.log(this.approval.approvalItems);
       this.approvalService
         .createApproval(this.approval)
         .pipe(take(1))

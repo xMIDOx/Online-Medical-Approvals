@@ -1,6 +1,5 @@
 <div class="row">
-  <button type="button" class="col-md-1 mb-2 btn btn-success btn-sm" data-bs-toggle="modal"
-    data-bs-target="#approvalItem" (click)="newSelection()">
+  <button type="button" class="col-md-1 mb-2 btn btn-success btn-sm" (click)="newSelection()">
     <i class="bi bi-plus-lg"></i> New
   </button>
 </div>
@@ -11,88 +10,94 @@
     <thead class="text-center align-middle table-primary">
       <tr>
         <th>Service</th>
-        <th>Quantity</th>
+        <th>Qty</th>
         <ng-container *ngIf="provider.providerCatId === 2">
-          <th>Dosage</th>
-          <th>Dosage Days</th>
-          <th>Dosage PerDay</th>
-          <th>Dosage Time</th>
+          <th>Dose</th>
+          <th>Dose Days</th>
+          <th class="text-nowrap">Dose Per-Day</th>
+          <th>Dose Time</th>
         </ng-container>
         <th> </th>
       </tr>
     </thead>
-    <tbody class="text-center align-middle" *ngFor="let item of approvalItems; index as i; trackBy: trackItems;">
+    <tbody class="text-center" *ngFor="let item of approvalItems; index as i; trackBy: trackItems;">
       <tr>
-        <td>{{item.serviceName}}</td>
-        <td>{{item.quantity}}</td>
-        <ng-container *ngIf="provider.providerCatId === providerCat.pharmacies">
-          <td>{{item.dosage}}</td>
-          <td>{{item.dosageDays}}</td>
-          <td>{{item.dosagePerDay}}</td>
-          <td>{{item.dosageTime}}</td>
+        <td class="col text-start">
+          <div *ngIf="!item.creationMode">
+            {{item.serviceName}}
+          </div>
+          <div *ngIf="item.creationMode">
+            <app-ng-select #ngSelectItems [id]='"ngSelectItems"' [name]='"ngSelectItems"' [items]="(priceList$ | async)"
+              [isLoading]="loadingServices" (searching)="getProviderPriceList($event)"
+              (onSelecting)="getSelectedService($event)">
+            </app-ng-select>
+          </div>
+        </td>
+        <td class="col-md-1">
+          <div *ngIf="!(item.editMode || item.creationMode)">
+            {{item.quantity}}
+          </div>
+          <div *ngIf="item.editMode || item.creationMode">
+            <input id="qty" name="quantity" type="number" class="form-control form-control-sm text-center"
+              [(ngModel)]="approvalItem.quantity" #quantity="ngModel" required>
+            <div *ngIf="!quantity.valid && quantity.touched" class="text-danger">
+              <div *ngIf="quantity.errors?.required">Quantity is required.</div>
+            </div>
+          </div>
+        </td>
+        <ng-container *ngIf="provider.providerCatId === providerCatEnum.pharmacies">
+          <td class="col-md-1">
+            <div *ngIf="!(item.editMode || item.creationMode)">
+              {{item.dosage}}
+            </div>
+            <div *ngIf="item.editMode || item.creationMode">
+              <input id="dosage" name="dosage" type="number" class="form-control form-control-sm text-center"
+                [(ngModel)]="approvalItem.dosage">
+            </div>
+          </td>
+          <td class="col-md-1">
+            <div *ngIf="!(item.editMode || item.creationMode)">
+              {{item.dosageDays}}
+            </div>
+            <div *ngIf="item.editMode || item.creationMode">
+              <input id="dosageDays" name="dosageDays" type="number" class="form-control form-control-sm text-center"
+                [(ngModel)]="approvalItem.dosageDays">
+            </div>
+          </td>
+          <td class="col-md-1">
+            <div *ngIf="!(item.editMode || item.creationMode)">
+              {{item.dosagePerDay}}
+            </div>
+            <div *ngIf="item.editMode || item.creationMode">
+              <input id="dosagePerDay" name="dosagePerDay" type="number"
+                class="form-control form-control-sm text-center" [(ngModel)]="approvalItem.dosagePerDay">
+            </div>
+          </td>
+          <td class="col-md-1">
+            <div *ngIf="!(item.editMode || item.creationMode)">
+              {{item.dosageTime}}
+            </div>
+            <div *ngIf="item.editMode || item.creationMode">
+              <input id="dosageTime" name="dosageTime" type="number" class="form-control form-control-sm text-center"
+                [(ngModel)]="approvalItem.dosageTime">
+            </div>
+          </td>
         </ng-container>
-        <td>
-          <div class="justify-content-start">
-            <!-- <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
-              data-bs-target="#approvalItem" (click)="Edit(item, i)">Edit</button> | -->
-            <button type="button" class="btn btn-outline-danger btn-sm" (click)="remove(item)">Delete</button>
+        <td class="col-md-1">
+          <div>
+            <i *ngIf="!(item.editMode || item.creationMode)"
+              class="bi bi-pencil-square btn btn-outline-primary btn-sm border-0" title="edit"
+              (click)="onEdit(item, i)">
+            </i>
+            <i *ngIf="!item.editMode" class="bi bi-trash btn btn-outline-danger btn-sm border-0" title="delete"
+              (click)="remove(item)"></i>
+            <i *ngIf="item.editMode" class="bi bi-x-lg btn-outline-danger btn-sm border-0" title="cancel"
+              (click)="onCanelEdit(item)"></i>
+            <i *ngIf="item.editMode || item.creationMode" class="bi bi-check-lg btn btn-outline-success btn-sm border-0"
+              title="save" (click)="updateItem(item, i)"></i>
           </div>
         </td>
       </tr>
     </tbody>
   </table>
 </div>
-
-<!-- Bootstrap Modal For Approval Item Form-->
-<app-bs-modal #childComp [id]="'approvalItem'" [title]="'Approval Services'" [cssClass]="'offWhite'">
-  <form #itemForm="ngForm" (ngSubmit)="onSubmit(itemForm)">
-    <div class="row mb-3">
-      <div class="col-md-9">
-        <label for="serviceId" class="form-label">Services</label>
-        <app-ng-select #ngSelectItems
-        [id]='"ngSelectItems"'
-        [name]='"ngSelectItems"'
-        [items]="(priceList$ | async)"
-        [isLoading]="loadingServices"
-        (searching)="getProviderPriceList($event)"
-        (onSelecting)="getSelectedService($event)"        >
-        </app-ng-select>
-      </div>
-      <div class="col-md-3">
-        <label for="qty" class="form-label">Quantity</label>
-        <input id="qty" name="quantity" type="number" class="form-control form-control-sm"
-          [(ngModel)]="approvalItem.quantity" #quantity="ngModel" required>
-        <div *ngIf="!quantity.valid && quantity.touched" class="text-danger">
-          <div *ngIf="quantity.errors?.required">Quantity is required.</div>
-        </div>
-      </div>
-    </div>
-    <div *ngIf="provider.providerCatId === 2" class="row mb-3">
-      <div class="col-md-3">
-        <label for="dosage" class="form-label col">Dosage</label>
-        <input id="dosage" name="dosage" type="number" class="form-control form-control-sm"
-          [(ngModel)]="approvalItem.dosage">
-      </div>
-      <div class="col-md-3">
-        <label for="dosagePerDay" class="form-label col text-nowrap">Dosage Per Day</label>
-        <input id="dosagePerDay" name="dosagePerDay" type="number" class="form-control form-control-sm"
-          [(ngModel)]="approvalItem.dosagePerDay">
-      </div>
-      <div class="col-md-3">
-        <label for="dosageDays" class="form-label">Dosage Days</label>
-        <input id="dosageDays" name="dosageDays" type="number" class="form-control form-control-sm"
-          [(ngModel)]="approvalItem.dosageDays">
-      </div>
-      <div class="col-md-3">
-        <label for="dosageTime" class="form-label">Dosage Time</label>
-        <input id="dosageTime" name="dosageTime" type="number" class="form-control form-control-sm"
-          [(ngModel)]="approvalItem.dosageTime">
-      </div>
-    </div>
-    <div class="row modal-footer justify-content-start">
-      <button type="submit" class="btn btn-success col-md-2" [disabled]="!itemForm.valid">Add</button>
-      <button type="submit" class="btn btn-secondary col-md-2" data-bs-dismiss="modal"
-        (click)="cancelEdit(itemForm)">Close</button>
-    </div>
-  </form>
-</app-bs-modal>
