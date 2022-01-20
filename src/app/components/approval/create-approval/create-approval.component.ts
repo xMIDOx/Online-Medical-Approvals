@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, NgForm } from '@angular/forms';
+import { Component, ElementRef, NgModule, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, NgForm, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EMPTY, Observable } from 'rxjs';
 import { switchMap, take, tap } from 'rxjs/operators';
@@ -24,9 +24,8 @@ import { NgSelectComponent } from './../../ng-select/ng-select.component';
 })
 export class CreateApprovalComponent implements OnInit {
   @ViewChild('approvalForm', { static: false }) approvalForm!: NgForm;
-
   public approval = <ApprovalDisplay>{};
-  public member = <Member>{};
+  public member: Partial<Member> = {};
   public provider = <Provider>{};
   public diagnostics$ = new Observable<object>();
   public claimProviderName = '';
@@ -46,15 +45,22 @@ export class CreateApprovalComponent implements OnInit {
     this.approval.onlineStatusId = ApprovalOnlineStatus.pending;
   }
 
-  public getMemberInfo(): void {
-    if (!this.approval.cardNumber) return;
+  public getMemberInfo(cardNumber: NgModel): void {
+    if (cardNumber.errors) {
+      this.member = {};
+      return;
+    }
 
     this.lookupService
       .getMemberByCardNum(this.approval.cardNumber)
       .pipe(take(1))
       .subscribe(
         (member: Member) => this.fetchMemberData(member),
-        () => this.approvalForm.controls.cardNumber.setErrors({ invalid: true })
+        () => {
+          this.member = {};
+          this.approvalForm.controls.cardNumber.setErrors({ invalid: true });
+          console.log('Member Info', this.member);
+        }
       );
   }
 
@@ -66,7 +72,7 @@ export class CreateApprovalComponent implements OnInit {
       .pipe(
         tap((isValid) => {
           if (!isValid) {
-            this.approvalForm.controls.claimNumber.setErrors({ invalid: true })
+            this.approvalForm.controls.claimNumber.setErrors({ invalid: true });
             this.claimProviderName = '';
           }
         }),

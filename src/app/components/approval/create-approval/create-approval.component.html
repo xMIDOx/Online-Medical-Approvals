@@ -23,7 +23,7 @@
               <div class="col-md-3">
                 <label for="cardNumber" class="form-label">Card Number</label>
                 <input id="cardNumber" name="cardNumber" type="text" class="form-control form-control-sm"
-                  [(ngModel)]="approval.cardNumber" (change)="getMemberInfo()" #cardNumber="ngModel" required>
+                  [(ngModel)]="approval.cardNumber" (change)="getMemberInfo(cardNumber)" #cardNumber="ngModel" required>
                 <div *ngIf="!cardNumber.valid && cardNumber.touched" class="text-danger">
                   <div *ngIf="cardNumber.errors?.required">Card Number is required.</div>
                   <div *ngIf="cardNumber.errors?.invalid">Card Number is invalid.</div>
