@@ -17,7 +17,7 @@ import { GenericCRUDService } from './generic-crud.service';
   providedIn: 'root',
 })
 export class LookupsService {
-  private readonly lookupsEndpoint = 'api/lookups/';
+  private readonly lookupsEndpoint = 'api/VLookUps/';
   constructor(private httpRepo: GenericCRUDService) {}
 
   public getProviders(queryObject: any) {

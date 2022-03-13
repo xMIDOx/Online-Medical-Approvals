@@ -34,6 +34,8 @@ import { PrintLayoutComponent } from './components/print-layout/print-layout.com
 import { MaxApprovalAmtDirective } from './custom/directives/max-approval-amt.directive';
 import { LoadingSpinner } from './models/loading-spinner.pipe';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
+import { ClaimPhotoComponent } from './components/claim-photo/claim-photo.component';
+import { EditClaimPhotoComponent } from './components/edit-claim-photo/edit-claim-photo.component';
 
 
 @NgModule({
@@ -59,6 +61,8 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
     ApprovalPrintTemplateComponent,
     PrintLayoutComponent,
     MaxApprovalAmtDirective,
+    ClaimPhotoComponent,
+    EditClaimPhotoComponent,
   ],
   imports: [
     BrowserModule,

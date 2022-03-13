@@ -5,11 +5,13 @@ import { ApprovalPrintTemplateComponent } from './components/approval-print-temp
 import { CreateApprovalComponent } from './components/approval/create-approval/create-approval.component';
 import { LogInComponent } from './components/auth/log-in/log-in.component';
 import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
+import { ClaimPhotoComponent } from './components/claim-photo/claim-photo.component';
 import {
   PendingApprovalDetailsComponent,
 } from './components/cmc/pending-approval-details/pending-approval-details.component';
 import { PendingApprovalsListComponent } from './components/cmc/pending-approvals-list/pending-approvals-list.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { EditClaimPhotoComponent } from './components/edit-claim-photo/edit-claim-photo.component';
 import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 import { HomeComponent } from './components/home/home.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
@@ -22,6 +24,16 @@ const routes: Routes = [
     path: '',
     redirectTo: '/home',
     pathMatch: 'full',
+  },
+
+  {
+    path: 'claim-photo',
+    component: ClaimPhotoComponent,
+  },
+
+  {
+    path: 'Edit-claim-photo/:id',
+    component: EditClaimPhotoComponent,
   },
 
   {
@@ -46,7 +58,9 @@ const routes: Routes = [
     path: 'print',
     outlet: 'print',
     component: PrintLayoutComponent,
-    children: [{ path: 'approval/:id', component: ApprovalPrintTemplateComponent }],
+    children: [
+      { path: 'approval/:id', component: ApprovalPrintTemplateComponent },
+    ],
   },
 
   {

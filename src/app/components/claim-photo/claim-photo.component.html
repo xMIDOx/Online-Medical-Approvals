@@ -1,0 +1,28 @@
+<h2 class="text-center fw-bold mb-4">
+  <span class="badge rounded-pill bg-success">Claims Photos</span>
+</h2>
+
+<div class="container-fluid">
+  <div class="row row-cols-1 row-cols-md-3 g-1 g-md-3">
+    <div *ngFor="let p of photos" class="col">
+      <div class="card">
+        <div class="row">
+          <div class="col-md-4">
+            <img [src]="baseUrl + '/' + p.serverPath" class="img-fluid h-100 w-100"  alt="...">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <p class="card-text"><strong>Provider:</strong> {{p.providerName}}</p>
+              <p class="card-text"><strong>User:</strong> {{p.userName}}</p>
+              <p class="card-text"><strong>Client:</strong> {{p.clientName}}</p>
+              <p class="card-text"><strong>Stamp Date:</strong> {{p.stampDate | date}} </p>
+            </div>
+            <div class="card-footer d-grid">
+              <a class="btn btn-secondary btn-sm" [routerLink]="['/Edit-claim-photo', p.id]">Review</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
