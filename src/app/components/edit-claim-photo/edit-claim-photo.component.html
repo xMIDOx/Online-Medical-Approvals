@@ -51,49 +51,51 @@
             </div>
           </div>
           <!-- Photo Details -->
+          <!-- Mediciations -->
           <div class="row mb-3">
             <div>
-              <button type="button" class="btn btn-success btn-sm" (click)="addNewRow()">
+              <button type="button" class="btn btn-success btn-sm" (click)="addNewMedicine()">
                 <i class="bi bi-plus-lg"></i>
                 Add Medications
               </button>
-
               <table class="table table-sm table-borderless">
                 <thead>
                   <tr>
-                    <th>Service</th>
+                    <th>Medicine Name</th>
                     <th>Quantity</th>
                     <th></th>
                   </tr>
                 </thead>
-                <tbody *ngFor="let medicine of photoMedications; index as i">
+                <tbody *ngFor="let medicine of filterMedications(); index as i">
                   <tr>
                     <td>
-                      <div *ngIf="!isEditMode(i); else medicationsInput">
+                      <div *ngIf="!isEditMode(medicine); else medicationsInput">
                         {{medicine.name}}
                       </div>
                       <ng-template #medicationsInput>
                         <app-ng-select [id]="'ngSelectMedications'" [name]="'ngSelectMedications'"
                           [items]="(medications$ | async)" [isLoading]="isLoading" (searching)="getMedications($event)"
-                          (onSelecting)="getSelectedMedicine($event)">
+                          (onSelecting)="getSelectedService($event)">
                         </app-ng-select>
                       </ng-template>
                     </td>
                     <td>
-                      <div *ngIf="!isEditMode(i); else quantityInput">
+                      <div *ngIf="!isEditMode(medicine); else quantityInput">
                         {{medicine.quantity}}
                       </div>
                       <ng-template #quantityInput>
-                        <input type="text" class="form-control form-control-sm" id="qty" name="qty" [(ngModel)]="selectedService.quantity">
+                        <input type="text" class="form-control form-control-sm" id="qty" name="qty"
+                          [(ngModel)]="selectedService.quantity">
                       </ng-template>
                     </td>
                     <td>
                       <div class="text-center">
-                        <i *ngIf="isEditMode(i);else deleteIcon" title="save"
-                          class="bi bi-check-lg btn btn-outline-success btn-sm border-0" (click)="saveItem(i)"></i>
+                        <i *ngIf="isEditMode(medicine);else deleteIcon" title="save"
+                          class="bi bi-check-lg btn btn-outline-success btn-sm border-0"
+                          (click)="saveItem(medicine)"></i>
                         <ng-template #deleteIcon>
                           <i title="delete" class="bi bi-trash btn btn-outline-danger btn-sm border-0"
-                            (click)="deleteItem(i)"></i>
+                            (click)="deleteItem(medicine)"></i>
                         </ng-template>
                       </div>
                     </td>
@@ -101,7 +103,110 @@
                 </tbody>
               </table>
             </div>
-
+          </div>
+          <!-- Scans -->
+          <div class="row mb-3">
+            <div>
+              <button type="button" class="btn btn-success btn-sm" (click)="addNewScan()">
+                <i class="bi bi-plus-lg"></i>
+                Add Scans
+              </button>
+              <table class="table table-sm table-borderless">
+                <thead>
+                  <tr>
+                    <th>Scan Name</th>
+                    <th>Quantity</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody *ngFor="let scan of filterScans(); index as i">
+                  <tr>
+                    <td>
+                      <div *ngIf="!isEditMode(scan); else scansInput">
+                        {{scan.name}}
+                      </div>
+                      <ng-template #scansInput>
+                        <app-ng-select [id]="'ngSelectScans'" [name]="'ngSelectScans'"
+                          [items]="(medicalServices$ | async)" [isLoading]="isLoading"
+                          (searching)="getMedicalServices($event)" (onSelecting)="getSelectedService($event)">
+                        </app-ng-select>
+                      </ng-template>
+                    </td>
+                    <td>
+                      <div *ngIf="!isEditMode(scan); else scanQuantityInput">
+                        {{scan.quantity}}
+                      </div>
+                      <ng-template #scanQuantityInput>
+                        <input type="text" class="form-control form-control-sm" id="qty" name="qty"
+                          [(ngModel)]="selectedService.quantity">
+                      </ng-template>
+                    </td>
+                    <td>
+                      <div class="text-center">
+                        <i *ngIf="isEditMode(scan);else deleteIcon" title="save"
+                          class="bi bi-check-lg btn btn-outline-success btn-sm border-0" (click)="saveItem(scan)"></i>
+                        <ng-template #deleteIcon>
+                          <i title="delete" class="bi bi-trash btn btn-outline-danger btn-sm border-0"
+                            (click)="deleteItem(scan)"></i>
+                        </ng-template>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- Labs -->
+          <div class="row mb-3">
+            <div>
+              <button type="button" class="btn btn-success btn-sm" (click)="addNewTest()">
+                <i class="bi bi-plus-lg"></i>
+                Add Medical Tests
+              </button>
+              <table class="table table-sm table-borderless">
+                <thead>
+                  <tr>
+                    <th>Test Name</th>
+                    <th>Quantity</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody *ngFor="let test of filterMedicalTests(); index as i">
+                  <tr>
+                    <td>
+                      <div *ngIf="!isEditMode(test); else testsInput">
+                        {{test.name}}
+                      </div>
+                      <ng-template #testsInput>
+                        <app-ng-select [id]="'ngSelectTests'" [name]="'ngSelectTests'" [items]="(medicalTests$ | async)"
+                          [isLoading]="isLoading" (searching)="getMedicalTests($event)"
+                          (onSelecting)="getSelectedService($event)">
+                        </app-ng-select>
+                      </ng-template>
+                    </td>
+                    <td>
+                      <div *ngIf="!isEditMode(test); else scanQuantityInput">
+                        {{test.quantity}}
+                      </div>
+                      <ng-template #scanQuantityInput>
+                        <input type="text" class="form-control form-control-sm" id="qty" name="qty"
+                          [(ngModel)]="selectedService.quantity">
+                      </ng-template>
+                    </td>
+                    <td>
+                      <div class="text-center">
+                        <i *ngIf="isEditMode(test);else deleteIcon" title="save"
+                          class="bi bi-check-lg btn btn-outline-success btn-sm border-0" (click)="saveItem(test)"></i>
+                        <ng-template #deleteIcon>
+                          <i title="delete" class="bi bi-trash btn btn-outline-danger btn-sm border-0"
+                            (click)="deleteItem(test)"></i>
+                        </ng-template>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
           <div>
             <button class="btn btn-primary" type="submit">Submit</button>
@@ -109,7 +214,7 @@
         </form>
       </div>
     </div>
-    <div class="col-md-3">
+    <div *ngIf="photo" class="col-md-3">
       <img class="img-fluid img-thumbnail" [src]="envUrl + '/' + photo?.serverPath">
     </div>
   </div>

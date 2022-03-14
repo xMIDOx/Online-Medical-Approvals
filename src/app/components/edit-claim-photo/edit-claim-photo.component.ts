@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Medicine } from 'src/app/models/medicine';
+import { ServiceTypes } from 'src/app/models/service-type.enum';
 
 import { PhotoService } from '../../models/photo-Service';
 import { environment } from './../../../environments/environment';
@@ -26,32 +27,37 @@ export class EditClaimPhotoComponent implements OnInit {
   public icdCodes$ = new Observable<object>();
   public medications$ = new Observable<object>();
   public medicalServices$ = new Observable<object>();
-
+  public medicalTests$ = new Observable<object>();
   public queryObj: any = {};
-
   public photoServices: PhotoService[] = [];
   public selectedService = <PhotoService>{};
-  public photoMedications: PhotoService[] = [];
   public isActiveRow = false;
   public activeRowIndex = -1 ;
 
   constructor(
     private route: ActivatedRoute,
-    private photoService: ClaimPhotoService,
+    private claimPhotoService: ClaimPhotoService,
     private onlineLookups: OnlineLookupsService
   ) {}
 
   ngOnInit(): void {
     this.photoId = this.route.snapshot.params['id'];
 
-    this.photoService
+    if (this.photoId) {
+      this.claimPhotoService
       .getClaimPhoto(this.photoId)
       .subscribe((res) => (this.photo = res));
+    }
   }
 
   public onSubmit(claimForm: NgForm) {
-    console.log(claimForm.value);
-    //this.photoService.updateClaimPhoto(this.photoId, this.claimPhoto);
+
+    this.claimPhoto.claimPhotoDetails = this.photoServices;
+    this.claimPhoto.clientId = this.photo.clientId;
+    this.claimPhoto.onlineStatusId = 1005;
+
+    this.claimPhotoService.updateClaimPhoto(this.photoId, this.claimPhoto)
+    .subscribe(res => console.log(res));
   }
 
   public getICDCodes(searchTerm: string) {
@@ -64,7 +70,7 @@ export class EditClaimPhotoComponent implements OnInit {
   }
 
   public selectedDiagnosis(diagnosis: KeyValue) {
-    console.log('selected Diagnosis', diagnosis);
+    this.claimPhoto.icdCodeId = diagnosis.id;
   }
 
   public getMedications(searchTerm: string) {
@@ -85,28 +91,71 @@ export class EditClaimPhotoComponent implements OnInit {
       .pipe(tap(() => (this.isLoading = false)));
   }
 
-  public getSelectedMedicine(medicine: PhotoService) {
-    this.selectedService = medicine;
+  public getMedicalTests(searchTerm: string) {
+    this.queryObj.searchTerm = searchTerm;
+    this.isLoading = true;
+
+    this.medicalTests$ = this.onlineLookups
+      .GetMedicalServices(this.queryObj)
+      .pipe(tap(() => (this.isLoading = false)));
   }
 
-  public addNewRow() {
-    this.activeRowIndex = this.photoMedications.push(<PhotoService>{}) - 1;
+  public getSelectedService(service: PhotoService) {
+    this.selectedService = service;
+  }
+
+  public addNewMedicine() {
+    let _medicine = <PhotoService>{};
+    _medicine.serviceTypeId = ServiceTypes.Medication;
+
+    this.activeRowIndex = this.photoServices.push(_medicine) - 1;
     this.isActiveRow = true;
   }
 
-  public saveItem(index: number) {
-    this.photoMedications[index] = Object.assign({}, this.selectedService);
+  public addNewScan() {
+    let _scan = <PhotoService>{};
+    _scan.serviceTypeId = ServiceTypes.Scan;
+
+    this.activeRowIndex = this.photoServices.push(_scan) - 1;
+    this.isActiveRow = true;
+  }
+
+  public addNewTest() {
+    let _test = <PhotoService>{};
+    _test.serviceTypeId = ServiceTypes.Lab;
+
+    this.activeRowIndex = this.photoServices.push(_test) - 1;
+    this.isActiveRow = true;
+  }
+
+  public saveItem(service: PhotoService) {
+    const index = this.photoServices.indexOf(service);
+    this.photoServices[index] = Object.assign({}, this.selectedService);
     this.resetObj(this.selectedService);
     this.isActiveRow = false;
     this.activeRowIndex = -1;
   }
 
-  public deleteItem(index: number) {
-    this.photoMedications.splice(index, 1);
+  public deleteItem(service: PhotoService) {
+    const index = this.photoServices.indexOf(service);
+    this.photoServices.splice(index, 1);
   }
 
-  public isEditMode(index: number): boolean {
+  public isEditMode(service: PhotoService): boolean {
+    const index = this.photoServices.indexOf(service);
     return this.isActiveRow && this.activeRowIndex == index;
+  }
+
+  public filterScans(): PhotoService[] {
+    return this.photoServices.filter(s => s.serviceTypeId == ServiceTypes.Scan);
+  }
+
+  public filterMedications(): PhotoService[] {
+    return this.photoServices.filter(s => s.serviceTypeId == ServiceTypes.Medication);
+  }
+
+  public filterMedicalTests(): PhotoService[] {
+    return this.photoServices.filter(s => s.serviceTypeId == ServiceTypes.Lab);
   }
 
   private resetObj(obj: any) {
