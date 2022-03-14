@@ -1,221 +1,270 @@
 <div class="container-fluid">
   <div class="row">
-    <h2 class="text-center fw-bold mb-4">
-      <span class="badge rounded-pill bg-warning">Photo Details</span>
-    </h2>
-  </div>
-  <div class="row">
+
     <div class="col-md-9">
+
       <div class="row mb-3">
-        <span class="col"><strong>Provider:</strong> {{photo?.providerName}}</span>
-        <span class="col"><strong>User:</strong> {{photo?.userName}}</span>
-        <span class="col"><strong>Client:</strong> {{photo?.clientName}} </span>
-        <span class="col"><strong>Stamp Date:</strong> {{photo?.stampDate | date}}</span>
+        <div class="col">
+          <table class="table table-sm caption-top table-bordered">
+            <caption class="text-warning fw-bold fs-4">Photo Info</caption>
+            <thead class="table-secondary">
+              <tr>
+                <th>Provider</th>
+                <th>User</th>
+                <th>Client</th>
+                <th>Stamp Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{photo?.providerName}}</td>
+                <td>{{photo?.userName}}</td>
+                <td>{{photo?.clientName}}</td>
+                <td>{{photo?.stampDate | date}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="row mb-4">
-        <form class="d-flex flex-column h-100 justify-content-start" #claimForm="ngForm"
-          (ngSubmit)="onSubmit(claimForm)">
-          <div class="row mb-3">
-            <div class="col-md-3">
-              <label for="name" class="form-label">Member Name</label>
-              <input type="text" class="form-control form-control-sm" name="name" id="name"
-                [(ngModel)]="claimPhoto.memberName">
+
+      <div class="row mb-3">
+        <div class="col">
+          <form class="d-flex flex-column h-100 justify-content-start" #claimForm="ngForm"
+            (ngSubmit)="onSubmit(claimForm)">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="name" class="form-label">Member Name</label>
+                <input type="text" class="form-control form-control-sm" name="name" id="name"
+                  [(ngModel)]="claimPhoto.memberName">
+              </div>
+              <div class="col-md-3">
+                <label for="claimFormNo" class="form-label">Claim Form Number</label>
+                <input id="claimFormNo" name="claimFormNo" type="text" class="form-control form-control-sm"
+                  [(ngModel)]="claimPhoto.claimFormNumber">
+              </div>
+              <div class="col-md-3">
+                <label for="procedureDate" class="form-label">Procedure Date</label>
+                <input id="procedureDate" name="approvalDate" type="date" class="form-control form-control-sm"
+                  [(ngModel)]="claimPhoto.procedureDate">
+              </div>
             </div>
-            <div class="col-md-3">
-              <label for="cardNumber" class="form-label">Card Number</label>
-              <input type="text" class="form-control form-control-sm" id="cardNumber" name="cardNumber"
-                [(ngModel)]="claimPhoto.cardNumber">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="diagnosis" class="form-label">Diagnosis</label>
+                <app-ng-select [id]="'ngSelectDiagnosis'" [name]="'ngSelectDiagnosis'" [items]="(icdCodes$ | async)"
+                  [isLoading]="isLoading" (searching)="getICDCodes($event)" (onSelecting)="selectedDiagnosis($event)">
+                </app-ng-select>
+              </div>
+              <div class="col-md-3">
+                <label for="cardNumber" class="form-label">Card Number</label>
+                <input type="text" class="form-control form-control-sm" id="cardNumber" name="cardNumber"
+                  [(ngModel)]="claimPhoto.cardNumber">
+              </div>
+              <div class="col-md-3">
+                <label for="PolicyNo" class="form-label">Policy Number</label>
+                <input id="PolicyNo" name="PolicyNo" type="text" class="form-control form-control-sm"
+                  [(ngModel)]="claimPhoto.policyNumber">
+              </div>
             </div>
-            <div class="col-md-3">
-              <label for="claimFormNo" class="form-label">Claim Form Number</label>
-              <input id="claimFormNo" name="claimFormNo" type="text" class="form-control form-control-sm"
-                [(ngModel)]="claimPhoto.claimFormNumber">
+            <!-- Photo Details -->
+            <!-- Mediciations -->
+            <div class="row mb-3">
+              <div class="col">
+                <div class="mb-3">
+                  <button title="Add New Medicine" type="button" class="btn btn-success btn-sm"
+                    (click)="addNewMedicine()">
+                    <i class="bi bi-plus"></i> Medications
+                  </button>
+                </div>
+                <div class="card">
+                  <div class="card-body">
+                    <table *ngIf="filterMedications().length != 0" class="table table-sm table-borderless">
+                      <thead class="table-secondary">
+                        <tr>
+                          <th>Medicine Name</th>
+                          <th>Quantity</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody *ngFor="let medicine of filterMedications(); index as i">
+                        <tr>
+                          <td class="col">
+                            <div *ngIf="!isEditMode(medicine); else medicationsInput">
+                              {{medicine.name}}
+                            </div>
+                            <ng-template #medicationsInput>
+                              <app-ng-select [id]="'ngSelectMedications'" [name]="'ngSelectMedications'"
+                                [items]="(medications$ | async)" [isLoading]="isLoading"
+                                (searching)="getMedications($event)" (onSelecting)="getSelectedService($event)">
+                              </app-ng-select>
+                            </ng-template>
+                          </td>
+                          <td class="col-md-1">
+                            <div class="text-center" *ngIf="!isEditMode(medicine); else quantityInput">
+                              {{medicine.quantity}}
+                            </div>
+                            <ng-template #quantityInput>
+                              <input type="text" class="form-control form-control-sm" id="qty" name="qty"
+                                [(ngModel)]="selectedService.quantity">
+                            </ng-template>
+                          </td>
+                          <td class="col-md-1">
+                            <div class="text-center">
+                              <i *ngIf="isEditMode(medicine);else deleteIcon" title="save"
+                                class="bi bi-check-lg btn btn-outline-success btn-sm border-0"
+                                (click)="saveItem(medicine)"></i>
+                              <ng-template #deleteIcon>
+                                <i title="delete" class="bi bi-trash btn btn-outline-danger btn-sm border-0"
+                                  (click)="deleteItem(medicine)"></i>
+                              </ng-template>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="col-md-3">
-              <label for="PolicyNo" class="form-label">Policy Number</label>
-              <input id="PolicyNo" name="PolicyNo" type="text" class="form-control form-control-sm"
-                [(ngModel)]="claimPhoto.policyNumber">
+
+            <!-- Scans -->
+            <div class="row mb-3">
+              <div class="col">
+                <div class="mb-2">
+                  <button title="Add New Scan" type="button" class="btn btn-success btn-sm" (click)="addNewScan()">
+                    <i class="bi bi-plus"></i> Scans
+                  </button>
+                </div>
+                <div class="card">
+                  <div class="card-body">
+                    <table *ngIf="filterScans().length != 0" class="table table-sm table-borderless">
+                      <thead class="table-secondary">
+                        <tr>
+                          <th>Scan Name</th>
+                          <th>Quantity</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody *ngFor="let scan of filterScans(); index as i">
+                        <tr>
+                          <td class="col">
+                            <div *ngIf="!isEditMode(scan); else scansInput">
+                              {{scan.name}}
+                            </div>
+                            <ng-template #scansInput>
+                              <app-ng-select [id]="'ngSelectScans'" [name]="'ngSelectScans'"
+                                [items]="(medicalServices$ | async)" [isLoading]="isLoading"
+                                (searching)="getMedicalServices($event)" (onSelecting)="getSelectedService($event)">
+                              </app-ng-select>
+                            </ng-template>
+                          </td>
+                          <td class="col-md-1">
+                            <div class="text-center" *ngIf="!isEditMode(scan); else scanQuantityInput">
+                              {{scan.quantity}}
+                            </div>
+                            <ng-template #scanQuantityInput>
+                              <input type="text" class="form-control form-control-sm" id="qty" name="qty"
+                                [(ngModel)]="selectedService.quantity">
+                            </ng-template>
+                          </td>
+                          <td class="col-md-1">
+                            <div class="text-center">
+                              <i *ngIf="isEditMode(scan);else deleteIcon" title="save"
+                                class="bi bi-check-lg btn btn-outline-success btn-sm border-0"
+                                (click)="saveItem(scan)"></i>
+                              <ng-template #deleteIcon>
+                                <i title="delete" class="bi bi-trash btn btn-outline-danger btn-sm border-0"
+                                  (click)="deleteItem(scan)"></i>
+                              </ng-template>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </div>
             </div>
-          </div>
-          <div class="row mb-3">
-            <div class="col-md-9">
-              <label for="diagnosis" class="form-label">Diagnosis</label>
-              <app-ng-select [id]="'ngSelectDiagnosis'" [name]="'ngSelectDiagnosis'" [items]="(icdCodes$ | async)"
-                [isLoading]="isLoading" (searching)="getICDCodes($event)" (onSelecting)="selectedDiagnosis($event)">
-              </app-ng-select>
+
+            <!-- Labs -->
+            <div class="row mb-3">
+              <div class="col">
+                <div class="mb-2">
+                  <button title="Add New Test" type="button" class="btn btn-success btn-sm" (click)="addNewTest()">
+                    <i class="bi bi-plus"></i> Tests
+                  </button>
+                </div>
+                <div class="card">
+                  <div class="card-body">
+                    <table *ngIf="filterMedicalTests().length != 0" class="table table-sm table-borderless">
+                      <thead class="table-secondary">
+                        <tr>
+                          <th>Test Name</th>
+                          <th>Quantity</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody *ngFor="let test of filterMedicalTests(); index as i">
+                        <tr>
+                          <td class="col">
+                            <div *ngIf="!isEditMode(test); else testsInput">
+                              {{test.name}}
+                            </div>
+                            <ng-template #testsInput>
+                              <app-ng-select [id]="'ngSelectTests'" [name]="'ngSelectTests'"
+                                [items]="(medicalTests$ | async)" [isLoading]="isLoading"
+                                (searching)="getMedicalTests($event)" (onSelecting)="getSelectedService($event)">
+                              </app-ng-select>
+                            </ng-template>
+                          </td>
+                          <td class="col-md-1 text-center">
+                            <div *ngIf="!isEditMode(test); else scanQuantityInput">
+                              {{test.quantity}}
+                            </div>
+                            <ng-template #scanQuantityInput>
+                              <input type="text" class="form-control form-control-sm" id="qty" name="qty"
+                                [(ngModel)]="selectedService.quantity">
+                            </ng-template>
+                          </td>
+                          <td class="col-md-1">
+                            <div class="text-center">
+                              <i *ngIf="isEditMode(test);else deleteIcon" title="save"
+                                class="bi bi-check-lg btn btn-outline-success btn-sm border-0"
+                                (click)="saveItem(test)"></i>
+                              <ng-template #deleteIcon>
+                                <i title="delete" class="bi bi-trash btn btn-outline-danger btn-sm border-0"
+                                  (click)="deleteItem(test)"></i>
+                              </ng-template>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="col-md-3">
-              <label for="procedureDate" class="form-label">Procedure Date</label>
-              <input id="procedureDate" name="approvalDate" type="date" class="form-control form-control-sm"
-                [(ngModel)]="claimPhoto.procedureDate">
+
+            <div class="row">
+              <div class="col text-center">
+                <button class="col-md-3 btn btn-primary btn-sm" type="submit">Submit</button>
+              </div>
             </div>
-          </div>
-          <!-- Photo Details -->
-          <!-- Mediciations -->
-          <div class="row mb-3">
-            <div>
-              <button type="button" class="btn btn-success btn-sm" (click)="addNewMedicine()">
-                <i class="bi bi-plus-lg"></i>
-                Add Medications
-              </button>
-              <table class="table table-sm table-borderless">
-                <thead>
-                  <tr>
-                    <th>Medicine Name</th>
-                    <th>Quantity</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody *ngFor="let medicine of filterMedications(); index as i">
-                  <tr>
-                    <td>
-                      <div *ngIf="!isEditMode(medicine); else medicationsInput">
-                        {{medicine.name}}
-                      </div>
-                      <ng-template #medicationsInput>
-                        <app-ng-select [id]="'ngSelectMedications'" [name]="'ngSelectMedications'"
-                          [items]="(medications$ | async)" [isLoading]="isLoading" (searching)="getMedications($event)"
-                          (onSelecting)="getSelectedService($event)">
-                        </app-ng-select>
-                      </ng-template>
-                    </td>
-                    <td>
-                      <div *ngIf="!isEditMode(medicine); else quantityInput">
-                        {{medicine.quantity}}
-                      </div>
-                      <ng-template #quantityInput>
-                        <input type="text" class="form-control form-control-sm" id="qty" name="qty"
-                          [(ngModel)]="selectedService.quantity">
-                      </ng-template>
-                    </td>
-                    <td>
-                      <div class="text-center">
-                        <i *ngIf="isEditMode(medicine);else deleteIcon" title="save"
-                          class="bi bi-check-lg btn btn-outline-success btn-sm border-0"
-                          (click)="saveItem(medicine)"></i>
-                        <ng-template #deleteIcon>
-                          <i title="delete" class="bi bi-trash btn btn-outline-danger btn-sm border-0"
-                            (click)="deleteItem(medicine)"></i>
-                        </ng-template>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <!-- Scans -->
-          <div class="row mb-3">
-            <div>
-              <button type="button" class="btn btn-success btn-sm" (click)="addNewScan()">
-                <i class="bi bi-plus-lg"></i>
-                Add Scans
-              </button>
-              <table class="table table-sm table-borderless">
-                <thead>
-                  <tr>
-                    <th>Scan Name</th>
-                    <th>Quantity</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody *ngFor="let scan of filterScans(); index as i">
-                  <tr>
-                    <td>
-                      <div *ngIf="!isEditMode(scan); else scansInput">
-                        {{scan.name}}
-                      </div>
-                      <ng-template #scansInput>
-                        <app-ng-select [id]="'ngSelectScans'" [name]="'ngSelectScans'"
-                          [items]="(medicalServices$ | async)" [isLoading]="isLoading"
-                          (searching)="getMedicalServices($event)" (onSelecting)="getSelectedService($event)">
-                        </app-ng-select>
-                      </ng-template>
-                    </td>
-                    <td>
-                      <div *ngIf="!isEditMode(scan); else scanQuantityInput">
-                        {{scan.quantity}}
-                      </div>
-                      <ng-template #scanQuantityInput>
-                        <input type="text" class="form-control form-control-sm" id="qty" name="qty"
-                          [(ngModel)]="selectedService.quantity">
-                      </ng-template>
-                    </td>
-                    <td>
-                      <div class="text-center">
-                        <i *ngIf="isEditMode(scan);else deleteIcon" title="save"
-                          class="bi bi-check-lg btn btn-outline-success btn-sm border-0" (click)="saveItem(scan)"></i>
-                        <ng-template #deleteIcon>
-                          <i title="delete" class="bi bi-trash btn btn-outline-danger btn-sm border-0"
-                            (click)="deleteItem(scan)"></i>
-                        </ng-template>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <!-- Labs -->
-          <div class="row mb-3">
-            <div>
-              <button type="button" class="btn btn-success btn-sm" (click)="addNewTest()">
-                <i class="bi bi-plus-lg"></i>
-                Add Medical Tests
-              </button>
-              <table class="table table-sm table-borderless">
-                <thead>
-                  <tr>
-                    <th>Test Name</th>
-                    <th>Quantity</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody *ngFor="let test of filterMedicalTests(); index as i">
-                  <tr>
-                    <td>
-                      <div *ngIf="!isEditMode(test); else testsInput">
-                        {{test.name}}
-                      </div>
-                      <ng-template #testsInput>
-                        <app-ng-select [id]="'ngSelectTests'" [name]="'ngSelectTests'" [items]="(medicalTests$ | async)"
-                          [isLoading]="isLoading" (searching)="getMedicalTests($event)"
-                          (onSelecting)="getSelectedService($event)">
-                        </app-ng-select>
-                      </ng-template>
-                    </td>
-                    <td>
-                      <div *ngIf="!isEditMode(test); else scanQuantityInput">
-                        {{test.quantity}}
-                      </div>
-                      <ng-template #scanQuantityInput>
-                        <input type="text" class="form-control form-control-sm" id="qty" name="qty"
-                          [(ngModel)]="selectedService.quantity">
-                      </ng-template>
-                    </td>
-                    <td>
-                      <div class="text-center">
-                        <i *ngIf="isEditMode(test);else deleteIcon" title="save"
-                          class="bi bi-check-lg btn btn-outline-success btn-sm border-0" (click)="saveItem(test)"></i>
-                        <ng-template #deleteIcon>
-                          <i title="delete" class="bi bi-trash btn btn-outline-danger btn-sm border-0"
-                            (click)="deleteItem(test)"></i>
-                        </ng-template>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div>
-            <button class="btn btn-primary" type="submit">Submit</button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
+
     </div>
+
     <div *ngIf="photo" class="col-md-3">
-      <img class="img-fluid img-thumbnail" [src]="envUrl + '/' + photo?.serverPath">
+      <div class="row">
+        <div class="col mt-5">
+          <img class="img-fluid img-thumbnail zoom" [src]="envUrl + '/' + photo?.serverPath">
+        </div>
+      </div>
+
     </div>
+
   </div>
 </div>

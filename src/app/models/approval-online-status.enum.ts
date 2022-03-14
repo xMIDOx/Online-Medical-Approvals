@@ -4,5 +4,6 @@ export enum ApprovalOnlineStatus {
   accepted = 2,
   rejected = 3,
   dispensed = 4,
-  canceled = 5
+  canceled = 5,
+  posted = 1005,
 }

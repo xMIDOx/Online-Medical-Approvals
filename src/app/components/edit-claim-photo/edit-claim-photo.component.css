@@ -1,0 +1,14 @@
+.sticky-offset {
+  top: 56px;
+}
+
+.zoom {
+  transition: transform 0.3s ease;
+}
+
+.zoom:hover {
+  -ms-transform: scale(2); /* IE 9 */
+  -webkit-transform: scale(2); /* Safari 3-8 */
+  transform: scale(2);
+  margin-left: -120px;
+}

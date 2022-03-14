@@ -14,8 +14,8 @@ export class ClaimPhotoService {
 
   constructor(private http: GenericCRUDService) { }
 
-  public getClaimsPhotos(): Observable<Object> {
-    return this.http.Get(this.baseRoute + 'getPhotos');
+  public getClaimsPhotos(statusId: number): Observable<Object> {
+    return this.http.Get(this.baseRoute + 'getPhotos?statusId=' + statusId);
   }
 
   public getClaimPhoto(id: number): Observable<Object> {

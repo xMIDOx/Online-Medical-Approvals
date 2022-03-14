@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ApprovalOnlineStatus } from 'src/app/models/approval-online-status.enum';
 
 import { environment } from './../../../environments/environment';
 import { ClaimPhotoService } from './../../services/claim-photo.service';
@@ -14,7 +15,7 @@ export class ClaimPhotoComponent implements OnInit {
   constructor(private claimPhotoService: ClaimPhotoService) {}
 
   ngOnInit(): void {
-    this.claimPhotoService.getClaimsPhotos().subscribe((res) => {
+    this.claimPhotoService.getClaimsPhotos(ApprovalOnlineStatus.pending).subscribe((res) => {
       this.photos = res;
       console.log(res);
     });

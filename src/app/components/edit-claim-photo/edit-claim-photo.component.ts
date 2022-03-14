@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { Medicine } from 'src/app/models/medicine';
 import { ServiceTypes } from 'src/app/models/service-type.enum';
 
 import { PhotoService } from '../../models/photo-Service';
@@ -32,10 +31,11 @@ export class EditClaimPhotoComponent implements OnInit {
   public photoServices: PhotoService[] = [];
   public selectedService = <PhotoService>{};
   public isActiveRow = false;
-  public activeRowIndex = -1 ;
+  public activeRowIndex = -1;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private claimPhotoService: ClaimPhotoService,
     private onlineLookups: OnlineLookupsService
   ) {}
@@ -45,19 +45,23 @@ export class EditClaimPhotoComponent implements OnInit {
 
     if (this.photoId) {
       this.claimPhotoService
-      .getClaimPhoto(this.photoId)
-      .subscribe((res) => (this.photo = res));
+        .getClaimPhoto(this.photoId)
+        .subscribe((res) => (this.photo = res));
     }
   }
 
   public onSubmit(claimForm: NgForm) {
-
     this.claimPhoto.claimPhotoDetails = this.photoServices;
     this.claimPhoto.clientId = this.photo.clientId;
     this.claimPhoto.onlineStatusId = 1005;
 
-    this.claimPhotoService.updateClaimPhoto(this.photoId, this.claimPhoto)
-    .subscribe(res => console.log(res));
+    this.claimPhotoService
+      .updateClaimPhoto(this.photoId, this.claimPhoto)
+      .subscribe((res) => {
+        claimForm.resetForm();
+        this.resetObj(this.claimPhoto);
+        this.router.navigate(['/claim-photo']);
+      });
   }
 
   public getICDCodes(searchTerm: string) {
@@ -147,15 +151,21 @@ export class EditClaimPhotoComponent implements OnInit {
   }
 
   public filterScans(): PhotoService[] {
-    return this.photoServices.filter(s => s.serviceTypeId == ServiceTypes.Scan);
+    return this.photoServices.filter(
+      (s) => s.serviceTypeId == ServiceTypes.Scan
+    );
   }
 
   public filterMedications(): PhotoService[] {
-    return this.photoServices.filter(s => s.serviceTypeId == ServiceTypes.Medication);
+    return this.photoServices.filter(
+      (s) => s.serviceTypeId == ServiceTypes.Medication
+    );
   }
 
   public filterMedicalTests(): PhotoService[] {
-    return this.photoServices.filter(s => s.serviceTypeId == ServiceTypes.Lab);
+    return this.photoServices.filter(
+      (s) => s.serviceTypeId == ServiceTypes.Lab
+    );
   }
 
   private resetObj(obj: any) {
