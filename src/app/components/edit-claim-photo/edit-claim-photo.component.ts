@@ -81,7 +81,7 @@ export class EditClaimPhotoComponent implements OnInit {
     this.queryObj.searchTerm = searchTerm;
     this.isLoading = true;
 
-    this.medications$ = this.onlineLookups
+     this.medications$ = this.onlineLookups
       .getMedications(this.queryObj)
       .pipe(tap(() => (this.isLoading = false)));
   }
@@ -104,8 +104,9 @@ export class EditClaimPhotoComponent implements OnInit {
       .pipe(tap(() => (this.isLoading = false)));
   }
 
-  public getSelectedService(service: PhotoService) {
+  public getSelectedService(service: any) {
     this.selectedService = service;
+    this.selectedService.serviceName = service.name;
   }
 
   public addNewMedicine() {

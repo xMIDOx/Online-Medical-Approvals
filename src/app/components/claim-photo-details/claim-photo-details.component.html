@@ -1,0 +1,60 @@
+<div *ngIf="(claimDetails$ | async) as claimPhoto" class="container-fluid">
+  <span class="badge rounded-pill bg-warning mb-3 fs-5 start">Photo Master</span>
+  <div class="row mb-3">
+    <div class="col">
+      <table class="table table-striped table-hover table-bordered">
+        <thead>
+          <tr>
+            <th>Provider</th>
+            <th>Client</th>
+            <th>User Name</th>
+            <th>Stamp Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{claimPhoto.providerName}}</td>
+            <td>{{claimPhoto.clientName}}</td>
+            <td>{{claimPhoto.userName}}</td>
+            <td>{{claimPhoto.stampDate | date}}</td>
+            <td>{{claimPhoto.onlineStatusName}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <span class="badge rounded-pill bg-warning mb-3 fs-5 start">Photo Details</span>
+  <div class="row mb-3">
+    <div class="col">
+      <table class="table table-striped table-hover table-bordered">
+        <thead>
+          <tr>
+            <th>Service Name</th>
+            <th>Service Type</th>
+            <th>Service Quantity</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let d of claimPhoto.claimPhotoDetails">
+          <tr>
+            <td>{{d.serviceName}}</td>
+            <td>{{d.typeName}}</td>
+            <td>{{d.quantity}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <div class="d-grid gap-1 d-md-flex justify-content-md-center">
+        <button class="btn btn-sm btn-success me-md-2 col-md-1" type="button" (click)="onClick(onlineStatus.accepted)">Accept</button>
+        <button class="btn btn-sm btn-danger col-md-1" type="button" (click)="onClick(onlineStatus.rejected)">Reject</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>

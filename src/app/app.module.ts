@@ -36,6 +36,8 @@ import { LoadingSpinner } from './models/loading-spinner.pipe';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { ClaimPhotoComponent } from './components/claim-photo/claim-photo.component';
 import { EditClaimPhotoComponent } from './components/edit-claim-photo/edit-claim-photo.component';
+import { ClaimPhotoListComponent } from './components/claim-photo-list/claim-photo-list.component';
+import { ClaimPhotoDetailsComponent } from './components/claim-photo-details/claim-photo-details.component';
 
 
 @NgModule({
@@ -63,6 +65,8 @@ import { EditClaimPhotoComponent } from './components/edit-claim-photo/edit-clai
     MaxApprovalAmtDirective,
     ClaimPhotoComponent,
     EditClaimPhotoComponent,
+    ClaimPhotoListComponent,
+    ClaimPhotoDetailsComponent,
   ],
   imports: [
     BrowserModule,

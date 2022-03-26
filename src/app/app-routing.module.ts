@@ -5,6 +5,8 @@ import { ApprovalPrintTemplateComponent } from './components/approval-print-temp
 import { CreateApprovalComponent } from './components/approval/create-approval/create-approval.component';
 import { LogInComponent } from './components/auth/log-in/log-in.component';
 import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
+import { ClaimPhotoDetailsComponent } from './components/claim-photo-details/claim-photo-details.component';
+import { ClaimPhotoListComponent } from './components/claim-photo-list/claim-photo-list.component';
 import { ClaimPhotoComponent } from './components/claim-photo/claim-photo.component';
 import {
   PendingApprovalDetailsComponent,
@@ -29,6 +31,11 @@ const routes: Routes = [
   {
     path: 'claim-photo',
     component: ClaimPhotoComponent,
+  },
+
+  {
+    path: 'claim-photo-details/:id',
+    component: ClaimPhotoDetailsComponent,
   },
 
   {
@@ -67,6 +74,7 @@ const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [AuthGuard],
+    children: [{ path: 'claims/posted', component: ClaimPhotoListComponent }],
   },
 
   {

@@ -24,14 +24,13 @@ export class OnlineLookupsService {
       .pipe(map((res) => res as KeyValue));
   }
 
-  public getMedications(queryObj: QueryObject): Observable<KeyValue> {
+  public getMedications(queryObj: QueryObject): Observable<object> {
     return this.httpRepo
       .Get(
         this.lookupsEndpoint +
           'GetMedications?' +
           this.httpRepo.toQueryString(queryObj)
-      )
-      .pipe(map((res) => res as KeyValue));
+      );
   }
 
   public GetMedicalServices(queryObj: QueryObject): Observable<KeyValue> {

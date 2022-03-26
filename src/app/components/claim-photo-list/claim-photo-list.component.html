@@ -1,0 +1,38 @@
+<div class="row" *ngIf="(claimPhotos$ | async) as claims">
+  <div *ngIf="claims.length != 0; else noData" class="col">
+    <table datatable [dtOptions]="dtOptions" class="table table-striped table-hover table-bordered">
+      <thead>
+        <tr>
+          <th>Provider</th>
+          <th>Client</th>
+          <th>User Name</th>
+          <th>Stamp Date</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let c of claims">
+        <tr>
+          <td>{{c.providerName}}</td>
+          <td>{{c.clientName}}</td>
+          <td>{{c.userName}}</td>
+          <td>{{c.stampDate | date}}</td>
+          <td>{{c.onlineStatusName}}</td>
+          <td>
+            <a [routerLink]="['/claim-photo-details', c.id]" class="link-success">Details</a>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot *ngIf="claims.length == 0">
+        <tr>
+          <td colspan="6" class="text-center">No data found.</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <ng-template #noData>
+    <div class="container d-flex justify-content-center align-items-center">
+      <p class="fw-bold text-primary fs-5">No Data Found</p>
+    </div>
+  </ng-template>
+</div>

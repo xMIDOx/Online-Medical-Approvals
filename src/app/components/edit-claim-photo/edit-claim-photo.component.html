@@ -90,7 +90,7 @@
                         <tr>
                           <td class="col">
                             <div *ngIf="!isEditMode(medicine); else medicationsInput">
-                              {{medicine.name}}
+                              {{medicine.serviceName}}
                             </div>
                             <ng-template #medicationsInput>
                               <app-ng-select [id]="'ngSelectMedications'" [name]="'ngSelectMedications'"
@@ -149,7 +149,7 @@
                         <tr>
                           <td class="col">
                             <div *ngIf="!isEditMode(scan); else scansInput">
-                              {{scan.name}}
+                              {{scan.serviceName}}
                             </div>
                             <ng-template #scansInput>
                               <app-ng-select [id]="'ngSelectScans'" [name]="'ngSelectScans'"
@@ -209,7 +209,7 @@
                         <tr>
                           <td class="col">
                             <div *ngIf="!isEditMode(test); else testsInput">
-                              {{test.name}}
+                              {{test.serviceName}}
                             </div>
                             <ng-template #testsInput>
                               <app-ng-select [id]="'ngSelectTests'" [name]="'ngSelectTests'"
