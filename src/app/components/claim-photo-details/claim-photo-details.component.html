@@ -50,8 +50,13 @@
   <div class="row">
     <div class="col">
       <div class="d-grid gap-1 d-md-flex justify-content-md-center">
-        <button class="btn btn-sm btn-success me-md-2 col-md-1" type="button" (click)="onClick(onlineStatus.accepted)">Accept</button>
-        <button class="btn btn-sm btn-danger col-md-1" type="button" (click)="onClick(onlineStatus.rejected)">Reject</button>
+        <button class="btn btn-sm btn-success me-md-2 col-md-1" type="button"
+          (click)="onClick(onlineStatus.accepted)">Accept</button>
+        <button class="btn btn-sm btn-danger col-md-1" type="button"
+          (click)="onClick(onlineStatus.rejected)">Reject</button>
+        <button type="button" class="btn btn-success col-md-1 end mb-3" (click)="print()">
+          <i class="bi bi-printer"></i> Print
+        </button>
       </div>
     </div>
 

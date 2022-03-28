@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -18,8 +18,10 @@ export class PrintService {
   }
 
   public onDataReady(): void {
-    window.print();
-    this.isPrinting = false;
-    this.router.navigate([{ outlets: { print: null } }]);
+    setTimeout(() => {
+      window.print();
+      this.isPrinting = false;
+      this.router.navigate([{ outlets: { print: null } }]);
+    });
   }
 }

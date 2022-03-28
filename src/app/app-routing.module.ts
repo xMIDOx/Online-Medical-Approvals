@@ -8,6 +8,7 @@ import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 import { ClaimPhotoDetailsComponent } from './components/claim-photo-details/claim-photo-details.component';
 import { ClaimPhotoListComponent } from './components/claim-photo-list/claim-photo-list.component';
 import { ClaimPhotoComponent } from './components/claim-photo/claim-photo.component';
+import { ClaimPrintTemplateComponent } from './components/claim-print-template/claim-print-template.component';
 import {
   PendingApprovalDetailsComponent,
 } from './components/cmc/pending-approval-details/pending-approval-details.component';
@@ -67,7 +68,13 @@ const routes: Routes = [
     component: PrintLayoutComponent,
     children: [
       { path: 'approval/:id', component: ApprovalPrintTemplateComponent },
+      { path: 'claim/:id', component: ClaimPrintTemplateComponent }
     ],
+  },
+
+  {
+    path: 'test/:id',
+    component: ClaimPrintTemplateComponent
   },
 
   {

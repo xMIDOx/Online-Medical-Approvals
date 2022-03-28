@@ -1,0 +1,54 @@
+<div *ngIf="claimPhoto != null">
+
+  <div class="approval row fs-5 fw-bold text-center mb-2 mt-0">
+    <span>Claim</span>
+  </div>
+
+  <div class="row">
+    <table class="table tables-responsive table-bordered table-sm">
+      <thead>
+        <tr>
+          <th>Provider Name</th>
+          <td>{{claimPhoto.providerName}}</td>
+          <th>Stamp Date</th>
+          <td>{{claimPhoto.stampDate | date}}</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Client Name</th>
+          <td>{{claimPhoto.clientName}}</td>
+          <th>User Name</th>
+          <td>{{claimPhoto.userName}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="row">
+    <table class="table table-responsive table-bordered">
+      <thead>
+        <tr>
+          <th>Service Name</th>
+          <th>Quntity</th>
+          <th>Service Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of claimPhoto.claimPhotoDetails">
+          <td>{{item.serviceName}}</td>
+          <td>{{item.quantity}}</td>
+          <td>{{item.typeName}}</td>
+        </tr>
+        <tr>
+          <th>Notes</th>
+          <td colspan="2"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- <img src="assets/images/Signature.ico" class="img-fluid col-md-2 mx-auto d-block mb-3" alt="Medi Gold Signature"
+  (load)=isLoaded($event)> -->
+
+</div>

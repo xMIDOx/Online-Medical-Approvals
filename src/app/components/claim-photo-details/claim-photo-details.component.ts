@@ -5,6 +5,7 @@ import { ApprovalOnlineStatus } from 'src/app/models/approval-online-status.enum
 
 import { ClaimPhoto } from './../../models/claim-photo.model';
 import { ClaimPhotoService } from './../../services/claim-photo.service';
+import { PrintService } from './../../services/print.service';
 
 @Component({
   selector: 'app-claim-photo-details',
@@ -19,7 +20,8 @@ export class ClaimPhotoDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private claimPhotoService: ClaimPhotoService
+    private claimPhotoService: ClaimPhotoService,
+    private printService: PrintService
   ) {}
 
   ngOnInit(): void {
@@ -35,6 +37,10 @@ export class ClaimPhotoDetailsComponent implements OnInit {
           queryParams: { statusId: this.onlineStatus.posted },
         });
       });
+  }
+
+  public print() {
+    this.printService.printDocument('claim', this.claimId);
   }
 
   private getClaimDetails(): void {
