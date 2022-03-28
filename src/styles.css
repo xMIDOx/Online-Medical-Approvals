@@ -18,14 +18,22 @@
 }
 
 @media print {
-  /* app-root > * { display: none; } */
-  app-root app-navbar {
-    display: none;
-  }
-  app-root app-pending-approval-details {
-    display: none;
-  }
+  app-root > * { display: none; }
+
   app-root app-print-layout {
     display: block;
   }
+
+  app-root app-navbar {
+    display: none;
+  }
+
+  app-root app-pending-approval-details {
+    display: none;
+  }
+
+  app-root app-claim-photo-details {
+    display: none;
+  }
+
 }
