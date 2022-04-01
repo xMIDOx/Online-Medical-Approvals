@@ -14,6 +14,7 @@ import {
 } from './components/cmc/pending-approval-details/pending-approval-details.component';
 import { PendingApprovalsListComponent } from './components/cmc/pending-approvals-list/pending-approvals-list.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { EPrescriptionFormComponent } from './components/e-prescription-form/e-prescription-form.component';
 import { EditClaimPhotoComponent } from './components/edit-claim-photo/edit-claim-photo.component';
 import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 import { HomeComponent } from './components/home/home.component';
@@ -21,6 +22,7 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PrintLayoutComponent } from './components/print-layout/print-layout.component';
 import { AuthGuard } from './models/auth.guard';
 import { Roles } from './models/user-roles.enum';
+
 
 const routes: Routes = [
   {
@@ -32,6 +34,11 @@ const routes: Routes = [
   {
     path: 'claim-photo',
     component: ClaimPhotoComponent,
+  },
+
+  {
+    path: 'e-prescription',
+    component: EPrescriptionFormComponent,
   },
 
   {
@@ -68,13 +75,13 @@ const routes: Routes = [
     component: PrintLayoutComponent,
     children: [
       { path: 'approval/:id', component: ApprovalPrintTemplateComponent },
-      { path: 'claim/:id', component: ClaimPrintTemplateComponent }
+      { path: 'claim/:id', component: ClaimPrintTemplateComponent },
     ],
   },
 
   {
     path: 'test/:id',
-    component: ClaimPrintTemplateComponent
+    component: ClaimPrintTemplateComponent,
   },
 
   {

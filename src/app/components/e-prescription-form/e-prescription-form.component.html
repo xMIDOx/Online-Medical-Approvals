@@ -1,0 +1,37 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <form #ticketFrom="ngForm" (submit)="submitTicket(ticketFrom)" class="col-md-6 mt-2">
+      <div class="mb-3 text-center">
+        <span class="text-warning fst-italic fw-bolder fs-4">New Ticket</span>
+      </div>
+      <div class="mb-2">
+        <label for="doctors" class="form-label">Doctor Name</label>
+        <select id="doctors" name="doctors" class="form-select" [(ngModel)]="adminEPrescription.doctorId">
+          <option selected>Choose a Doctor</option>
+          <option value="1">Doctor 1</option>
+          <option value="2">Doctor 2</option>
+          <option value="3">Doctor 3</option>
+        </select>
+      </div>
+      <div class="mb-2">
+        <label for="Name" class="form-label">Patient Name</label>
+        <input type="text" id="Name" name="Name" class="form-control" [(ngModel)]="adminEPrescription.memberName">
+      </div>
+      <div class="mb-2">
+        <label for="phone" class="form-label">Phone Number</label>
+        <input type="text" id="phone" name="phone" class="form-control" [(ngModel)]="adminEPrescription.phoneNumber">
+      </div>
+      <div class="mb-2">
+        <label for="GRPNo" class="form-label">Policy Number </label>
+        <input type="text" id="GRPNo" name="GRPNo" class="form-control" [(ngModel)]="adminEPrescription.policyNumber">
+      </div>
+      <div class="mb-3">
+        <label for="CRTNo" class="form-label">Card Number</label>
+        <input type="text" id="CRTNo" name="CRTNo" class="form-control" [(ngModel)]="adminEPrescription.cardNumber">
+      </div>
+      <div class="mb-2">
+        <button type="submit" class="btn btn-success w-100">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>

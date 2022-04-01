@@ -39,6 +39,7 @@ import { EditClaimPhotoComponent } from './components/edit-claim-photo/edit-clai
 import { ClaimPhotoListComponent } from './components/claim-photo-list/claim-photo-list.component';
 import { ClaimPhotoDetailsComponent } from './components/claim-photo-details/claim-photo-details.component';
 import { ClaimPrintTemplateComponent } from './components/claim-print-template/claim-print-template.component';
+import { EPrescriptionFormComponent } from './components/e-prescription-form/e-prescription-form.component';
 
 
 @NgModule({
@@ -69,6 +70,7 @@ import { ClaimPrintTemplateComponent } from './components/claim-print-template/c
     ClaimPhotoListComponent,
     ClaimPhotoDetailsComponent,
     ClaimPrintTemplateComponent,
+    EPrescriptionFormComponent,
   ],
   imports: [
     BrowserModule,
