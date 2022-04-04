@@ -8,7 +8,9 @@ export interface ClaimPhoto {
   userName: string;
   serverPath: string;
   stampDate: Date;
-  entryType: string
+  entryType: string;
+  speciality: string;
+  entryUserName:  string;
   claimPhotoDetails: PhotoService[];
 
 }
