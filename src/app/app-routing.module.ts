@@ -20,9 +20,9 @@ import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 import { HomeComponent } from './components/home/home.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PrintLayoutComponent } from './components/print-layout/print-layout.component';
+import { TicketsListComponent } from './components/tickets-list/tickets-list.component';
 import { AuthGuard } from './models/auth.guard';
 import { Roles } from './models/user-roles.enum';
-
 
 const routes: Routes = [
   {
@@ -39,6 +39,11 @@ const routes: Routes = [
   {
     path: 'e-prescription',
     component: EPrescriptionFormComponent,
+  },
+
+  {
+    path: 'pending-tickets',
+    component: TicketsListComponent,
   },
 
   {

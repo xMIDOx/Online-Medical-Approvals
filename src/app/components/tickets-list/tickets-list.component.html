@@ -1,5 +1,5 @@
-<div class="row" *ngIf="(claimPhotos$ | async) as claims">
-  <div *ngIf="claims.length != 0; else noData" class="col">
+<div class="row" *ngIf="(tickets$ | async) as tickets">
+  <div *ngIf="tickets.length != 0; else noData" class="col">
     <table datatable [dtOptions]="dtOptions" class="table table-striped table-hover table-bordered">
       <thead>
         <tr>
@@ -8,11 +8,11 @@
           <th>User Name</th>
           <th>Stamp Date</th>
           <th>Status</th>
-          <th>Entry Type</th>
+          <th>Type</th>
           <th></th>
         </tr>
       </thead>
-      <tbody *ngFor="let c of claims">
+      <tbody *ngFor="let c of tickets">
         <tr>
           <td>{{c.providerName}}</td>
           <td>{{c.clientName}}</td>
@@ -21,11 +21,11 @@
           <td>{{c.onlineStatusName}}</td>
           <td>{{c.entryType}}</td>
           <td>
-            <a [routerLink]="['/claim-photo-details', c.id]" class="link-success">Details</a>
+            <a [routerLink]="['/Edit-claim-photo', c.id]" class="link-success">Edit</a>
           </td>
         </tr>
       </tbody>
-      <tfoot *ngIf="claims.length == 0">
+      <tfoot *ngIf="tickets.length == 0">
         <tr>
           <td colspan="6" class="text-center">No data found.</td>
         </tr>

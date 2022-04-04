@@ -15,18 +15,19 @@ export class ClaimPhotoListComponent implements OnInit {
   public claimPhotos$ = new Observable<ClaimPhoto[]>();
   public dtOptions: DataTables.Settings = {};
 
-  constructor(private claimPhotoService: ClaimPhotoService, private route: ActivatedRoute) {}
+  constructor(
+    private claimPhotoService: ClaimPhotoService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    if (this.claimStatusId == -1) {
+    if (this.claimStatusId == -1)
       this.claimStatusId = this.route.snapshot.queryParams.statusId;
-    }
 
     this.getClaims();
   }
 
   private getClaims() {
-    this.claimPhotos$ = this.claimPhotoService.getClaimsPhotos();
+    this.claimPhotos$ = this.claimPhotoService.getClaimsPhotos(this.claimStatusId);
   }
-
 }

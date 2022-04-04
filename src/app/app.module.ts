@@ -40,6 +40,7 @@ import { ClaimPhotoListComponent } from './components/claim-photo-list/claim-pho
 import { ClaimPhotoDetailsComponent } from './components/claim-photo-details/claim-photo-details.component';
 import { ClaimPrintTemplateComponent } from './components/claim-print-template/claim-print-template.component';
 import { EPrescriptionFormComponent } from './components/e-prescription-form/e-prescription-form.component';
+import { TicketsListComponent } from './components/tickets-list/tickets-list.component';
 
 
 @NgModule({
@@ -71,6 +72,7 @@ import { EPrescriptionFormComponent } from './components/e-prescription-form/e-p
     ClaimPhotoDetailsComponent,
     ClaimPrintTemplateComponent,
     EPrescriptionFormComponent,
+    TicketsListComponent,
   ],
   imports: [
     BrowserModule,

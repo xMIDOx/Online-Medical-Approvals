@@ -7,7 +7,6 @@ import { ClaimPhoto } from './../models/claim-photo.model';
 import { EditClaimPhoto } from './../models/edit-claim-photo';
 import { GenericCRUDService } from './generic-crud.service';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -16,12 +15,20 @@ export class ClaimPhotoService {
 
   constructor(private http: GenericCRUDService) {}
 
-  public getClaimsPhotos(statusId?: number): Observable<ClaimPhoto[]> {
+  public getClaimsPhotos(
+    statusId?: number,
+    entryTypeId?: number
+  ): Observable<ClaimPhoto[]> {
     if (!statusId) statusId = 0;
 
-    console.log('statusId', statusId);
     return this.http
-      .Get(this.baseRoute + 'getPhotos?statusId=' + statusId)
+      .Get(
+        this.baseRoute +
+          'getPhotos?statusId=' +
+          statusId +
+          '&entryTypeId=' +
+          entryTypeId
+      )
       .pipe(map((res) => res as ClaimPhoto[]));
   }
 

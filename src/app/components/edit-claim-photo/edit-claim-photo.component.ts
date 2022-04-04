@@ -46,7 +46,10 @@ export class EditClaimPhotoComponent implements OnInit {
     if (this.photoId) {
       this.claimPhotoService
         .getClaimPhoto(this.photoId)
-        .subscribe((res) => (this.photo = res));
+        .subscribe((res) =>  {
+          (this.photo = res);
+          console.log(this.photo);
+        });
     }
   }
 
