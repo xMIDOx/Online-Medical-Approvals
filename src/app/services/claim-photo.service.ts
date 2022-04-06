@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { tick } from '@angular/core/testing';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AdminEPrescription } from 'src/app/models/admin-e-prescription.model';
@@ -46,6 +47,10 @@ export class ClaimPhotoService {
       this.baseRoute + 'EditClaimPhoto/' + id,
       claimPhoto
     );
+  }
+
+  public updateTicket(id: number, ticket: EditClaimPhoto): Observable<Object> {
+    return this.http.Update(this.baseRoute + 'EditTicket/' + id, ticket);
   }
 
   public updateStatus(id: number, statusId: number): Observable<object> {

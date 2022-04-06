@@ -6,7 +6,7 @@
       <div class="row mb-3">
         <div class="col">
           <table class="table table-sm caption-top table-bordered">
-            <caption class="text-warning fw-bold fs-4">Photo Info</caption>
+            <caption class="text-warning fw-bold fs-4">Claim Info</caption>
             <thead class="table-secondary">
               <tr>
                 <th>Provider</th>
@@ -34,18 +34,30 @@
             <div class="row mb-3">
               <div class="col-md-6">
                 <label for="name" class="form-label">Member Name</label>
-                <input type="text" class="form-control form-control-sm" name="name" id="name"
-                  [(ngModel)]="claimPhoto.memberName">
+                <input *ngIf="!isTicket; else memberNameTxt" type="text" class="form-control form-control-sm"
+                  name="name" id="name" [(ngModel)]="claimPhoto.memberName">
+                <ng-template #memberNameTxt>
+                  <input type="text" type="text" class="form-control form-control-sm" value="{{photo.memberName}}"
+                    readonly>
+                </ng-template>
               </div>
               <div class="col-md-3">
                 <label for="claimFormNo" class="form-label">Claim Form Number</label>
-                <input id="claimFormNo" name="claimFormNo" type="text" class="form-control form-control-sm"
-                  [(ngModel)]="claimPhoto.claimFormNumber">
+                <input *ngIf="!isTicket; else claimFormTxt" id="claimFormNo" name="claimFormNo" type="text"
+                  class="form-control form-control-sm" [(ngModel)]="claimPhoto.claimFormNumber">
+                <ng-template #claimFormTxt>
+                  <input type="text" type="text" class="form-control form-control-sm" value="{{photo.claimFormNumber}}"
+                    readonly>
+                </ng-template>
               </div>
               <div class="col-md-3">
                 <label for="procedureDate" class="form-label">Procedure Date</label>
-                <input id="procedureDate" name="approvalDate" type="date" class="form-control form-control-sm"
-                  [(ngModel)]="claimPhoto.procedureDate">
+                <input *ngIf="!isTicket; else stampDateTxt" id="procedureDate" name="approvalDate" type="date"
+                  class="form-control form-control-sm" [(ngModel)]="claimPhoto.procedureDate">
+                <ng-template #stampDateTxt>
+                  <input type="text" type="text" class="form-control form-control-sm" value="{{photo.stampDate | date}}"
+                    readonly>
+                </ng-template>
               </div>
             </div>
             <div class="row mb-3">
@@ -57,13 +69,21 @@
               </div>
               <div class="col-md-3">
                 <label for="cardNumber" class="form-label">Card Number</label>
-                <input type="text" class="form-control form-control-sm" id="cardNumber" name="cardNumber"
-                  [(ngModel)]="claimPhoto.cardNumber">
+                <input *ngIf="!isTicket; else cardNumTxt" type="text" class="form-control form-control-sm"
+                  id="cardNumber" name="cardNumber" [(ngModel)]="claimPhoto.cardNumber">
+                <ng-template #cardNumTxt>
+                  <input type="text" type="text" class="form-control form-control-sm" value="{{photo.cardNumber}}"
+                    readonly>
+                </ng-template>
               </div>
               <div class="col-md-3">
                 <label for="PolicyNo" class="form-label">Policy Number</label>
-                <input id="PolicyNo" name="PolicyNo" type="text" class="form-control form-control-sm"
-                  [(ngModel)]="claimPhoto.policyNumber">
+                <input *ngIf="!isTicket; else polictNumTxt " id="PolicyNo" name="PolicyNo" type="text"
+                  class="form-control form-control-sm" [(ngModel)]="claimPhoto.policyNumber">
+                <ng-template #polictNumTxt>
+                  <input type="text" type="text" class="form-control form-control-sm" value="{{photo.policyNumber}}"
+                    readonly>
+                </ng-template>
               </div>
             </div>
             <!-- Photo Details -->
@@ -257,7 +277,7 @@
 
     </div>
 
-    <div *ngIf="photo?.serverPath" class="col-md-3">
+    <div *ngIf="photo?.serverPath && !isTicket" class="col-md-3">
       <div class="row">
         <div class="col mt-5">
           <img class="img-fluid img-thumbnail zoom" [src]="envUrl + '/' + photo?.serverPath">

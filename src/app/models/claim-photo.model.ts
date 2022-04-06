@@ -2,6 +2,8 @@ import { PhotoService } from './photo-Service';
 
 export interface ClaimPhoto {
   id: number;
+  clientId: number;
+  onlineEntryTypeId: number;
   providerName: string;
   clientName: string;
   onlineStatusName: string;
@@ -11,6 +13,9 @@ export interface ClaimPhoto {
   entryType: string;
   speciality: string;
   entryUserName:  string;
+  cardNumber: string;
+  claimFormNumber: string;
+  memberName: string;
+  policyNumber: string;
   claimPhotoDetails: PhotoService[];
-
 }
