@@ -1,8 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { AdminEPrescription } from 'src/app/models/admin-e-prescription.model';
+import { OnlineEntryType } from 'src/app/models/online-entry-type.enum';
+import { Roles } from 'src/app/models/user-roles.enum';
+import { AuthService } from 'src/app/services/auth.service';
 
+import { KeyValue } from './../../models/key-value.model';
+import { User } from './../../models/user.model';
 import { ClaimPhotoService } from './../../services/claim-photo.service';
+import { OnlineLookupsService } from './../../services/online-lookups.service';
 
 @Component({
   selector: 'app-e-prescription-form',
@@ -11,28 +19,50 @@ import { ClaimPhotoService } from './../../services/claim-photo.service';
 })
 export class EPrescriptionFormComponent implements OnInit {
   public adminEPrescription = <AdminEPrescription>{};
+  public doctors$ = new Observable<User[]>();
+  public clients$ = new Observable<KeyValue[]>();
+  private user = <User>{};
 
-  constructor(private claimPhotoService: ClaimPhotoService) {}
+  constructor(
+    private authService: AuthService,
+    private claimPhotoService: ClaimPhotoService,
+    private lookupService: OnlineLookupsService
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getUser();
+    this.getDoctors();
+  }
 
   public submitTicket(ticketFrom: NgForm): void {
     if (!ticketFrom.valid) return;
 
-    this.adminEPrescription.providerAdminId = "feac9c1d-1ca4-4544-adf3-d65c7a2bfe51"; // at login
-    this.adminEPrescription.clientId = 4; // at login
-    this.adminEPrescription.providerId = 2; // at login
-    this.adminEPrescription.doctorId = "ffa6a104-a86f-48e1-a48b-549c1e4b28d5"; // DDL
-    this.adminEPrescription.stampDate = new Date();
-    this.adminEPrescription.onlineEntryTypeId = 2;
-
     this.claimPhotoService
       .createTicket(this.adminEPrescription)
-      .subscribe((res) => {
-        console.log(res);
-        ticketFrom.resetForm();
-      });
+      .subscribe(() => ticketFrom.resetForm());
+  }
 
-    // ticketFrom.reset();
+  public getUser() {
+    this.authService
+      .getUser()
+      .pipe(take(1))
+      .subscribe((res) => {
+        this.user = res;
+        this.clients$ = this.lookupService.clientsByProviderId(res.providerId);
+        this.fetchTicketMeta();
+      });
+  }
+
+  private getDoctors() {
+    this.doctors$ = this.authService.getUsersByRoleId(
+      Roles.DoctorId.toString()
+    );
+  }
+
+  private fetchTicketMeta() {
+    this.adminEPrescription.onlineEntryTypeId = OnlineEntryType.Ticket;
+    this.adminEPrescription.providerId = this.user.providerId;
+    this.adminEPrescription.providerAdminId = this.user.id;
+    this.adminEPrescription.stampDate = new Date();
   }
 }

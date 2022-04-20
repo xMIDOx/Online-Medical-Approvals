@@ -8,26 +8,31 @@
         <label for="doctors" class="form-label">Doctor Name</label>
         <select id="doctors" name="doctors" class="form-select" [(ngModel)]="adminEPrescription.doctorId">
           <option selected>Choose a Doctor</option>
-          <option value="1">Doctor 1</option>
-          <option value="2">Doctor 2</option>
-          <option value="3">Doctor 3</option>
+          <option *ngFor="let d of (doctors$ | async)" [value]="d.id">{{d.userName}}</option>
         </select>
       </div>
       <div class="mb-2">
         <label for="Name" class="form-label">Patient Name</label>
         <input type="text" id="Name" name="Name" class="form-control" [(ngModel)]="adminEPrescription.memberName">
       </div>
-      <div class="mb-2">
-        <label for="phone" class="form-label">Phone Number</label>
-        <input type="text" id="phone" name="phone" class="form-control" [(ngModel)]="adminEPrescription.phoneNumber">
+      <div class="mb-3">
+        <label for="CRTNo" class="form-label">Card Number</label>
+        <input type="text" id="CRTNo" name="CRTNo" class="form-control" [(ngModel)]="adminEPrescription.cardNumber">
       </div>
       <div class="mb-2">
         <label for="GRPNo" class="form-label">Policy Number </label>
         <input type="text" id="GRPNo" name="GRPNo" class="form-control" [(ngModel)]="adminEPrescription.policyNumber">
       </div>
-      <div class="mb-3">
-        <label for="CRTNo" class="form-label">Card Number</label>
-        <input type="text" id="CRTNo" name="CRTNo" class="form-control" [(ngModel)]="adminEPrescription.cardNumber">
+      <div class="mb-2">
+        <label for="phone" class="form-label">Phone Number</label>
+        <input type="text" id="phone" name="phone" class="form-control" [(ngModel)]="adminEPrescription.phoneNumber">
+      </div>
+      <div class="mb-2">
+        <label for="client" class="form-label">Client Name</label>
+        <select id="client" name="client" class="form-select" [(ngModel)]="adminEPrescription.clientId">
+          <option selected>Choose a Client</option>
+          <option *ngFor="let c of (clients$ | async)" [value]="c.id">{{c.name}}</option>
+        </select>
       </div>
       <div class="mb-2">
         <button type="submit" class="btn btn-success w-100">Submit</button>

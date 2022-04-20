@@ -95,14 +95,18 @@ export class AuthService {
   }
 
   public getUser(): Observable<User> {
-    return this.http.Get('api/user/getUser').pipe(
-      map(res => res as User)
-    )
+    return this.http.Get('api/user/getUser').pipe(map((res) => res as User));
   }
 
   public getAuthProviderUser(): Observable<User> {
-    return this.http.Get('api/user/GetProviderUser').pipe(
-      map(res => res as User)
-    )
+    return this.http
+      .Get('api/user/GetProviderUser')
+      .pipe(map((res) => res as User));
+  }
+
+  public getUsersByRoleId(roleId: string): Observable<User[]> {
+    return this.http
+      .Get('api/user/GetUsersByRoleId?roleId=' + roleId)
+      .pipe(map((res) => res as User[]));
   }
 }

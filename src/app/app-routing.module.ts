@@ -32,33 +32,39 @@ const routes: Routes = [
   },
 
   {
+    path: 'log-in',
+    component: LogInComponent,
+  },
+
+  {
     path: 'claim-photo',
     component: ClaimPhotoComponent,
+    canActivate: [AuthGuard],
   },
 
   {
     path: 'e-prescription',
     component: EPrescriptionFormComponent,
+    canActivate: [AuthGuard],
+    data: { roles: [Roles.ProviderAdmin] },
   },
 
   {
     path: 'pending-tickets',
     component: TicketsListComponent,
+    canActivate: [AuthGuard],
   },
 
   {
     path: 'claim-photo-details/:id',
     component: ClaimPhotoDetailsComponent,
+    canActivate: [AuthGuard],
   },
 
   {
     path: 'Edit-claim-photo/:id',
     component: EditClaimPhotoComponent,
-  },
-
-  {
-    path: 'log-in',
-    component: LogInComponent,
+    canActivate: [AuthGuard],
   },
 
   {

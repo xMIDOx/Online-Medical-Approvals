@@ -7,6 +7,6 @@ export enum Roles {
   ProviderUser = 'ProviderUser',
   CMCDoctorId = 4,
   CMCDoctor = 'CMCDoctor',
-
-
+  Doctor = 'Doctor',
+  DoctorId = 5
 }
