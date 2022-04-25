@@ -46,7 +46,7 @@ const routes: Routes = [
     path: 'e-prescription',
     component: EPrescriptionFormComponent,
     canActivate: [AuthGuard],
-    data: { roles: [Roles.ProviderAdmin] },
+    data: { roles: [Roles.Receptionist] },
   },
 
   {

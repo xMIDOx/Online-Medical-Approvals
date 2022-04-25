@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
 import { KeyValue } from 'src/app/models/key-value.model';
 import { Provider } from 'src/app/models/provider.model';
 
@@ -12,6 +12,7 @@ import { User } from './../../../models/user.model';
 import { AuthService } from './../../../services/auth.service';
 import { LookupsService } from './../../../services/lookups.service';
 import { NotificationService } from './../../../services/notification.service';
+import { OnlineLookupsService } from './../../../services/online-lookups.service';
 import { UserRolesService } from './../../../services/user-roles.service';
 
 @Component({
@@ -24,9 +25,11 @@ export class SignUpComponent implements OnInit {
   public providers$ = new Observable<Object>();
   public branches$ = new Observable<Branch[]>();
   public provider$ = new Observable<Provider>();
+  public specialties$ = new Observable<KeyValue[]>();
   public branch = <Branch>{};
   public rolesEnum = Roles;
   public isLoading = false;
+  public ngLoading = false;
   public error: string = '';
   public userRegistration: Register = {
     email: '',
@@ -40,21 +43,26 @@ export class SignUpComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private userRolesService: UserRolesService,
-    private lookupService: LookupsService,
+    private viewlookupService: LookupsService,
+    private onLinelookupService: OnlineLookupsService,
     private notification: NotificationService
   ) {}
 
   ngOnInit(): void {
     this.getLoggedUser();
+    this.getSpecialties();
   }
 
   public signUp(form: NgForm) {
-    this.userRegistration.email = form.value.email;
-    this.userRegistration.password = form.value.password;
+    // this.userRegistration.email = form.value.email;
+    // this.userRegistration.password = form.value.password;
     this.userRegistration.confirmPassword = form.value.password;
 
     this.isLoading = true;
-    if ((this.userRegistration.providerId == 0) && (this.userRegistration.roles.includes(Roles.ProviderUser)))
+    if (
+      this.userRegistration.providerId == 0 &&
+      this.userRegistration.roles.includes(Roles.ProviderUser)
+    )
       this.notification.showError('The user has no assigned provider.');
     else this.registerUser(this.userRegistration);
     this.isLoading = false;
@@ -68,8 +76,11 @@ export class SignUpComponent implements OnInit {
       .getUser()
       .pipe(take(1))
       .subscribe((user: User) => {
-        if (user.providerId != 0) this.providerUserRegistration(user);
-        else this.roles$ = this.userRolesService.getRoles();
+        if (user.providerId != 0) {
+          this.userRegistration.providerId = user.providerId;
+          this.filterProviderAdminRoles();
+        }
+        else this.filterAdminRoles();
       });
   }
 
@@ -79,6 +90,25 @@ export class SignUpComponent implements OnInit {
       (err) => (this.error = err.error.message)
     );
   }
+
+  private filterAdminRoles() {
+    this.roles$ = this.userRolesService.getRoles().pipe(
+      map(roles => roles.filter(r => r.name === Roles.ProviderAdmin || r.name === Roles.CMCDoctor)));
+  }
+
+  private filterProviderAdminRoles() {
+    this.roles$ = this.userRolesService.getRoles().pipe(
+      map(roles => roles.filter(r => r.name === Roles.Doctor || r.name === Roles.Receptionist)));
+  }
+
+  public getSpecialties() {
+    this.specialties$ = this.onLinelookupService.getSpecialties();
+  }
+
+  public isSelectedRole(role: string): boolean {
+    return this.userRegistration.roles.includes(role);
+  }
+
 
   //#region >> Provider Admin Registration Logic
   public addOrRemoveRoles(roleName: string, $event: any) {
@@ -91,30 +121,29 @@ export class SignUpComponent implements OnInit {
 
   public fetchProviders(searchTerm: string) {
     this.queryObj.searchTerm = searchTerm;
-    this.providers$ = this.lookupService.getProviders(this.queryObj);
+    this.ngLoading = true;
+    // this.providers$ = this.lookupService.getProviders(this.queryObj);
+    this.providers$ = this.onLinelookupService
+      .getProviders(this.queryObj)
+      .pipe(tap(() => (this.ngLoading = false)));
   }
 
   public selectedProvider(item: KeyValue) {
     this.userRegistration.providerId = item.id;
   }
-
-  public isProviderSelected(): boolean {
-    return this.userRegistration.roles.includes(this.rolesEnum.ProviderAdmin);
-  }
   //#endregion
 
   //#region >> Provider User Registration Logic
+
   public OnBranchChange() {
     console.log(this.branch);
   }
 
   private providerUserRegistration(providerAdmin: User): void {
     this.userRegistration.providerId = providerAdmin.providerId;
-    this.userRegistration.roles.push(Roles.ProviderUser);
-    this.provider$ = this.lookupService.getProviderById(
-      providerAdmin.providerId
-    );
-    this.branches$ = this.lookupService.getBranches(providerAdmin.providerId);
+    //this.userRegistration.roles.push(Roles.ProviderUser);
+    //this.provider$ = this.viewlookupService.getProviderById(providerAdmin.providerId);
+    //this.branches$ = this.viewlookupService.getBranches(providerAdmin.providerId);
   }
   //#endregion
 }

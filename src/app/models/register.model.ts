@@ -3,5 +3,6 @@ export interface Register {
   password: string;
   confirmPassword : string;
   providerId: number;
+  specialtyId?: number;
   roles: string[];
 }

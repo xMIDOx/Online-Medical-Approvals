@@ -24,12 +24,14 @@
     <form class="col-md-6 mx-auto" #authForm="ngForm" (ngSubmit)="signUp(authForm)" *ngIf="!isLoading">
       <div class="col mb-3">
         <label for="email" class="form-label">Email</label>
-        <input type="text" id="email" name="email" class="form-control" ngModel required email>
+        <input type="text" id="email" name="email" [(ngModel)]="userRegistration.email" class="form-control" required
+          email>
       </div>
 
       <div class="col mb-3">
         <label for="password" class="form-label">Password</label>
-        <input type="password" id="password" name="password" class="form-control" ngModel required minlength="6">
+        <input type="password" id="password" name="password" class="form-control"
+          [(ngModel)]="userRegistration.password" required minlength=" 6">
       </div>
 
       <div class="col mb-3" *ngIf="(roles$ | async) as roles">
@@ -41,13 +43,22 @@
         </div>
       </div>
 
-      <div class="col mb-3" *ngIf="isProviderSelected()">
-        <label for="" class="form-label">Providers</label>
-        <app-ng-select [items]="(providers$ | async)" (searching)="fetchProviders($event)"
-          (onSelecting)="selectedProvider($event)"></app-ng-select>
+      <div class="col mb-3" *ngIf="isSelectedRole(rolesEnum.ProviderAdmin)">
+        <label for="ngProvider" class="form-label">Providers</label>
+        <app-ng-select [id]="'ngProvider'" [name]="'ngProvider'" [items]="(providers$ | async)"
+          (searching)="fetchProviders($event)" (onSelecting)="selectedProvider($event)" [isLoading]="ngLoading">
+        </app-ng-select>
       </div>
 
-      <div class="col mb-3" *ngIf="userRegistration.providerId">
+      <div class="col mb-3" *ngIf="isSelectedRole(rolesEnum.Doctor)">
+        <label for="specialty" class="form-label">Specialties</label>
+        <select id="specialty" name="specialty" class="form-select" [(ngModel)]="userRegistration.specialtyId">
+          <option selected>Choose a Specialty</option>
+          <option *ngFor="let s of (specialties$ | async)" [value]="s.id">{{s.name}}</option>
+        </select>
+      </div>
+
+      <!-- <div class="col mb-3" *ngIf="userRegistration.providerId">
         <label for="branches" class="col-md-2 col-form-label">Branches</label>
         <select class="form-select mt-1" id="branches" name="branches" [(ngModel)]="branch"
           (ngModelChange)="OnBranchChange()">
@@ -56,7 +67,7 @@
             {{b.address}}
           </option>
         </select>
-      </div>
+      </div> -->
 
       <div class="mb-3">
         <button type="submit" class="btn btn-success" [disabled]="!authForm.valid">Sign Up</button>

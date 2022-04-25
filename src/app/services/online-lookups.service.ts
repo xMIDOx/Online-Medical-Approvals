@@ -14,6 +14,22 @@ export class OnlineLookupsService {
 
   constructor(private httpRepo: GenericCRUDService) {}
 
+  public getSpecialties(): Observable<KeyValue[]> {
+    return this.httpRepo
+      .Get(this.lookupsEndpoint + 'GetSpecialties?')
+      .pipe(map((res) => res as KeyValue[]));
+  }
+
+  public getProviders(queryObj: QueryObject): Observable<KeyValue> {
+    return this.httpRepo
+      .Get(
+        this.lookupsEndpoint +
+          'getProviders?' +
+          this.httpRepo.toQueryString(queryObj)
+      )
+      .pipe(map((res) => res as KeyValue));
+  }
+
   public getICDCodes(queryObj: QueryObject): Observable<KeyValue> {
     return this.httpRepo
       .Get(
