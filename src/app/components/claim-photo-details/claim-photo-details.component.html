@@ -1,5 +1,7 @@
 <div *ngIf="(claimDetails$ | async) as claimPhoto" class="container-fluid">
+
   <span class="badge rounded-pill bg-warning mb-3 fs-5 start">Photo Master</span>
+
   <div class="row mb-3">
     <div class="col">
       <table class="table table-striped table-hover table-bordered">
@@ -26,6 +28,7 @@
   </div>
 
   <span class="badge rounded-pill bg-warning mb-3 fs-5 start">Photo Details</span>
+
   <div class="row mb-3">
     <div class="col">
       <table class="table table-striped table-hover table-bordered">
@@ -51,10 +54,10 @@
     <div class="col">
       <div class="d-grid gap-1 d-md-flex justify-content-md-center">
         <button class="btn btn-sm btn-success  col-md-1" type="button"
-          (click)="onClick(onlineStatus.accepted)">Accept</button>
-        <button class="btn btn-sm btn-danger col-md-1" type="button"
-          (click)="onClick(onlineStatus.rejected)">Reject</button>
-        <button type="button" class="btn btn-sm btn-warning col-md-1" (click)="print()">
+          (click)="onClick(EStatus.accepted)">Accept</button>
+        <button class="btn btn-sm btn-danger col-md-1" type="button" (click)="onClick(EStatus.rejected)">Reject</button>
+        <button *ngIf="claimPhoto.onlineStatusName === EStatus.Accepted" type="button"
+          class="btn btn-sm btn-warning col-md-1" (click)="print()">
           <i class="bi bi-printer"></i> Print
         </button>
       </div>

@@ -12,8 +12,8 @@
           <th></th>
         </tr>
       </thead>
-      <tbody *ngFor="let c of claims">
-        <tr>
+      <tbody >
+        <tr *ngFor="let c of claims">
           <td>{{c.providerName}}</td>
           <td>{{c.clientName}}</td>
           <td>{{c.userName}}</td>

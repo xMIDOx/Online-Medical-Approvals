@@ -15,13 +15,13 @@ import { PrintService } from './../../services/print.service';
 export class ClaimPhotoDetailsComponent implements OnInit {
   public claimId = 0;
   public claimDetails$ = new Observable<ClaimPhoto>();
-  public onlineStatus = ApprovalOnlineStatus;
+  public EStatus = ApprovalOnlineStatus;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
     private claimPhotoService: ClaimPhotoService,
-    private printService: PrintService
+    private printService: PrintService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -34,13 +34,17 @@ export class ClaimPhotoDetailsComponent implements OnInit {
       .updateStatus(this.claimId, statusId)
       .subscribe(() => {
         this.router.navigate(['/dashboard/claims/posted'], {
-          queryParams: { statusId: this.onlineStatus.posted },
+          queryParams: { statusId: this.EStatus.posted },
         });
       });
   }
 
   public print() {
     this.printService.printDocument('claim', this.claimId);
+  }
+
+  public isAllowedPrint(statusId: number ) {
+    return
   }
 
   private getClaimDetails(): void {

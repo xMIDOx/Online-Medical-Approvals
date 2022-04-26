@@ -11,11 +11,11 @@
           <th>Stamp Date</th>
           <th>Status</th>
           <th>Type</th>
-          <th></th>
+          <th *ngIf="isSelectedRole(ERoles.Doctor)"></th>
         </tr>
       </thead>
-      <tbody *ngFor="let c of tickets">
-        <tr>
+      <tbody>
+        <tr *ngFor="let c of tickets">
           <td>{{c.providerName}}</td>
           <td>{{c.clientName}}</td>
           <td>{{c.userName}}</td>
@@ -24,7 +24,7 @@
           <td>{{c.stampDate | date}}</td>
           <td>{{c.onlineStatusName}}</td>
           <td>{{c.entryType}}</td>
-          <td>
+          <td *ngIf="isSelectedRole(ERoles.Doctor)">
             <a [routerLink]="['/Edit-claim-photo', c.id]" class="link-success">Edit</a>
           </td>
         </tr>
