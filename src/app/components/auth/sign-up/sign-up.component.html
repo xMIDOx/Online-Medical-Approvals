@@ -43,14 +43,14 @@
         </div>
       </div>
 
-      <div class="col mb-3" *ngIf="isSelectedRole(rolesEnum.ProviderAdmin)">
+      <div class="col mb-3" *ngIf="isAnySelected(rolesWithProvierId) && isLoggedUserRole(rolesEnum.Admin)">
         <label for="ngProvider" class="form-label">Providers</label>
         <app-ng-select [id]="'ngProvider'" [name]="'ngProvider'" [items]="(providers$ | async)"
           (searching)="fetchProviders($event)" (onSelecting)="selectedProvider($event)" [isLoading]="ngLoading">
         </app-ng-select>
       </div>
 
-      <div class="col mb-3" *ngIf="isSelectedRole(rolesEnum.Doctor)">
+      <div class="col mb-3" *ngIf="isSelected(rolesEnum.Doctor)">
         <label for="specialty" class="form-label">Specialties</label>
         <select id="specialty" name="specialty" class="form-select" [(ngModel)]="userRegistration.specialtyId">
           <option selected>Choose a Specialty</option>

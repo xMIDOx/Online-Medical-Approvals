@@ -62,4 +62,10 @@ export class ClaimPhotoService {
   public createTicket(ticket: AdminEPrescription): Observable<Object> {
     return this.http.Create(this.baseRoute + 'AddTicket', ticket);
   }
+
+  public getDoctorTickets(doctorId: string): Observable<ClaimPhoto[]> {
+    return this.http
+      .Get(this.baseRoute + 'GetPendingDoctorTickets?doctorId=' + doctorId)
+      .pipe(map((res) => res as ClaimPhoto[]));
+  }
 }

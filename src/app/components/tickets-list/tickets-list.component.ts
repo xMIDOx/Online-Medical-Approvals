@@ -1,5 +1,6 @@
+import { Token } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { ApprovalOnlineStatus } from 'src/app/models/approval-online-status.enum';
 import { Roles } from 'src/app/models/user-roles.enum';
@@ -8,6 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ClaimPhoto } from './../../models/claim-photo.model';
 import { OnlineEntryType } from './../../models/online-entry-type.enum';
 import { UserToken } from './../../models/user-token.model';
+import { User } from './../../models/user.model';
 import { ClaimPhotoService } from './../../services/claim-photo.service';
 
 @Component({
@@ -31,11 +33,14 @@ export class TicketsListComponent implements OnInit {
   }
 
   public getUserTickets() {
-    this.tickets$ = this.authService.userToken$.pipe(
+    this.tickets$ = combineLatest([this.authService.userToken$,this.authService.getUser()])
+    .pipe(
       take(1),
-      switchMap((token: UserToken) => {
-        this.userToken = token;
-        return this.getTickets();
+      switchMap((combined: [UserToken, User]) => {
+        this.userToken = combined[0];
+        if (this.isSelectedRole(Roles.Doctor))
+          return this.claimPhotoService.getDoctorTickets(combined[1].id);
+        else return this.getTickets();
       })
     );
   }

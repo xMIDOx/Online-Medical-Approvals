@@ -31,6 +31,7 @@ export class SignUpComponent implements OnInit {
   public isLoading = false;
   public ngLoading = false;
   public error: string = '';
+  public rolesWithProvierId = [Roles.Doctor.toString(), Roles.Receptionist.toString(), Roles.ProviderAdmin.toString()];
   public userRegistration: Register = {
     email: '',
     password: '',
@@ -54,21 +55,36 @@ export class SignUpComponent implements OnInit {
   }
 
   public signUp(form: NgForm) {
-    // this.userRegistration.email = form.value.email;
-    // this.userRegistration.password = form.value.password;
     this.userRegistration.confirmPassword = form.value.password;
-
     this.isLoading = true;
-    if (
-      this.userRegistration.providerId == 0 &&
-      this.userRegistration.roles.includes(Roles.ProviderUser)
-    )
+
+    if (this.userRegistration.providerId == 0 && this.userRegistration.roles.includes(Roles.ProviderUser))
       this.notification.showError('The user has no assigned provider.');
     else this.registerUser(this.userRegistration);
-    this.isLoading = false;
 
+    this.isLoading = false;
     form.reset();
     this.userRegistration.roles = [];
+  }
+
+  public getSpecialties() {
+    this.specialties$ = this.onLinelookupService.getSpecialties();
+  }
+
+  public isSelected(role: string): boolean {
+    return this.userRegistration.roles.includes(role);
+  }
+
+  public isAnySelected(roles: string[]): boolean {
+    return this.userRegistration.roles.some(ur => roles.includes(ur));
+  }
+
+  public isLoggedUserRole(role: string): boolean {
+    let result = false;
+     this.authService.userToken$.pipe(take(1)).subscribe(res => {
+      result =  res.roles.includes(role);
+    });
+    return result;
   }
 
   private getLoggedUser(): void {
@@ -92,23 +108,16 @@ export class SignUpComponent implements OnInit {
   }
 
   private filterAdminRoles() {
-    this.roles$ = this.userRolesService.getRoles().pipe(
-      map(roles => roles.filter(r => r.name === Roles.ProviderAdmin || r.name === Roles.CMCDoctor)));
+    this.roles$ = this.userRolesService.getRoles();
+    // .pipe(
+    //   map(roles => roles.filter(r => r.name === Roles.ProviderAdmin || r.name === Roles.CMCDoctor))
+    //   );
   }
 
   private filterProviderAdminRoles() {
     this.roles$ = this.userRolesService.getRoles().pipe(
       map(roles => roles.filter(r => r.name === Roles.Doctor || r.name === Roles.Receptionist)));
   }
-
-  public getSpecialties() {
-    this.specialties$ = this.onLinelookupService.getSpecialties();
-  }
-
-  public isSelectedRole(role: string): boolean {
-    return this.userRegistration.roles.includes(role);
-  }
-
 
   //#region >> Provider Admin Registration Logic
   public addOrRemoveRoles(roleName: string, $event: any) {
