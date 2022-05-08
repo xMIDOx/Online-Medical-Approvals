@@ -6,6 +6,7 @@ import { AdminEPrescription } from 'src/app/models/admin-e-prescription.model';
 import { OnlineEntryType } from 'src/app/models/online-entry-type.enum';
 import { Roles } from 'src/app/models/user-roles.enum';
 import { AuthService } from 'src/app/services/auth.service';
+import { NotificationService } from 'src/app/services/notification.service';
 
 import { KeyValue } from './../../models/key-value.model';
 import { User } from './../../models/user.model';
@@ -26,7 +27,8 @@ export class EPrescriptionFormComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private claimPhotoService: ClaimPhotoService,
-    private lookupService: OnlineLookupsService
+    private lookupService: OnlineLookupsService,
+    private notifyService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -39,7 +41,10 @@ export class EPrescriptionFormComponent implements OnInit {
 
     this.claimPhotoService
       .createTicket(this.adminEPrescription)
-      .subscribe(() => ticketFrom.resetForm());
+      .subscribe(() => {
+        ticketFrom.resetForm();
+        this.notifyService.showSuccess('Ticket Submitted Successfully.');
+      });
   }
 
   public getUser() {

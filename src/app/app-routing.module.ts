@@ -53,6 +53,7 @@ const routes: Routes = [
     path: 'pending-tickets',
     component: TicketsListComponent,
     canActivate: [AuthGuard],
+    data: {roles: [Roles.Receptionist, Roles.Doctor]}
   },
 
   {

@@ -51,18 +51,21 @@
   </div>
 
   <div class="row">
-    <div class="col">
+    <div class="col" *ngIf="showActionBtns()">
       <div class="d-grid gap-1 d-md-flex justify-content-md-center">
         <button class="btn btn-sm btn-success  col-md-1" type="button"
           (click)="onClick(EStatus.accepted)">Accept</button>
         <button class="btn btn-sm btn-danger col-md-1" type="button" (click)="onClick(EStatus.rejected)">Reject</button>
-        <button *ngIf="claimPhoto.onlineStatusName === EStatus.Accepted" type="button"
-          class="btn btn-sm btn-warning col-md-1" (click)="print()">
+      </div>
+    </div>
+
+    <div class="col" *ngIf="claimPhoto.onlineStatusName === EStatus.Accepted && showPrintBtn()">
+      <div class="d-grid gap-1 d-md-flex justify-content-md-center">
+        <button type="button" class="btn btn-sm btn-warning col-md-1" (click)="print()">
           <i class="bi bi-printer"></i> Print
         </button>
       </div>
     </div>
-
   </div>
 
 </div>

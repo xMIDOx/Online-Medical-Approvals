@@ -9,14 +9,27 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link" routerLink="/home" routerLinkActive="active current">Home</a>
-        <a *ngIf="!isProviderAdmin()" class="nav-link" routerLink="/create-approval"
+        <!-- <a class="nav-link" routerLink="/home" routerLinkActive="active current">Home</a> -->
+        <!-- <a *ngIf="!isProviderAdmin()" class="nav-link" routerLink="/create-approval"
           routerLinkActive="active current">Add Approval</a>
         <a *ngIf="!isProviderAdmin()" class="nav-link" routerLink="/pending-approvals"
-          routerLinkActive="active current">Pending Approvals</a>
+          routerLinkActive="active current">Pending Approvals</a> -->
         <a class="nav-link" routerLink="/claim-photo" routerLinkActive="active current">Claims Photos</a>
-        <a class="nav-link" routerLink="/e-prescription" routerLinkActive="active current">Add Ticket</a>
-        <a class="nav-link" routerLink="/pending-tickets" routerLinkActive="active current">Pending Tickets</a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            E-Prescription
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <li>
+              <a class="dropdown-item fst-italic" routerLink="/e-prescription">New</a>
+            </li>
+            <li>
+              <a class="dropdown-item fst-italic" routerLink="/pending-tickets">Pending</a>
+            </li>
+          </ul>
+        </li>
+        <!-- <a class="nav-link" routerLink="/e-prescription" routerLinkActive="active current">Add Ticket</a>
+        <a class="nav-link" routerLink="/pending-tickets" routerLinkActive="active current">Pending Tickets</a> -->
         <a class="nav-link" routerLink="/dashboard" routerLinkActive="active current">Dashboard</a>
       </div>
       <div class="navbar-nav d-flex ms-auto">
