@@ -9,4 +9,5 @@ export interface AdminEPrescription {
   cardNumber: string;
   providerAdminId: string; // at login
   stampDate: Date;
+  claimHolderId: number;
 }

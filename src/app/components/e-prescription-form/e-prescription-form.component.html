@@ -11,21 +11,26 @@
           <option *ngFor="let d of (doctors$ | async)" [value]="d.id">{{d.userName}}</option>
         </select>
       </div>
-      <div class="mb-2">
-        <label for="Name" class="form-label">Patient Name</label>
-        <input type="text" id="Name" name="Name" class="form-control" [(ngModel)]="adminEPrescription.memberName">
-      </div>
       <div class="mb-3">
         <label for="CRTNo" class="form-label">Card Number</label>
-        <input type="text" id="CRTNo" name="CRTNo" class="form-control" [(ngModel)]="adminEPrescription.cardNumber">
+        <input #cardNumber type="text" id="CRTNo" name="CRTNo" class="form-control"
+          [(ngModel)]="adminEPrescription.cardNumber" (change)="findMember(cardNumber)">
       </div>
+      <ng-container *ngIf="{member: claimHolder$ | async} as c">
+        <div class="mb-2">
+          <label for="Name" class="form-label">Patient Name</label>
+          <input type="text" id="Name" name="Name" class="form-control" [(ngModel)]="adminEPrescription.memberName"
+            [disabled]="isExist">
+        </div>
+        <div class="mb-2">
+          <label for="phone" class="form-label">Phone Number</label>
+          <input type="text" id="phone" name="phone" class="form-control" [(ngModel)]="adminEPrescription.phoneNumber"
+            [disabled]="isExist">
+        </div>
+      </ng-container>
       <div class="mb-2">
         <label for="GRPNo" class="form-label">Policy Number </label>
         <input type="text" id="GRPNo" name="GRPNo" class="form-control" [(ngModel)]="adminEPrescription.policyNumber">
-      </div>
-      <div class="mb-2">
-        <label for="phone" class="form-label">Phone Number</label>
-        <input type="text" id="phone" name="phone" class="form-control" [(ngModel)]="adminEPrescription.phoneNumber">
       </div>
       <div class="mb-2">
         <label for="client" class="form-label">Client Name</label>

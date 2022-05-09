@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { AdminEPrescription } from 'src/app/models/admin-e-prescription.model';
+import { ClaimHolder } from 'src/app/models/claim-holder.model';
 import { OnlineEntryType } from 'src/app/models/online-entry-type.enum';
 import { Roles } from 'src/app/models/user-roles.enum';
 import { AuthService } from 'src/app/services/auth.service';
@@ -22,6 +23,8 @@ export class EPrescriptionFormComponent implements OnInit {
   public adminEPrescription = <AdminEPrescription>{};
   public doctors$ = new Observable<User[]>();
   public clients$ = new Observable<KeyValue[]>();
+  public claimHolder$ = new Observable<ClaimHolder>();
+  public isExist = false;
   private user = <User>{};
 
   constructor(
@@ -56,6 +59,23 @@ export class EPrescriptionFormComponent implements OnInit {
         this.clients$ = this.lookupService.clientsByProviderId(res.providerId);
         this.fetchTicketMeta();
       });
+  }
+
+  public findMember(input: HTMLInputElement) {
+    this.claimHolder$ = this.lookupService
+      .claimHolderByCardNum(input.value)
+      .pipe(
+        tap((claimHolder) => {
+          if (claimHolder) {
+            this.isExist = true;
+            this.adminEPrescription.claimHolderId = claimHolder.id;
+            this.adminEPrescription.cardNumber = claimHolder.cardNumber;
+            this.adminEPrescription.memberName = claimHolder.name;
+            this.adminEPrescription.phoneNumber = claimHolder.phoneNumber;
+          }
+          console.log(claimHolder);
+        })
+      );
   }
 
   private getDoctors() {

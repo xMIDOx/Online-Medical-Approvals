@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { ClaimHolder } from '../models/claim-holder.model';
 import { KeyValue } from './../models/key-value.model';
 import { QueryObject } from './../models/query-object';
 import { GenericCRUDService } from './generic-crud.service';
@@ -62,5 +63,11 @@ export class OnlineLookupsService {
     return this.httpRepo
       .Get('api/Client/GetProviderClients?providerId=' + id)
       .pipe(map((res) => res as KeyValue[]));
+  }
+
+  public claimHolderByCardNum(cardNum: string): Observable<ClaimHolder> {
+    return this.httpRepo
+      .Get(this.lookupsEndpoint + 'GetClaimHolder?cardNumber=' + cardNum)
+      .pipe(map((res) => res as ClaimHolder));
   }
 }
