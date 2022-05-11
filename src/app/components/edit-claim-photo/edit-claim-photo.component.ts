@@ -58,18 +58,6 @@ export class EditClaimPhotoComponent implements OnInit {
   }
 
   public onSubmit(claimForm: NgForm) {
-    // this.claimPhoto.claimPhotoDetails = this.photoServices;
-    // this.claimPhoto.clientId = this.photo.clientId;
-    // this.claimPhoto.onlineStatusId = 1005;
-
-    // this.claimPhotoService
-    //   .updateClaimPhoto(this.photoId, this.claimPhoto)
-    //   .subscribe((res) => {
-    //     claimForm.resetForm();
-    //     this.resetObj(this.claimPhoto);
-    //     this.router.navigate(['/claim-photo']);
-    //   });
-
     if (this.photo.onlineEntryTypeId == OnlineEntryType.Ticket)
       this.updateTicket();
     else this.updateClaimPhoto();
@@ -147,6 +135,9 @@ export class EditClaimPhotoComponent implements OnInit {
   }
 
   public saveItem(service: PhotoService) {
+    if (this.selectedService.serviceTypeId == ServiceTypes.Lab || ServiceTypes.Scan)
+      this.selectedService.quantity = 1
+
     const index = this.photoServices.indexOf(service);
     this.photoServices[index] = Object.assign({}, this.selectedService);
     this.resetObj(this.selectedService);

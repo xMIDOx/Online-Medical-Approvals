@@ -4,4 +4,5 @@ export interface PhotoService {
   quantity: number;
   serviceName: string;
   typeName: string;
+  duration: number;
 }

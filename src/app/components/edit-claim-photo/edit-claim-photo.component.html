@@ -98,11 +98,12 @@
                 </div>
                 <div class="card">
                   <div class="card-body">
-                    <table *ngIf="filterMedications().length != 0" class="table table-sm table-borderless">
+                    <table *ngIf="filterMedications().length != 0" class="table table-sm table-bordered">
                       <thead class="table-secondary">
                         <tr>
                           <th>Medicine Name</th>
-                          <th>Quantity</th>
+                          <th class="text-center">Quantity</th>
+                          <th class="text-center">Duartion</th>
                           <th></th>
                         </tr>
                       </thead>
@@ -127,6 +128,16 @@
                               <input type="text" class="form-control form-control-sm" id="qty" name="qty"
                                 [(ngModel)]="selectedService.quantity">
                             </ng-template>
+                          </td>
+                          <td class="col-md-1">
+                            <div class="text-center" *ngIf="!isEditMode(medicine); else durationinput">
+                              {{medicine.duration}}
+                            </div>
+                            <ng-template #durationinput>
+                              <input type="text" class="form-control form-control-sm" id="duration" name="duration"
+                              [(ngModel)]="selectedService.duration">
+                            </ng-template>
+
                           </td>
                           <td class="col-md-1">
                             <div class="text-center">
@@ -161,7 +172,7 @@
                       <thead class="table-secondary">
                         <tr>
                           <th>Scan Name</th>
-                          <th>Quantity</th>
+                          <th class="text-center">Quantity</th>
                           <th></th>
                         </tr>
                       </thead>
@@ -179,13 +190,13 @@
                             </ng-template>
                           </td>
                           <td class="col-md-1">
-                            <div class="text-center" *ngIf="!isEditMode(scan); else scanQuantityInput">
+                            <div class="text-center" *ngIf="!isEditMode(scan)">
                               {{scan.quantity}}
                             </div>
-                            <ng-template #scanQuantityInput>
+                            <!-- <ng-template #scanQuantityInput>
                               <input type="text" class="form-control form-control-sm" id="qty" name="qty"
-                                [(ngModel)]="selectedService.quantity">
-                            </ng-template>
+                                [(ngModel)]="selectedService.quantity" disabled>
+                            </ng-template> -->
                           </td>
                           <td class="col-md-1">
                             <div class="text-center">
@@ -239,13 +250,13 @@
                             </ng-template>
                           </td>
                           <td class="col-md-1 text-center">
-                            <div *ngIf="!isEditMode(test); else scanQuantityInput">
+                            <div *ngIf="!isEditMode(test)">
                               {{test.quantity}}
                             </div>
-                            <ng-template #scanQuantityInput>
+                            <!-- <ng-template #scanQuantityInput>
                               <input type="text" class="form-control form-control-sm" id="qty" name="qty"
-                                [(ngModel)]="selectedService.quantity">
-                            </ng-template>
+                                [(ngModel)]="selectedService.quantity" disabled>
+                            </ng-template> -->
                           </td>
                           <td class="col-md-1">
                             <div class="text-center">
