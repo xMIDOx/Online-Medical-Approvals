@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { tick } from '@angular/core/testing';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AdminEPrescription } from 'src/app/models/admin-e-prescription.model';
@@ -7,6 +6,7 @@ import { AdminEPrescription } from 'src/app/models/admin-e-prescription.model';
 import { ClaimPhoto } from './../models/claim-photo.model';
 import { EditClaimPhoto } from './../models/edit-claim-photo';
 import { GenericCRUDService } from './generic-crud.service';
+
 
 @Injectable({
   providedIn: 'root',
@@ -53,10 +53,8 @@ export class ClaimPhotoService {
     return this.http.Update(this.baseRoute + 'EditTicket/' + id, ticket);
   }
 
-  public updateStatus(id: number, statusId: number): Observable<object> {
-    return this.http.Get(
-      this.baseRoute + 'UpdateStatus?id=' + id + '&statusId=' + statusId
-    );
+  public updateStatus(id: number, claim: ClaimPhoto): Observable<object> {
+    return this.http.Update(this.baseRoute + 'UpdateStatus?id=' + id, claim);
   }
 
   public createTicket(ticket: AdminEPrescription): Observable<Object> {

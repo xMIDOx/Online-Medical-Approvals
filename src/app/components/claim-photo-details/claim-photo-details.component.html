@@ -1,4 +1,4 @@
-<div *ngIf="(claimDetails$ | async) as claimPhoto" class="container-fluid">
+<div *ngIf="claimPhoto" class="container-fluid">
 
   <span class="badge rounded-pill bg-warning mb-3 fs-5 start">Photo Master</span>
 
@@ -37,13 +37,21 @@
             <th>Service Name</th>
             <th>Service Type</th>
             <th>Service Quantity</th>
+            <th></th>
           </tr>
         </thead>
         <tbody *ngFor="let d of claimPhoto.claimPhotoDetails">
-          <tr>
+          <tr [class.text-decoration-line-through]="d.statusId === EStatus.rejected">
             <td>{{d.serviceName}}</td>
             <td>{{d.typeName}}</td>
             <td>{{d.quantity}}</td>
+            <td *ngIf="showActionBtns()" class="text-center fst-italic">
+              <button *ngIf="d.statusId === EStatus.rejected" type="button" class="btn btn-outline-success btn-sm"
+                (click)="toggleStatus(d)">Accept</button>
+              <button *ngIf="d.statusId !== EStatus.rejected" type="button" class="btn btn-outline-danger btn-sm"
+                (click)="toggleStatus(d)">reject</button>
+            </td>
+
           </tr>
         </tbody>
       </table>

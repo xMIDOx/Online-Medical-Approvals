@@ -17,5 +17,6 @@ export interface ClaimPhoto {
   claimFormNumber: string;
   memberName: string;
   policyNumber: string;
+  onlineStatusId: number;
   claimPhotoDetails: PhotoService[];
 }

@@ -31,6 +31,7 @@ export class EditClaimPhotoComponent implements OnInit {
   public medicalTests$ = new Observable<object>();
   public photoServices: PhotoService[] = [];
   public selectedService = <PhotoService>{};
+  public EStatus = ApprovalOnlineStatus;
   public queryObj: any = {};
   public isLoading = false;
   public isActiveRow = false;
@@ -135,6 +136,8 @@ export class EditClaimPhotoComponent implements OnInit {
   }
 
   public saveItem(service: PhotoService) {
+    this.selectedService.statusId = this.EStatus.accepted;
+
     if (this.selectedService.serviceTypeId == ServiceTypes.Lab || ServiceTypes.Scan)
       this.selectedService.quantity = 1
 
@@ -190,8 +193,6 @@ export class EditClaimPhotoComponent implements OnInit {
     this.claimPhoto.claimPhotoDetails = this.photoServices;
     this.claimPhoto.procedureDate = this.photo.stampDate;
     this.claimPhoto.onlineStatusId = ApprovalOnlineStatus.posted;
-
-    console.log(this.claimPhoto);
 
     this.claimPhotoService
       .updateTicket(this.photoId, this.claimPhoto)

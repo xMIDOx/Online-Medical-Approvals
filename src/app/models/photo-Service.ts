@@ -5,4 +5,5 @@ export interface PhotoService {
   serviceName: string;
   typeName: string;
   duration: number;
+  statusId: number;
 }

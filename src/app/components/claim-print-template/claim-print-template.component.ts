@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { ApprovalOnlineStatus } from 'src/app/models/approval-online-status.enum';
 
 import { ClaimPhoto } from './../../models/claim-photo.model';
 import { ClaimPhotoService } from './../../services/claim-photo.service';
@@ -16,6 +17,7 @@ import { PrintService } from './../../services/print.service';
 export class ClaimPrintTemplateComponent implements OnInit {
   public claimId = 0;
   public claimPhoto = <ClaimPhoto>{};
+  public Estatus = ApprovalOnlineStatus;
 
   constructor(
     private claimPhotoService: ClaimPhotoService,

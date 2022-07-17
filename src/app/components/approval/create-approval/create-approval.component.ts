@@ -1,5 +1,5 @@
-import { Component, ElementRef, NgModule, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, NgForm, NgModel } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EMPTY, Observable } from 'rxjs';
 import { switchMap, take, tap } from 'rxjs/operators';
@@ -15,7 +15,7 @@ import { Member } from './../../../models/member.model';
 import { User } from './../../../models/user.model';
 import { ApprovalService } from './../../../services/approval.service';
 import { LookupsService } from './../../../services/lookups.service';
-import { NgSelectComponent } from './../../ng-select/ng-select.component';
+
 
 @Component({
   selector: 'app-create-approval',
